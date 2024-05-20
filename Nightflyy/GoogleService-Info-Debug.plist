@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>613195206570-chdu75a6jcjnh8p02aa80medudecljft.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.613195206570-chdu75a6jcjnh8p02aa80medudecljft</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBzqv8mQzj_CsgIz-otiOtdhRg7Rf5Rzak</string>
+	<key>GCM_SENDER_ID</key>
+	<string>613195206570</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>dev.com.slydelife.Slyde</string>
+	<key>PROJECT_ID</key>
+	<string>nightflyydev</string>
+	<key>STORAGE_BUCKET</key>
+	<string>nightflyydev.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:613195206570:ios:dac4a94c2290a6e053a5d3</string>
+	<key>DATABASE_URL</key>
+	<string>https://nightflyydev.firebaseio.com</string>
+</dict>
+</plist>
