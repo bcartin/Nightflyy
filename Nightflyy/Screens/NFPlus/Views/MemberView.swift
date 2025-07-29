@@ -9,8 +9,8 @@ import SwiftUI
 
 struct MemberView: View {
     
-    @State private var glow = false
     @Environment(\.dismiss) var dismiss
+    @State var viewModel: NFPRedeemViewModel = .init()
     
     var body: some View {
         VStack {
@@ -29,10 +29,19 @@ struct MemberView: View {
             
             Spacer()
             
-//            RedeemButtonView()
-//            NoCreditsView()
-//            RedeemCodeView()
-            CreditRedeemedView()
+            switch viewModel.displayView {
+            case .noCredits:
+                NoCreditsView(viewModel: $viewModel)
+            case .hasCredits:
+                RedeemButtonView(viewModel: $viewModel)
+                    .transition(.blurReplace)
+            case .codeScreen:
+                RedeemCodeView(viewModel: $viewModel)
+                    .transition(.blurReplace)
+            case .redeemSuccess:
+                CreditRedeemedView(viewModel: $viewModel)
+                    .transition(.blurReplace)
+            }
             
             Spacer()
             
@@ -61,6 +70,12 @@ struct MemberView: View {
                 .fill(.gray.opacity(0.9))
                 .frame(width: 86, height: 6)
         }
+        .onChange(of: viewModel.shouldDismiss) { _, newValue in
+            if newValue {
+                dismiss()
+            }
+        }
+        .errorAlert(error: $viewModel.error, buttonTitle: "OK")
     }
 }
 

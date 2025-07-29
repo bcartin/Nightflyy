@@ -125,10 +125,11 @@ class EditProfileViewModel {
                     try account.save()
                     await updateUsernamesCollection()
                     await updateFirebaseUser()
+                    updateSearchIndex()
                     try? await Task.sleep(for: .seconds(2))
                     isLoading = false
                     AccountManager.shared.account = self.account
-                    showSavedMessage()
+                    General.showSavedMessage()
                 }
                 catch {
                     self.error = error
@@ -163,6 +164,12 @@ class EditProfileViewModel {
     func updateFirebaseUser() async {
         if usernameDidChange || profileImageDidChange {
             await FirebaseFunctionsManager.shared.updateDisplayNameAndPhotoUrl(account: account)
+        }
+    }
+    
+    func updateSearchIndex() {
+        if usernameDidChange {
+            try? SearchManager.shared.updateSearchIndex(objectID: account.uid, objectType: .person, name: account.name, username: username, venue: nil)
         }
     }
     

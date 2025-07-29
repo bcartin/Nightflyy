@@ -9,39 +9,42 @@ import SwiftUI
 
 struct EventCardView: View {
     
-    var imageName: String
+    @Bindable var viewModel: EventCardViewModel
     var size: CGSize
     
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Image(systemName: "person.crop.circle")
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                    .foregroundStyle(.white)
+                UserImageRound(imageUrl: viewModel.eventOwner?.profileImageUrl, size: 24)
                 
-                Text("Username")
+                Text(viewModel.ownerName)
                     .foregroundStyle(.white)
                     .font(.system(size: 16))
                 
                 Spacer()
             }
             .padding(.bottom, 8)
+            .highPriorityGesture(
+                TapGesture()
+                    .onEnded {
+                        viewModel.navigateToProfile()
+                    }
+            )
             
             ZStack(alignment: .top) {
-                Image(imageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: size.width - 110, height: (size.width - 110) * 1.375)
+                EventImage(imageUrl: viewModel.event.eventFlyerUrl, size: CGSize(width: size.width - 110, height: (size.width - 110) * 1.375))
                     .clipShape(.rect(cornerRadius: 12))
                     .padding(.bottom)
+                    .onTapGesture {
+                        viewModel.navigateToEventDetails()
+                    }
                 
                 HStack() {
                     Spacer()
                     
                     VStack(alignment: .trailing ,spacing: 12) {
                         
-                        Text("TUE, DEC 31")
+                        Text(viewModel.eventDateString)
                             .foregroundStyle(.white)
                             .padding(6)
                             .background(.mainPurple)
@@ -52,22 +55,38 @@ struct EventCardView: View {
                         Spacer()
                             .frame(height: (size.width - 255) * 1.375)
                         
-                        Button {
-                            
+                        Menu {
+                            Button("Interested") {
+                                viewModel.markAsInterested()
+                            }
+                            Button("Going") {
+                                viewModel.markAsAttenging()
+                            }
+                            Button("Not Going") {
+                                viewModel.markAsNotAttending()
+                            }
                         } label: {
-                            Image("ic_interested")
+                            Image(viewModel.attendingButtonProperties.icon)
                                 .resizable()
                                 .padding(8)
                                 .frame(width: 42, height: 42)
-                                .foregroundStyle(.gray)
+                                .foregroundStyle(viewModel.attendingButtonProperties.color)
                                 .overlay {
                                     Circle()
-                                        .stroke(.gray, lineWidth: 1)
+                                        .stroke(viewModel.attendingButtonProperties.color, lineWidth: 1)
                                 }
                         }
                         
-                        Button {
-                            
+                        Menu {
+//                            Button("Invite Friends") {
+//                                viewModel.handleInviteFriendsTapped()
+//                            }
+                            ShareLink(item: viewModel.shareLink, message: Text("Check out this event on Nightflyy!")) {
+                                Label("Share Event", systemImage: "")
+                            }
+                            Button("Invite Friends") {
+                                viewModel.handleSendAsMessageTapped()
+                            }
                         } label: {
                             Image("ic_share")
                                 .resizable()
@@ -81,7 +100,7 @@ struct EventCardView: View {
                         }
                         
                         Button {
-                            
+                            viewModel.navigateToGuestList()
                         } label: {
                             Image("ic_crowd")
                                 .resizable()
@@ -99,7 +118,7 @@ struct EventCardView: View {
                 }
             }
             
-            Text("Event Name")
+            Text(viewModel.event.eventName ?? "")
                 .font(.system(size: 24, weight: .bold))
                 .foregroundStyle(.white)
                 .padding(.top, 4)
@@ -110,17 +129,29 @@ struct EventCardView: View {
                     .frame(width: 14, height: 14)
                     .foregroundStyle(.mainPurple)
                 
-                Text("New York, NY")
-                    .font(.system(size: 14))
+                Text(viewModel.eventLocation)
+                    .font(.system(size: 17))
                     .foregroundStyle(.white)
+                    .padding(.trailing, 14)
             }
+            .frame(maxWidth: .infinity)
+            
             
         }
         .frame(width: size.width - 86)
-        .background(.backgroundBlack)
+        .background(.clear)
+        .sheet(isPresented: $viewModel.presentInviteScreen, onDismiss: nil) {
+            InviteFromEventView(viewModel: InviteFromEventViewModel(event: viewModel.event))
+        }
+        .sheet(isPresented: $viewModel.presentSendAsMessageScreen, onDismiss: nil) {
+            SendObjectAsMessageView(viewModel: SendObjectAsMessageViewModel(event: viewModel.event))
+        }
+        .errorAlert(error: $viewModel.error, buttonTitle: "OK")
     }
 }
 
 #Preview {
-    EventCardView(imageName: "event1", size: CGSize(width: UIScreen.main.bounds.size.width, height: 392))
+    EventCardView(viewModel: EventCardViewModel(event: TestData.events.first!),
+                  size: CGSize(width: UIScreen.main.bounds.size.width, height: 392))
 }
+

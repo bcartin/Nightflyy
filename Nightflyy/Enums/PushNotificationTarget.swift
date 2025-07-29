@@ -1,5 +1,5 @@
 //
-//  PushNotificationGroups.swift
+//  PushNotificationTarget.swift
 //  Nightflyy
 //
 //  Created by Bernie Cartin on 4/15/25.
@@ -7,8 +7,14 @@
 
 import Foundation
 
-enum PushNotificationGroups: String {
+enum PushNotificationTarget: String, CaseIterable {
+    
+    static var allValues: [String] {
+        return allCases.map { $0.rawValue.capitalized }
+    }
+    
     case everyone
-    case user
-    case system
+    case nfplus = "nightflyy_plus"
+    case test
+    
 }

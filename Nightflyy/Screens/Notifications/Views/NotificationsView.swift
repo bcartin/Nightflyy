@@ -10,11 +10,51 @@ import SwiftUI
 struct NotificationsView: View {
     
     @Binding var showMenu: Bool
+    var viewModel: NotificationsViewModel
     
     var body: some View {
         RouterView {
             VStack(alignment: .leading) {
+                if !(viewModel.hideSwipeForActionPrompt) {
+                    HStack {
+                        Image(systemName: "arrow.left")
+                            .font(.system(size: 16))
+                            .foregroundStyle(.gray)
+                        
+                        Text("Swipe right for actions.")
+                            .foregroundStyle(.gray)
+                            .font(.system(size: 12))
+                        
+                        Button {
+                            viewModel.setHideSwipeForActionPrompt(true)
+                        } label: {
+                            Text("Hide")
+                                .font(.system(size: 12))
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .buttonBorderShape(.capsule)
+                        .tint(Color.onlineBlue)
+
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.top)
+                }
                 
+                List {
+                    ForEach(AppNotificationsManager.shared.notifications) { notification in
+                        let viewModel = NotificationViewModel(notification: notification)
+                        NotificationView(viewModel: viewModel)
+                            .listRowBackground(Color.clear)
+                            .swipeActions {
+                                viewModel.actionsView()
+                            }
+                    }
+                    
+                }
+                .listStyle(PlainListStyle())
+                .refreshable {
+                    await AppNotificationsManager.shared.fetchNotifications(refetch: true)
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .backgroundImage("slyde_background")
@@ -46,8 +86,7 @@ struct NotificationsView: View {
                 }
             }
             .task {
-                let notifications = try? await AppNotificationClient.fetchNewAppNotifications()
-                print(notifications?.count)
+                await AppNotificationsManager.shared.fetchNotifications()
             }
         }
     }

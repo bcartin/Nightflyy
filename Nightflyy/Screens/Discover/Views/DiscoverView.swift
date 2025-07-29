@@ -50,8 +50,8 @@ struct DiscoverView: View {
                         
                         ScrollView(.horizontal) {
                             HStack(spacing: 16) {
-                                ForEach(viewModel.displayEvents) { event in
-                                    EventCardSmallView(event: event)
+                                ForEach(viewModel.filteredDisplayEvents) { event in
+                                    EventCardSmallView(viewModel: EventCardSmallViewModel(event: event))
                                 }
                             }
                             .scrollTargetLayout()

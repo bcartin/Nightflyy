@@ -1,5 +1,5 @@
 //
-//  UserImageSmall.swift
+//  UserImageRound.swift
 //  Nightflyy
 //
 //  Created by Bernie Cartin on 11/7/24.
@@ -7,24 +7,24 @@
 
 import SwiftUI
 
-struct UserImageSmall: View {
+struct UserImageRound: View {
     
-    var account: Account?
+    var imageUrl: String?
     var size: CGFloat
     
     var body: some View {
-        if let url = account?.profileImageUrl {
-            AsyncImage(url: URL(string: url)) { image in
-                image.image?.resizable()
-            }
-            .frame(width: size, height: size)
-            .padding(.leading)
+        
+        
+        if let url = imageUrl, !url.isEmpty {
+            CachedAsyncImage(url: URL(string: url), size: .init(width: size, height: size), shape: .circle, contentMode: .fill)
         }
         else {
             Image(systemName: "person.crop.circle")
                 .resizable()
+                .aspectRatio(contentMode: .fill)
                 .frame(width: size, height: size)
-                .padding(.leading)
+                .clipShape(Circle())
+                .foregroundStyle(.white)
         }
     }
 }

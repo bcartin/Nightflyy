@@ -11,7 +11,15 @@ import Foundation
 class SideBarMenuViewModel {
     
     var presentSheet: Bool = false
-    var selectedMenuItem: MenuItem = .accountInfo
+    var selectedMenuItem: MenuItem = .accountInfo(type: .personal)
+    
+    var isPlusMember: Bool {
+        return NFPManager.shared.isPlusMember
+    }
+    
+    var bannerText: String {
+        isPlusMember ? "Nightflyy+ Member" : "Upgrade to Nightflyy+"
+    }
     
     func navigateToProfile() {
         if let account = AccountManager.shared.account {

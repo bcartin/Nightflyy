@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ALGOLIA_SEARCH_KEY</key>
+	<string>$(ALGOLIA_SEARCH_KEY)</string>
+	<key>APPID</key>
+	<string>$(APPID)</string>
+	<key>FB_FILEPATH_NAME</key>
+	<string>$(FB_FILEPATH_NAME)</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>maps</string>
+	</array>
+	<key>QONVERSION_KEY</key>
+	<string>$(QONVERSION_KEY)</string>
+	<key>SENDGRID_BASEURL</key>
+	<string>$(SENDGRID_BASEURL)</string>
+	<key>SENDGRID_KEY</key>
+	<string>$(SENDGRID_KEY)</string>
+	<key>MIXPANEL_TOKEN</key>
+	<string>$(MIXPANEL_TOKEN)</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Bebas-Regular.ttf</string>
+		<string>neuropol.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+</dict>
+</plist>

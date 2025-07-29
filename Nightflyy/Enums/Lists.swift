@@ -31,7 +31,7 @@ enum MusicGenre: String, CaseIterable {
     case Top40 = "Top 40"
     case HipHop = "Hip-Hop"
     case RNB = "R&B"
-    case EDM
+    case EDM = "EDM"
     case Rock
     case Metal
     case Latin

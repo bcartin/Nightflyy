@@ -11,7 +11,8 @@ import AuthenticationServices
 struct LoginView: View {
     
     @Environment(AuthenticationManager.self) private var authenticationManager
-    @State var viewModel = LoginViewModel()
+    @State var viewModel: LoginViewModel
+    @Binding var signUpViewModel: SignupViewModel
     @Binding var flip: Bool
     
     var body: some View {
@@ -46,10 +47,12 @@ struct LoginView: View {
                 
                 HStack{
                     Spacer()
-                    Text("Forgot your password?")
-                        .foregroundStyle(.white)
-                        .font(.footnote)
-                        .fontWeight(.medium)
+                    Button ("Forgot your password?") {
+                        signUpViewModel.goToScreen(.forgotPassword)
+                    }
+                    .foregroundStyle(.white)
+                    .font(.footnote)
+                    .fontWeight(.medium)
                 }
                 .padding(.horizontal, 32)
                 
@@ -116,5 +119,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView(flip: .constant(true))
+    LoginView(viewModel: LoginViewModel(), signUpViewModel: .constant(SignupViewModel()), flip: .constant(true))
 }

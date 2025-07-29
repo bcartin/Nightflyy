@@ -28,18 +28,10 @@ struct MultiSelectAccountListItemView: View {
         .task {
             account = await AccountClient.fetchAccount(accountId: accountId)
         }
-//        .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(isSelected ? .mainPurple : .clear)
+                .fill(isSelected ? .mainPurple : .backgroundBlackLight.opacity(0.4))
         )
-//        .cornerRadius(12, corners: .allCorners)
-//        .overlay(content: {
-//            if isSelected {
-//                RoundedRectangle(cornerRadius: 12)
-//                    .fill(.mainPurple)
-//            }
-//        })
         .onTapGesture {
             selectOrUnselect()
         }

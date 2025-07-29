@@ -27,7 +27,7 @@ class SearchResultsListViewModel: NSObject {
     var algoliaSearchResults: [AlgoliaSearchResult] = []
     
     init(searchResults: [SearchResult]) {
-        self.searchResults = searchResults
+        self.searchResults = searchResults.sorted{$0.id < $1.id}
         super.init()
         self.updateSegmentsTitles()
         self.makeEventResultsViewModels()
@@ -101,7 +101,7 @@ class SearchResultsListViewModel: NSObject {
                 }
             }
         }
-        return searchResults
+        return searchResults.sorted{$0.id < $1.id}
     }
     
     private func fetchResult(_ algoliaResult: AlgoliaSearchResult) async -> SearchResult? {

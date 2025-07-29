@@ -87,7 +87,7 @@ class DiscoverViewModel {
     }
     
     var resultsCount: Int {
-        return filteredDisplayEvents.count + filterViewModel.venues.count
+        return filteredDisplayEvents.count + filteredVenues.count
     }
     
     var filteredDisplayEvents: [Event] {
@@ -96,10 +96,27 @@ class DiscoverViewModel {
                 selectedVenues.contains($0.eventVenueType ?? "") || selectedVenues.isEmpty
             }
             .filter {
-                $0.eventMusic?.contains(selectedMusic) ?? true
+                guard let eventMusic = $0.eventMusic else { return selectedMusic.isEmpty }
+                return selectedMusic.contains(where: eventMusic.contains) || selectedMusic.isEmpty
             }
             .filter {
-                $0.eventCrowds?.contains(selectedCrowds) ?? true
+                guard let eventCrowds = $0.eventCrowds else { return selectedCrowds.isEmpty }
+                return selectedCrowds.contains(where: eventCrowds.contains) || selectedCrowds.isEmpty
+            }
+    }
+    
+    var filteredVenues: [Account] {
+        filterViewModel.venues
+            .filter {
+                selectedVenues.contains($0.venueType ?? "") || selectedVenues.isEmpty
+            }
+            .filter {
+                guard let venueMusic = $0.music else { return selectedMusic.isEmpty }
+                return selectedMusic.contains(where: venueMusic.contains) || selectedMusic.isEmpty
+            }
+            .filter {
+                guard let venueCrowds = $0.clientele else { return selectedCrowds.isEmpty }
+                return selectedCrowds.contains(where: venueCrowds.contains) || selectedCrowds.isEmpty
             }
     }
     
@@ -112,7 +129,7 @@ class DiscoverViewModel {
         searchResults.append(contentsOf: filteredDisplayEvents.map {
             return SearchResult(type: .event, account: nil, event: $0, id: $0.uid)
         })
-        searchResults.append(contentsOf: filterViewModel.venues.map {
+        searchResults.append(contentsOf: filteredVenues.map {
             return SearchResult(type: .venue, account: $0, event: nil, id: $0.uid)
         })
         return SearchResultsListViewModel(searchResults: searchResults)

@@ -15,7 +15,7 @@ class AppNotificationClient {
     
     static func fetchNewAppNotifications(lastUpdated: Date? = nil) async throws -> [AppNotification] {
         guard let uid = AccountManager.shared.account?.uid else {
-            return [] //TODO: Throw error?
+            return []
         }
         var notifications: [AppNotification] = .init()
         let dbRef = FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value).document(uid).collection(FirestoreCollections.Accounts.notifications)
@@ -33,6 +33,11 @@ class AppNotificationClient {
         }
         let dbRef = FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value).document(uid).collection(FirestoreCollections.Accounts.notifications).document(notificationId)
         try await dbRef.delete()
+    }
+    
+    static func saveNotification(for accountId: String, notification: AppNotification) throws {
+        let db = FirebaseManager.shared.db
+        try db.collection(FirestoreCollections.Accounts.value).document(accountId).collection(FirestoreCollections.Notifications.value).addDocument(from: notification)
     }
 }
 

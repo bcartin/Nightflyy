@@ -37,11 +37,7 @@ struct EditProfileView: View {
                                     .clipShape(Circle())
                             }
                             else if let profileImageUrl = viewModel.account.profileImageUrl {
-                                AsyncImage(url: URL(string: profileImageUrl)) { image in
-                                    image.image?.resizable()
-                                }
-                                .frame(width: 94, height: 94)
-                                .clipShape(Circle())
+                                CachedAsyncImage(url: URL(string: profileImageUrl), size: .init(width: 94, height: 94), shape: .circle)
                             }
                             else {
                                 Image(systemName: "person.circle.fill")
@@ -67,7 +63,7 @@ struct EditProfileView: View {
                             Text("Account Info".uppercased())
                                 .font(.system(size: 15, weight: .bold))
                             
-                            CustomTextField(placeholder: "Username", value: $viewModel.username, keyboardType: .URL)
+                            CustomTextField(placeholder: "Username", value: $viewModel.username, keyboardType: .URL, isRequired: true)
                             
                             CustomTextField(placeholder: "Email", value: $viewModel.email, keyboardType: .URL, disabled: true)
                             
@@ -88,7 +84,7 @@ struct EditProfileView: View {
                             Text("Personal Info".uppercased())
                                 .font(.system(size: 15, weight: .bold))
                             
-                            CustomTextField(placeholder: "Name", value: $viewModel.name)
+                            CustomTextField(placeholder: "Name", value: $viewModel.name, isRequired: true)
                             
                             ActionTextField(placeholder: "Gender", value: $viewModel.gender) {
                                 viewModel.goToScreen(.gender)
@@ -102,9 +98,9 @@ struct EditProfileView: View {
                                 viewModel.goToScreen(.bio)
                             }
                             
-                            CustomTextField(placeholder: "Current City (optional)", value: $viewModel.currentCity)
+                            CustomTextField(placeholder: "Current City", value: $viewModel.currentCity)
                             
-                            CustomTextField(placeholder: "Phone Number (optional)", value: $viewModel.phoneNumber)
+                            CustomTextField(placeholder: "Phone Number", value: $viewModel.phoneNumber)
                             
                         }
                         

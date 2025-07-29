@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 enum AppConfiguration {
     enum Error: Swift.Error {
@@ -29,5 +28,3 @@ enum AppConfiguration {
         }
     }
 }
-
-

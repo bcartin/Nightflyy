@@ -10,6 +10,8 @@ import SwiftUI
 struct PaywallView: View {
     
     @Environment(\.dismiss) var dismiss
+    @Environment(AuthenticationManager.self) private var authenticationManager
+    @Binding var viewModel: NFPSignUpViewModel
     
     var body: some View {
         ZStack {
@@ -63,7 +65,7 @@ struct PaywallView: View {
                     .padding(.vertical, 16)
                 
                 Button {
-                    
+                    viewModel.checkForReferral()
                 } label: {
                     Text("Join Now, First Round On Us")
                 }
@@ -71,9 +73,9 @@ struct PaywallView: View {
                 
                 
                 Button {
-                    // RENEW SUBSCRItion action
+                    viewModel.restoreSubscriptionOrSkip()
                 } label: {
-                    Text("Renew Subscription")
+                    Text(authenticationManager.isSigningUp ? "Skip" : "Renew Subscription")
                         .foregroundStyle(.mainPurple)
                         .font(.system(size: 17))
                         .padding()
@@ -95,7 +97,7 @@ struct PaywallView: View {
 }
 
 #Preview {
-    PaywallView()
+    PaywallView(viewModel: .constant(NFPSignUpViewModel()))
 }
 
 
@@ -138,18 +140,18 @@ struct FeaturesView: View {
                         
                         Spacer()
                     }
-                        .frame(width: width, height: 80)
-                        .background {
-                            ZStack(alignment: .trailing) {
-                                RoundedRectangle(cornerRadius: 8)
-                                    .fill(feature.color)
-                                    .frame(width: width, height: 80)
-                                
-                                Rectangle()
-                                    .fill(.backgroundBlack)
-                                    .frame(width: width - 10, height: 80)
-                            }
+                    .frame(width: width, height: 80)
+                    .background {
+                        ZStack(alignment: .trailing) {
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(feature.color)
+                                .frame(width: width, height: 80)
+                            
+                            Rectangle()
+                                .fill(.backgroundBlack)
+                                .frame(width: width - 10, height: 80)
                         }
+                    }
                 }
             }
             .scrollTargetLayout()

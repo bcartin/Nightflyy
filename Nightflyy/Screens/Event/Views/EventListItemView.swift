@@ -3,60 +3,73 @@
 //  Nightflyy
 //
 //  Created by Bernie Cartin on 11/11/24.
-//
+// 
 
 import SwiftUI
 
 struct EventListItemView: View {
     
-    var event: Event
+    var viewModel: EventListItemViewModel
+    var tapAction: ButtonAction? = nil
     
     var body: some View {
-        HStack() {
-            EventImage(imageUrl: event.eventFlyerUrl, size: CGSize(width: 100, height: 88))
-                .cornerRadius(12, corners: [.topLeft, .bottomLeft])
-            
-            VStack(alignment: .leading, spacing: 8) {
-                Text(event.eventName ?? "")
-                    .foregroundStyle(.white)
-                    .font(.system(size: 17, weight: .bold))
-                    .lineLimit(1)
-                    .truncationMode(.tail)
+        HStack(spacing: 0) {
+                EventImage(imageUrl: viewModel.event.eventFlyerUrl, size: CGSize(width: 70, height: 70))
+                    .cornerRadius(12, corners: [.topLeft, .bottomLeft])
                 
-                Text("Hosted by Nightflyy")
-                    .foregroundStyle(.gray)
-                    .font(.system(size: 12))
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(viewModel.event.eventName ?? "")
+                        .foregroundStyle(.white)
+                        .font(.footnote)
+                        .fontWeight(.medium)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                    
+                    Text("Hosted by \(viewModel.eventOwner?.username ?? "Unclaimed")")
+                        .foregroundStyle(.gray)
+                        .font(.system(size: 12))
+                    
+                    Text(viewModel.event.eventVenue ?? "")
+                        .foregroundStyle(.gray)
+                        .font(.system(size: 12))
+                }
+                .padding(.leading, 12)
                 
-                Text("Gilded Club")
-                    .foregroundStyle(.gray)
-                    .font(.system(size: 12))
+                Spacer()
+                
+                VStack(alignment: .center, spacing: 4) {
+                    Text(viewModel.weekday)
+                        .foregroundStyle(.white)
+                        .font(.footnote)
+                        .fontWeight(.medium)
+                    
+                    Text(viewModel.month)
+                        .foregroundStyle(.gray)
+                        .font(.system(size: 12))
+                    
+                    Text(viewModel.day)
+                        .foregroundStyle(.gray)
+                        .font(.system(size: 12))
+                }
+                .padding(.trailing, 24)
             }
-            .padding(.leading, 12)
-            
-            Spacer()
-            
-            VStack(alignment: .center, spacing: 8) {
-                Text("Tue")
-                    .foregroundStyle(.white)
-                    .font(.system(size: 17, weight: .bold))
-                
-                Text("Dec")
-                    .foregroundStyle(.gray)
-                    .font(.system(size: 12))
-                
-                Text("31")
-                    .foregroundStyle(.gray)
-                    .font(.system(size: 12))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color.white.opacity(0.05))
+            .shadow(color: .gray.opacity(0.3), radius: 10.0)
+            .cornerRadius(12, corners: .allCorners)
+            .overlay(content: {
+                if viewModel.isSelected {
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(.mainPurple, lineWidth: 4)
+                }
+            })
+            .onTapGesture {
+                tapAction?()
             }
-            .padding(.trailing, 24)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.white.opacity(0.1))
-        .cornerRadius(12, corners: .allCorners)
     }
 }
 
-#Preview {
-    EventListItemView(event: TestData.event)
-        .preferredColorScheme(.dark)
-}
+//#Preview {
+//    EventListItemView(viewModel: EventListItemViewModel(event: TestData.events.first!), tapAction: nil)
+//        .preferredColorScheme(.dark)
+//}

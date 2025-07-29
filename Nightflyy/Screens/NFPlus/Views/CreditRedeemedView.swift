@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct CreditRedeemedView: View {
+    
+    @Binding var viewModel: NFPRedeemViewModel
+    
     var body: some View {
         VStack(alignment: .center, spacing: 24) {
             Image("ConfirmationCheck")
@@ -23,7 +26,7 @@ struct CreditRedeemedView: View {
                 .foregroundStyle(.white)
             
             Button {
-                
+                viewModel.dismiss()
             } label: {
                 Text("Continue")
             }

@@ -13,7 +13,7 @@ class General {
         ToastsManager.shared.showToast(label: "Saved", imageName: "checkmark.circle.fill")
     }
     
-    static func showSuccessMessage(message: String, imageName: String) {
+    static func showSuccessMessage(message: String, imageName: String = "checkmark.circle.fill") {
         ToastsManager.shared.showToast(label: message, imageName: imageName)
     }
 }

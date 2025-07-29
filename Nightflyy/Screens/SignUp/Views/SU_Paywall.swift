@@ -8,11 +8,16 @@
 import SwiftUI
 
 struct SU_Paywall: View {
+    
+    @Binding var viewModel: SignupViewModel
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NFPContainerView()
+            .navigationBarBackButtonHidden()
+            .background(.backgroundBlack)
     }
 }
 
 #Preview {
-    SU_Paywall()
+    SU_Paywall(viewModel: .constant(SignupViewModel()))
 }

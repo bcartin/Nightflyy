@@ -18,8 +18,13 @@ struct EventCommentsListView: View {
                     .font(.system(size: 14, weight: .medium))
                     .padding(18)
                 
-                ForEach(viewModel.comments) { comment in
-                    
+                ForEach(viewModel.commentsViewModels, id: \.self) { viewModel in
+                    LazyVStack {
+                        EventCommentView(viewModel: viewModel)
+                            .task {
+                                await viewModel.fetchAccount()
+                            }
+                    }
                 }
             }
             
@@ -38,6 +43,7 @@ struct EventCommentsListView: View {
                         .padding(.trailing)
                         .padding(.vertical)
                 })
+                .disabled(viewModel.commentText.isEmpty)
             }
             .frame(minHeight: 44)
             .background(.backgroundBlack)

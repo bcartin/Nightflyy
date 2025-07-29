@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import StoreKit
 
 struct SideBarMenuView: View {
     
+    @Environment(\.requestReview) var requestReview
     @Environment(AccountManager.self) private var accountManager
     @Environment(Router.self) private var router
     @Binding var showMenu: Bool
@@ -40,10 +42,11 @@ struct SideBarMenuView: View {
             }
             
             Button {
-                
+                NFPManager.shared.showNFPView = true
+                showMenu = false
             } label: {
                 HStack {
-                    Text("Upgrade to Nightflyy+")
+                    Text(viewModel.bannerText)
                         .foregroundStyle(.white)
                         .font(.custom("NeuropolXRg-Regular", size: 17))
                         .padding()
@@ -51,38 +54,82 @@ struct SideBarMenuView: View {
                     Spacer()
                 }
                 .background(
-                    LinearGradient(gradient: Gradient(colors: [.backgroundBlack, .backgroundBlack, .mainPurple]), startPoint: .leading, endPoint: .trailing)
+                    LinearGradient(gradient: Gradient(colors: [.backgroundBlack, .backgroundBlack, viewModel.isPlusMember ? .onlineBlue : .mainPurple]), startPoint: .leading, endPoint: .trailing)
                 )
             }
 
             
             SideBarHeader(title: "ACCOUNT")
                 
-            SideBarButton(.accountInfo) {
-                viewModel.selectMenuItem(.accountInfo)
+            SideBarButton(.accountInfo(type: AccountManager.shared.account?.accountType ?? .personal)) {
+                viewModel.selectMenuItem(.accountInfo(type: AccountManager.shared.account?.accountType ?? .personal))
                 showMenu = false
             }
             
-            SideBarButton(.eventPreferences){
+            SideBarButton(.eventPreferences) {
                 viewModel.selectMenuItem(.eventPreferences)
                 showMenu = false
             }
             
             SideBarHeader(title: "SETTINGS")
             
-            SideBarButton(.privacy)
-            SideBarButton(.pushNotifications)
+            SideBarButton(.privacy){
+                viewModel.selectMenuItem(.privacy)
+                showMenu = false
+            }
+            
+            SideBarButton(.pushNotifications) {
+                viewModel.selectMenuItem(.pushNotifications)
+                showMenu = false
+            }
             
             SideBarHeader(title: "ABOUT")
             
-            SideBarButton(.termsOfService)
-            SideBarButton(.privacyPolicy)
-            SideBarButton(.helpUs)
-            SideBarButton(.rateUs)
-            SideBarButton(.shareApp)
+            SideBarButton(.termsOfService){
+                viewModel.selectMenuItem(.termsOfService)
+                showMenu = false
+            }
             
-            SideBarButton(.logout) {
-                try? AuthenticationManager.shared.logOut()
+            SideBarButton(.privacyPolicy){
+                viewModel.selectMenuItem(.privacyPolicy)
+                showMenu = false
+            }
+            
+            SideBarButton(.helpUs){
+                viewModel.selectMenuItem(.helpUs)
+                showMenu = false
+            }
+            
+            SideBarButton(.rateUs) {
+                requestReview()
+            }
+            
+            ShareLink(item: URL(string: "https://apps.apple.com/us/app/id1487722727")!, message: Text("You have been invited to join the exclusive nightlife community! Download Nightflyy now.")) {
+                HStack(spacing: 12) {
+                    Text("Share")
+                        .font(.system(size: 17))
+                        
+                    Spacer(minLength: 0)
+                }
+                .foregroundStyle(.white)
+                .padding(.horizontal)
+                .padding(.vertical, 10)
+                .contentShape(.rect)
+                .foregroundStyle(.primary)
+            }
+            
+            HStack {
+                SideBarButton(.logout) {
+                    showMenu = false
+                    try? AuthenticationManager.shared.logOut()
+                }
+                
+                Spacer()
+                
+                Text("version \(UIApplication.appVersion)")
+                    .foregroundStyle(.gray)
+                    .font(.system(size: 12))
+                    .padding(.horizontal)
             }
         }
         .padding(.vertical, 20)

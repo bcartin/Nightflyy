@@ -90,16 +90,20 @@ struct SearchResultsView: View {
                         }
                     }
                     else if viewModel.selectedSegment == 2 {
-                        ForEach(viewModel.venueResultsViewModels, id: \.self) { vm in
-                            VenueListItemView(viewModel: vm) {
-                                vm.navigateToProfile()
+                        LazyVStack {
+                            ForEach(viewModel.venueResultsViewModels, id: \.self) { vm in
+                                VenueListItemView(viewModel: vm) {
+                                    vm.navigateToProfile()
+                                }
                             }
                         }
                     }
                     else if viewModel.selectedSegment == 3 {
-                        ForEach(viewModel.personResultsViewModels, id: \.self) { vm in
-                            PersonListItemView(viewModel: vm) {
-                                vm.navigateToProfile()
+                        LazyVStack {
+                            ForEach(viewModel.personResultsViewModels, id: \.self) { vm in
+                                PersonListItemView(viewModel: vm) {
+                                    vm.navigateToProfile()
+                                }
                             }
                         }
                     }

@@ -17,6 +17,7 @@ class LoginViewModel {
     var password: String = ""
     var nonce: String = AuthenticationManager.shared.randomNonceString()
     var appleIDCredential: ASAuthorizationAppleIDCredential?
+    var presentEmailSentAlert: Bool = false
     
     var error: Error?
     
@@ -59,6 +60,22 @@ class LoginViewModel {
         catch {
             print(error.localizedDescription)
             self.error = error
+        }
+    }
+    
+    func handleForgotPassword() {
+        if email.isEmpty {
+            error = AccountError.invalidEmail
+            return
+        }
+        Task {
+            do {
+                try await AuthenticationManager.shared.forgotPassword(email: email)
+                presentEmailSentAlert = true
+            }
+            catch {
+                self.error = error
+            }
         }
     }
 }

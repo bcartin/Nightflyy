@@ -17,11 +17,12 @@ struct EventsFilterView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Spacer()
+                
                 Button {
                     dismiss()
                 } label: {
-                    Image(systemName: "x.circle")
-                        .font(.title)
+                    Image(systemName: "xmark")
+                        .font(.system(size: 17))
                         .foregroundStyle(.gray)
                 }
 
@@ -75,6 +76,14 @@ struct EventsFilterView: View {
             
             Text("POPULAR")
                 .font(.system(size: 20, weight: .bold))
+            
+            Button {
+                viewModel.selectCity(name: "Charlotte")
+                dismiss()
+            } label: {
+                Text("Charlotte, NC")
+                    .citySearchResult()
+            }
             
             Button {
                 viewModel.selectCity(name: "Rochester")

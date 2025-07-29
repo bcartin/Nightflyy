@@ -10,15 +10,32 @@ import SwiftUI
 struct InboxView: View {
     
     @Binding var showMenu: Bool
-    @State private var searchText = ""
+    @Bindable var viewModel: InboxViewModel
     
     var body: some View {
         RouterView {
-            ScrollView {
+            List {
+                ForEach(viewModel.viewModels) { chatViewModel in
+                    InboxRowView(viewModel: chatViewModel) {
+                        viewModel.navigateToChat(viewModel: chatViewModel)
+                    }
+                    .swipeActions {
+                        Button {
+                            chatViewModel.deleteChat()
+                        } label: {
+                            Text("Delete")
+                        }
+                        .tint(.red)
+                    }
+                    
+                }
                 
             }
+            .listStyle(PlainListStyle())
             .frame(maxWidth: .infinity)
+            .backgroundImage("slyde_background")
             .background(.backgroundBlack)
+            .scrollIndicators(.hidden)
             .safeAreaPadding(.bottom, 44)
             .foregroundStyle(.white)
             .navigationBarTitleDisplayMode(.inline)
@@ -41,19 +58,24 @@ struct InboxView: View {
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
-
+                        viewModel.shouldPresentNewChatView = true
                     }, label: {
                         Image(systemName:"square.and.pencil")
                             .foregroundStyle(.white)
                     })
                 }
             }
+            .searchable(text: $viewModel.searchText, prompt: "Search")
+            .sheet(isPresented: $viewModel.shouldPresentNewChatView) {
+                NewChatView(viewModel: NewChatViewModel())
+            }
         }
-        .scrollIndicators(.hidden)
-        .searchable(text: $searchText, prompt: "Search")
+        
+        
     }
 }
 
 #Preview {
-    InboxView(showMenu: .constant(false))
+    InboxView(showMenu: .constant(false), viewModel: InboxViewModel())
+        .preferredColorScheme(.dark)
 }

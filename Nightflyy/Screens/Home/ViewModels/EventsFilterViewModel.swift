@@ -14,8 +14,11 @@ class EventsFilterViewModel {
     var selectedFiler: EventsViewFilter = .nearby
     var cities: [City]
     var filteredCities: [City]
+    var searchForVenues: Bool
+    var venues: [Account] = .init()
     
-    init() {
+    init(searchForVenues: Bool = false) {
+        self.searchForVenues = searchForVenues
         self.cities = Bundle.main.decode("uscities.json")
         self.filteredCities = Bundle.main.decode("uscities.json")
         self.filteredCities.sort { $0.city < $1.city}
@@ -43,5 +46,14 @@ class EventsFilterViewModel {
         let location = CLLocation(latitude: city.latitude, longitude: city.longitude)
         EventsManager.shared.setLocationEvents(location)
         selectedFiler = .location(city)
+        if searchForVenues {
+            getVenues(for: city)
+        }
+    }
+    
+    func getVenues(for city: City) {
+        Task {
+            venues = await AccountClient.fetchVenuesFrom(city: city)
+        }
     }
 }

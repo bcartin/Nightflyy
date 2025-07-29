@@ -6,9 +6,8 @@
 //
 
 import Foundation
+import FirebaseAuth
 import FirebaseFirestore
-import FirebaseStorage
-import FirebaseFirestoreSwift
 import FirebaseFunctions
 
 class FirebaseManager {
@@ -23,7 +22,6 @@ class FirebaseManager {
     lazy var functions = Functions.functions()
     
     let db = Firestore.firestore()
-    let storageRef = Storage.storage().reference()
     
     func getDocument<T>(collection: String, documentId: String, _ type: T.Type) async throws -> T? where T: Decodable {
         let docRef = self.db.collection(collection).document(documentId)

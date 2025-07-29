@@ -16,10 +16,7 @@ struct VenueListItemView: View {
         HStack(spacing: 0) {
             
             if let profileImageUrl = viewModel.venue.profileImageUrl {
-                AsyncImage(url: URL(string: profileImageUrl)) { image in
-                    image.image?.resizable()
-                }
-                .frame(width: 70, height: 70)
+                CachedAsyncImage(url: URL(string: profileImageUrl), size: .init(width: 70, height: 70), shape: .rect)
                 .cornerRadius(12, corners: [.bottomLeft, .topLeft])
             }
             else {
@@ -31,7 +28,7 @@ struct VenueListItemView: View {
                     
             }
             
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 4) {
                 Group {
                     HStack(alignment: .center) {
                         Text(viewModel.venue.name ?? "")
@@ -49,18 +46,19 @@ struct VenueListItemView: View {
                     
                     Text(viewModel.venue.venueType ?? "")
                         .foregroundStyle(Color.mainPurple)
-                        .font(.footnote)
+                        .font(.system(size: 12))
                     
                     HStack {
                         Text((viewModel.venue.city ?? "") + ", " + (viewModel.venue.state ?? ""))
                             .foregroundStyle(Color.gray)
-                            .font(.footnote)
+                            .font(.system(size: 12))
                     }
                 }
                 .padding(.horizontal)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.white.opacity(0.05))
+            .shadow(color: .gray.opacity(0.3), radius: 10.0)
             .cornerRadius(12, corners: [.topRight, .bottomRight])
         }
         .onTapGesture {

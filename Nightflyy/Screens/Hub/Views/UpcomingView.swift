@@ -8,11 +8,82 @@
 import SwiftUI
 
 struct UpcomingView: View {
+    
+    var viewModel = UpcomingViewModel()
+    
+    var noEventsView: some View {
+        Text("No Events")
+            .foregroundColor(.secondary)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding(.vertical, 48)
+    }
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(alignment: .leading) {
+                Text("GOING")
+                    .foregroundStyle(.white)
+                    .font(.system(size: 14))
+                    .padding(.vertical, 12)
+                
+                if viewModel.eventsAttending.isEmpty {
+                    noEventsView
+                }
+                else {
+                    ForEach(viewModel.eventsAttending, id: \.self) { viewModel in
+                        EventListItemView(viewModel: viewModel) {
+                            viewModel.navigateToEvent()
+                        }
+                    }
+                }
+                
+                Text("INTERESTED")
+                    .foregroundStyle(.white)
+                    .font(.system(size: 14))
+                    .padding(.vertical, 12)
+                
+                if viewModel.eventsInterested.isEmpty {
+                    noEventsView
+                }
+                else {
+                    ForEach(viewModel.eventsInterested, id: \.self) { viewModel in
+                        EventListItemView(viewModel: viewModel) {
+                            viewModel.navigateToEvent()
+                        }
+                    }
+                }
+                
+                Text("INVITED")
+                    .foregroundStyle(.white)
+                    .font(.system(size: 14))
+                    .padding(.vertical, 12)
+                
+                if viewModel.eventsInvited.isEmpty {
+                    noEventsView
+                }
+                else {
+                    ForEach(viewModel.eventsInvited, id: \.self) { viewModel in
+                        EventListItemView(viewModel: viewModel) {
+                            viewModel.navigateToEvent()
+                        }
+                    }
+                }
+                
+                Spacer()
+            }
+            .padding(.horizontal, 12)
+        }
+        .task {
+            await viewModel.fetchEvents(refetch: false)
+        }
+        .refreshable {
+            await viewModel.fetchEvents(refetch: true)
+        }
     }
 }
 
 #Preview {
-    UpcomingView()
+    //UpcomingView()
+    
+    HubView(showMenu: .constant(false), viewModel: HubViewModel())
 }

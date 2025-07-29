@@ -1,5 +1,5 @@
 //
-//  AddSearchViewModel.swift
+//  AddressSearchViewModel.swift
 //  Nightflyy
 //
 //  Created by Bernie Cartin on 4/23/25.
@@ -9,11 +9,13 @@ import SwiftUI
 import MapKit
 import Combine
 
-class AddSearchViewModel: NSObject, ObservableObject {
+class AddressSearchViewModel: NSObject, ObservableObject {
     
-    private var searchCancellable: AnyCancellable?
+    
     @Published var searchText: String = ""
-    private(set) var searchResults: [MKLocalSearchCompletion] = .init()
+    @Published private(set) var searchResults: [MKLocalSearchCompletion] = .init()
+    @Published var selectedAddress: String = ""
+    private var searchCancellable: AnyCancellable?
     
     private lazy var localSearchCompleter: MKLocalSearchCompleter = {
         let completer = MKLocalSearchCompleter()
@@ -37,7 +39,7 @@ class AddSearchViewModel: NSObject, ObservableObject {
             })
     }
     
-    func selectAddress(result: MKLocalSearchCompletion) async -> String? {
+    func selectAddress(result: MKLocalSearchCompletion) async {
         let request = MKLocalSearch.Request(completion: result)
         let response = try? await MKLocalSearch(request: request).start()
         let placemark = response?.mapItems.first?.placemark
@@ -45,12 +47,16 @@ class AddSearchViewModel: NSObject, ObservableObject {
         address += " " + (placemark?.thoroughfare ?? "")
         address += ", " + (placemark?.locality ?? "")
         address += ", " + (placemark?.administrativeArea ?? "")
-        address += " " + (placemark?.postalCode ?? "")        
-        return address
+        address += " " + (placemark?.postalCode ?? "")
+        selectedAddress = address
+    }
+    
+    func getSelectedAddress() -> String? {
+        return selectedAddress
     }
 }
 
-extension AddSearchViewModel: MKLocalSearchCompleterDelegate {
+extension AddressSearchViewModel: MKLocalSearchCompleterDelegate {
     
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         Task { @MainActor in

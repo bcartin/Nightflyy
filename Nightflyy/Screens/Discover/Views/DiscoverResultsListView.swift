@@ -79,7 +79,6 @@ struct DiscoverResultsListView: View {
             .padding(.horizontal)
         }
         .frame(maxWidth: .infinity)
-//        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .backgroundImage("slyde_background")
         .background(.backgroundBlack)
         .foregroundStyle(.white)
