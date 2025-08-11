@@ -119,6 +119,8 @@ struct CreateEventView: View {
                         Toggle(isOn: $viewModel.guestsCanInvite, label: {
                             Text("Guests can invite guests")
                                 .foregroundStyle(Color.white.opacity(0.5))
+                                .font(.system(size: 14))
+
                         })
                         .padding(.horizontal)
                         .tint(.mainPurple)

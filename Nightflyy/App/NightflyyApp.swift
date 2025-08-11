@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Airbridge
+import Mixpanel
 
 @main
 struct NightflyyApp: App {
@@ -53,7 +55,7 @@ struct NightflyyApp: App {
                     LoadingView()
                 }
                 
-                if appState.showSplashScreen {
+                if appState.showSplashScreen && authenticationManager.isSignedIn {
                     SplashScreenView()
                 }
                 
@@ -63,11 +65,25 @@ struct NightflyyApp: App {
                 
             }
             .task {
-                MainCoordinator().initialAppSetup()
+//                MainCoordinator().initialAppSetup()
                 navigator = Navigator(router: router)
                 pushNotificationsManager.navigator = navigator
+                
+                _ = Airbridge.handleDeferredDeeplink { url in
+                    if let url = url {
+                        navigator?.handleUniversalLink(url: url)
+                    }
+                }
             }
             .onOpenURL { url in
+                
+                Airbridge.trackDeeplink(url: url)
+                let isAirbridgeDeeplink = Airbridge.handleDeeplink(url: url) { url in
+                    navigator?.handleUniversalLink(url: url)
+                }
+                
+                if isAirbridgeDeeplink { return }
+                
                 navigator?.handleUniversalLink(url: url)
             }
             .onChange(of: scenePhase) { _, newValue in

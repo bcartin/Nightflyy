@@ -20,7 +20,7 @@ struct EventView: View {
     var body: some View {
         @Bindable var toastsManager = toastsManager
         
-        ZStack(alignment: .bottomTrailing) {
+        ZStack(alignment: .bottom) {
             ScrollView(.vertical) {
                 VStack(alignment: .leading) {
                     HeaderImage(size: size, safeArea: safeArea, imageUrl: viewModel.event.eventFlyerUrl) {
@@ -144,20 +144,23 @@ struct EventView: View {
             .toolbar(.hidden, for: .navigationBar)
             
             if viewModel.hasLink {
+                
                 Button {
                     if let url = URL(string: viewModel.event.ticketingUrl ?? "") {
                         openURL(url)
                     }
                 } label: {
-                    Image(systemName: "link")
-                        .frame(width: 48, height: 48)
+                    Text("RSVP")
                         .foregroundStyle(.white)
-                        .background(
-                            Circle()
+                        .font(.system(size: 13, weight: .medium))
+                        .frame(width: 120, height: 40)
+                        .background{
+                            Capsule()
                                 .fill(.mainPurple.gradient)
-                        )
-                        .padding(24)
+                        }
+                        .padding(.horizontal, 32)
                 }
+                
             }
             
             if showBanner {

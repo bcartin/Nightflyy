@@ -17,7 +17,7 @@ struct UpdateView: View {
                 .resizable()
                 .frame(width: 150, height: 150)
             
-            Text("There's a newer version of Nightflyy available.")
+            Text("A new version of Nightflyy just dropped!")
             
             Text("Update to the latest version of the app to enjoy all of Nightflyy's latest features.")
                 .font(.footnote)

@@ -1,5 +1,5 @@
 {
-  "originHash" : "34e23b645622e394150f57a407bb81aba6107646e0b58e795c4ecddc0735ad74",
+  "originHash" : "d924d98983816715378b7ad2a97f63061d6005cee3a4694a379d25857ce7bcc7",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "194a6706acbd25e4ef639bcaddea16e8758a3e27",
         "version" : "1.2024011602.0"
+      }
+    },
+    {
+      "identity" : "airbridge-ios-sdk-deployment",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ab180/airbridge-ios-sdk-deployment",
+      "state" : {
+        "revision" : "0c47fb40cf638e2aa1b05b9ddb58c807fbbdaddc",
+        "version" : "4.7.0"
       }
     },
     {

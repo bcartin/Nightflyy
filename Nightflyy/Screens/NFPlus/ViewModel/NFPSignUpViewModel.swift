@@ -65,6 +65,14 @@ class NFPSignUpViewModel {
             referralVenue = account
             changeView(to: .confirm)
         }
+        else if let accountId: String = UserDefaultsKeys.nfpReferred.getValue() {
+            Task {
+                if let account = await AccountClient.fetchAccount(accountId: accountId) {
+                    referralVenue = account
+                    changeView(to: .confirm)
+                }
+            }
+        }
         else {
             changeView(to: .promoCode)
         }

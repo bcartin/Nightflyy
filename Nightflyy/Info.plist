@@ -6,6 +6,19 @@
 	<string>$(ALGOLIA_SEARCH_KEY)</string>
 	<key>APPID</key>
 	<string>$(APPID)</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.nightflyy.nightflyyapp</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>nightflyy</string>
+			</array>
+		</dict>
+	</array>
 	<key>FB_FILEPATH_NAME</key>
 	<string>$(FB_FILEPATH_NAME)</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
@@ -14,14 +27,18 @@
 	<array>
 		<string>maps</string>
 	</array>
+	<key>MIXPANEL_TOKEN</key>
+	<string>$(MIXPANEL_TOKEN)</string>
 	<key>QONVERSION_KEY</key>
 	<string>$(QONVERSION_KEY)</string>
 	<key>SENDGRID_BASEURL</key>
 	<string>$(SENDGRID_BASEURL)</string>
 	<key>SENDGRID_KEY</key>
 	<string>$(SENDGRID_KEY)</string>
-	<key>MIXPANEL_TOKEN</key>
-	<string>$(MIXPANEL_TOKEN)</string>
+	<key>APPNAME</key>
+	<string>$(APPNAME)</string>
+	<key>AIRBRIDGE_TOKEN</key>
+	<string>$(AIRBRIDGE_TOKEN)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Bebas-Regular.ttf</string>

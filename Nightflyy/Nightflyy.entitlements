@@ -11,6 +11,9 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:app.nightflyy.com/mobile</string>
+		<string>applinks:nightflyy.airbridge.io</string>
+		<string>applinks:nightflyy.abr.ge</string>
+		<string>applinks:partner.nightflyy.com</string>
 	</array>
 </dict>
 </plist>

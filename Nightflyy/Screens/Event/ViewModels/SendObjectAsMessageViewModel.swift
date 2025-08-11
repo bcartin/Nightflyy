@@ -48,7 +48,7 @@ class SendObjectAsMessageViewModel {
     func sendMessages() {
         guard var message = message else {return}
         selectedAccounts.forEach { accountId in
-            var chat = ChatsManager.shared.getChat(with: accountId)
+            let chat = ChatsManager.shared.getChat(with: accountId)
             message.recipient = accountId
             do {
                 try ChatsManager.sendMessage(chatId: chat.uid, message: message)

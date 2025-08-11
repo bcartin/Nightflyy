@@ -17,7 +17,6 @@ class FirebaseFunctionsManager {
     lazy var functions = Functions.functions()
     
     func updateDisplayNameAndPhotoUrl(account: Account) async {
-        guard let username = account.username else { return }
         let info = ["displayName":account.username, "photoURL":account.profileImageUrl]
         self.functions.httpsCallable("updateUser").call(["uid":account.uid, "info":info]) { result, error in
             if let error = error as NSError? {

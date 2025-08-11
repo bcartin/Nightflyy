@@ -59,7 +59,7 @@ struct SlideToConfirm: View {
     /// Knob View
     func KnobView(_ size: CGSize, progress: CGFloat, maxLimit: CGFloat) -> some View {
         Circle()
-            .fill(.background)
+            .fill(.white)
             .padding(config.knobPadding)
             .frame(width: size.height, height: size.height)
             .overlay {

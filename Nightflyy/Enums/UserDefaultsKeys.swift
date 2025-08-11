@@ -10,6 +10,7 @@ import Foundation
 enum UserDefaultsKeys :String {
     case hideSwipeForActionsPrompt
     case bonusCredit
+    case nfpReferred
     
     func getValue<T>() -> T? {
         switch self {
@@ -18,6 +19,8 @@ enum UserDefaultsKeys :String {
             UserDefaults.standard.bool(forKey: rawValue) as? T ?? false as! T
         case .bonusCredit:
             UserDefaults.standard.integer(forKey: rawValue) as? T
+        case .nfpReferred:
+            UserDefaults.standard.string(forKey: rawValue) as? T
         }
    
     }

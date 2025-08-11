@@ -47,7 +47,7 @@ class SendgridManager {
         let body = ContactRequestBody(list_ids: list_ids, contacts: [contact])
         
         guard let request = ContactRequest(body: body) else { return }
-        let response = try await AddContacts(request: request)
+        _ = try await AddContacts(request: request)
 #endif
     }
     

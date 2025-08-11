@@ -13,27 +13,24 @@ struct ConfirmNFPView: View {
     @Binding var viewModel: NFPSignUpViewModel
     
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 44) {
             
-            Image("plus_button")
-                .resizable()
-                .frame(width: 150, height: 150)
-                .padding(.bottom, 32)
-            
-            Text("Almost there. Swipe below to subscribe to Nightflyy+ and get a 7 day trial!")
-                .font(.system(size: 17))
+            Text("🥂 Welcome to Nightflyy Plus!")
+                .font(.system(size: 20))
                 .multilineTextAlignment(.center)
             
-            Text("$7.99/month after trial period. You can cancel anytime.")
-                .font(.system(size: 11))
+            UserImageRound(imageUrl: viewModel.referralVenue?.profileImageUrl, size: 150)
+            
+            Text("\(viewModel.referralVenue?.username ?? "") is letting you in the club!")
+                .font(.system(size: 15))
                 .multilineTextAlignment(.center)
             
             Spacer()
                 .frame(height: 64)
             
             let config = SlideToConfirm.Config(
-                idleText: "Swipe to Subscribe",
-                onSwipeText: "Subscription Confirmed",
+                idleText: "Swipe to get in",
+                onSwipeText: "Let's go!",
                 confirmationText: "Success!",
                 tint: .mainPurple,
                 foregorundColor: .white

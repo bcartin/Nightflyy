@@ -30,12 +30,23 @@ class Navigator {
                 guard let id = id else {return}
                 await navigateToAccount(accountId: id)
             case .nfplus:
+                UserDefaultsKeys.nfpReferred.setValue(id)
                 await openNFPpaywall(accountId: id)
             case .other:
                 print("other")
             }
         }
     }
+    
+//    func handleDeepLink(url: URL) {
+//        Task {
+//            let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+//            if let accountId = components?.queryItems?.first(where: {$0.name == "id"})?.value {
+//                UserDefaultsKeys.nfpReferred.setValue(accountId)
+//                await openNFPpaywall(accountId: accountId)
+//            }
+//        }
+//    }
     
     func handlePushNotification(userInfo: [AnyHashable:Any]) {
         Task {
@@ -63,12 +74,14 @@ class Navigator {
     }
     
     private func navigateToEvent(eventId: String) async {
+        guard AuthenticationManager.shared.isSignedIn else {return}
         guard let event = await EventClient.fetchEvent(eventId: eventId) else {return}
         let viewModel = EventViewModel(event: event)
         router.navigateTo(.Event(viewModel))
     }
     
     private func navigateToAccount(accountId: String) async {
+        guard AuthenticationManager.shared.isSignedIn else {return}
         guard let account = await AccountClient.fetchAccount(accountId: accountId) else {return}
         let viewModel = ProfileViewModel(account: account)
         router.navigateTo(.Profile(viewModel))
@@ -80,6 +93,7 @@ class Navigator {
                 NFPManager.shared.referralAccount = account
             }
         }
+        guard AuthenticationManager.shared.isSignedIn else {return}
         NFPManager.shared.showNFPView = true
     }
     

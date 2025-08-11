@@ -76,14 +76,6 @@ struct NotificationsView: View {
                             .contentTransition(.symbolEffect)
                     })
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: {
-//                        viewModel.navigateToCreateNewEvent()
-                    }, label: {
-                        Image(systemName:"plus")
-                            .foregroundStyle(.white)
-                    })
-                }
             }
             .task {
                 await AppNotificationsManager.shared.fetchNotifications()

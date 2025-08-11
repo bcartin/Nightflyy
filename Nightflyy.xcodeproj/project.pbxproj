@@ -111,6 +111,7 @@
 		CB1ABE502E15709500843490 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB1ABE4F2E15709500843490 /* SplashScreenView.swift */; };
 		CB1ABE522E25700F00843490 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB1ABE512E25700700843490 /* AnalyticsManager.swift */; };
 		CB2A1BFD2CBEB4350041495F /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB2A1BFC2CBEB4350041495F /* BottomSheetView.swift */; };
+		CB4BCB7C2E4146DB00FC54A5 /* Airbridge in Frameworks */ = {isa = PBXBuildFile; productRef = CB4BCB7B2E4146DB00FC54A5 /* Airbridge */; };
 		CB6BCACA2CB7108C003D851F /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6BCAC92CB71087003D851F /* AppState.swift */; };
 		CB6BCAD12CB71357003D851F /* SideBarMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6BCAD02CB71357003D851F /* SideBarMenuView.swift */; };
 		CB6BCAD42CB81617003D851F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6BCAD32CB81617003D851F /* HomeView.swift */; };
@@ -577,6 +578,7 @@
 				CB0BF8682BFFD96900C4612C /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
 				CB0BF8902BFFD96900C4612C /* FirebaseMLModelDownloader in Frameworks */,
 				CB0BF86E2BFFD96900C4612C /* FirebaseAppCheck in Frameworks */,
+				CB4BCB7C2E4146DB00FC54A5 /* Airbridge in Frameworks */,
 				CB0BF86C2BFFD96900C4612C /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				CBB78C1A2DBBE55400FD0DA4 /* AlgoliaSearchClient in Frameworks */,
 				CB0BF88E2BFFD96900C4612C /* FirebaseMessaging in Frameworks */,
@@ -1434,6 +1436,7 @@
 				CBB78CB52DE4E35700FD0DA4 /* SendGrid */,
 				CBB78CC12DE621B900FD0DA4 /* Qonversion */,
 				CBC270672E0487C20075C931 /* Mixpanel */,
+				CB4BCB7B2E4146DB00FC54A5 /* Airbridge */,
 			);
 			productName = Nightflyy;
 			productReference = CB0BF8042BFBE61F00C4612C /* Nightflyy.app */;
@@ -1447,7 +1450,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1640;
 				TargetAttributes = {
 					CB0BF8032BFBE61F00C4612C = {
 						CreatedOnToolsVersion = 15.4;
@@ -1469,6 +1472,7 @@
 				CBB78CB42DE4E35700FD0DA4 /* XCRemoteSwiftPackageReference "sendgrid-swift" */,
 				CBB78CC02DE621B900FD0DA4 /* XCRemoteSwiftPackageReference "qonversion-ios-sdk" */,
 				CBC270662E0487C20075C931 /* XCRemoteSwiftPackageReference "mixpanel-swift" */,
+				CB4BCB7A2E4146DB00FC54A5 /* XCRemoteSwiftPackageReference "airbridge-ios-sdk-deployment" */,
 			);
 			productRefGroup = CB0BF8052BFBE61F00C4612C /* Products */;
 			projectDirPath = "";
@@ -1795,6 +1799,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = YVH7KZM656;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1858,6 +1863,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = YVH7KZM656;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1888,9 +1894,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Nightflyy/Nightflyy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_ASSET_PATHS = "\"Nightflyy/Preview Content\"";
-				DEVELOPMENT_TEAM = YVH7KZM656;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nightflyy/Info.plist;
@@ -1931,9 +1936,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Nightflyy/Nightflyy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_ASSET_PATHS = "\"Nightflyy/Preview Content\"";
-				DEVELOPMENT_TEAM = YVH7KZM656;
 				ENABLE_PREVIEWS = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1997,6 +2001,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 11.5.0;
+			};
+		};
+		CB4BCB7A2E4146DB00FC54A5 /* XCRemoteSwiftPackageReference "airbridge-ios-sdk-deployment" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ab180/airbridge-ios-sdk-deployment";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.7.0;
 			};
 		};
 		CBB78C142DBBE43E00FD0DA4 /* XCRemoteSwiftPackageReference "algoliasearch-client-swift" */ = {
@@ -2143,6 +2155,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CB0BF8632BFFD85800C4612C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseStorageCombine-Community";
+		};
+		CB4BCB7B2E4146DB00FC54A5 /* Airbridge */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CB4BCB7A2E4146DB00FC54A5 /* XCRemoteSwiftPackageReference "airbridge-ios-sdk-deployment" */;
+			productName = Airbridge;
 		};
 		CBB78C192DBBE55400FD0DA4 /* AlgoliaSearchClient */ = {
 			isa = XCSwiftPackageProductDependency;

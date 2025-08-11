@@ -10,35 +10,45 @@ import SwiftUI
 struct VenueReferralView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var viewModel: NFPSignUpViewModel
+    @State var isTyping: Bool = false
     
     var body: some View {
         VStack(spacing: 8) {
             Text("Who brought you to the Nightflyy+ club?")
-                .font(.title2)
-                .fontWeight(.bold)
-                .padding(.top, 64)
-                .padding(.bottom, 24)
+                .font(.system(size: 18, weight: .bold))
+                .padding(.top, 24)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
-            
-            HStack {
-                Image(systemName: "magnifyingglass")
-                    .foregroundStyle(.white.opacity(0.5))
-                    .padding(.leading, 8)
                 
-                TextField("",
-                          text: $viewModel.venueSearchText,
-                          prompt: Text("Search for venue")
-                    .foregroundStyle(.white.opacity(0.5)))
-                .font(.system(size: 17))
-            }
-            .padding(.horizontal, 32)
-            
-            Rectangle()
-                .foregroundStyle(.white.opacity(0.5))
-                .frame(height: 1)
-                .padding(.horizontal, 32)
-                .padding(.bottom, 8)
+                TextField("", text: $viewModel.venueSearchText, prompt: Text("Search").foregroundStyle(.white.opacity(0.5)))
+                    .foregroundStyle(.white)
+                    .padding(8)
+                    .padding(.horizontal, 25)
+                    .background(.gray.opacity(0.3))
+                    .cornerRadius(8)
+                    .onTapGesture {
+                        self.isTyping = true
+                    }
+                    .overlay {
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                                .foregroundStyle(.white.opacity(0.5))
+                                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                                .padding(.leading, 8)
+                            
+                            if isTyping {
+                                Button(action: {
+                                    viewModel.venueSearchText = ""
+                                }, label: {
+                                    Image(systemName: "multiply.circle.fill")
+                                        .foregroundStyle(.gray)
+                                        .padding(.trailing, 12)
+                                })
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 12)
             
             ScrollView(.vertical) {
                 ForEach(viewModel.filteredNFPProviders) { account in
@@ -78,13 +88,12 @@ struct VenueReferralView: View {
             }
             .mainButtonStyle()
             
-            Button("No one invited me to Nightflyy+") {
-                viewModel.changeView(to: .confirm)
-            }
-            .foregroundStyle(.mainPurple)
-            .font(.system(size: 17))
-            .padding()
-
+//            Button("No one invited me to Nightflyy+") {
+//                viewModel.changeView(to: .confirm)
+//            }
+//            .foregroundStyle(.mainPurple)
+//            .font(.system(size: 17))
+//            .padding()
 
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
