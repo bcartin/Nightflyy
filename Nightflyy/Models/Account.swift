@@ -49,7 +49,6 @@ struct Account: Identifiable, Codable, Savable {
     var plusCredits: Int?
     var plusMember: Bool?
     var plusProvider: Bool?
-//    var plusVenue: Bool?
     var profileImageUrl: String?
     var rating: Float?
     var redemptionCode: String?
@@ -106,7 +105,6 @@ struct Account: Identifiable, Codable, Savable {
         case geohash = "g"
         case plusMember = "plus_member"
         case plusProvider = "plus_provider"
-//        case plusVenue = "plus_venue"
         case plusCredits = "plus_credits"
         case nextCreditDate = "next_credit_date"
         case rating
