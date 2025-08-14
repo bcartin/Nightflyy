@@ -10,6 +10,7 @@ import SwiftUI
 struct NFPContainerView: View {
     
     @State var signUpViewModel: NFPSignUpViewModel = .init()
+    @State var viewModel: NFPRedeemViewModel = .init()
     @Environment(AppState.self) private var appState
     
     var body: some View {

@@ -97,6 +97,7 @@ enum SignupError: Error {
     
     case invalidCredentials
     case cannotProcessRequest
+    case noReferralVenueSelected
 }
 
 extension SignupError: LocalizedError {
@@ -108,6 +109,8 @@ extension SignupError: LocalizedError {
             "Invalid Credentials"
         case .cannotProcessRequest:
             "Cannot Process Your Request"
+        case .noReferralVenueSelected:
+            "Please select a referral venue."
         }
     }
     

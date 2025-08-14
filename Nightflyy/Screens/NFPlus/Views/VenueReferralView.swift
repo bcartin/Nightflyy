@@ -84,16 +84,9 @@ struct VenueReferralView: View {
             Spacer()
             
             Button("Continue") {
-                viewModel.changeView(to: .confirm)
+                viewModel.validateReferral()
             }
             .mainButtonStyle()
-            
-//            Button("No one invited me to Nightflyy+") {
-//                viewModel.changeView(to: .confirm)
-//            }
-//            .foregroundStyle(.mainPurple)
-//            .font(.system(size: 17))
-//            .padding()
 
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

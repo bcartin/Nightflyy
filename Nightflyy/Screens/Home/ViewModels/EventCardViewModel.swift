@@ -47,7 +47,7 @@ class EventCardViewModel: NSObject {
     var attendingButtonProperties: (icon: String, title: String, color: Color) {
         let icon = attendanceStatus == .attending ? "ic_going" : "ic_interested"
         let title = attendanceStatus == .attending ? "Going" : "Interested"
-        let color = attendanceStatus == .notAttending ? Color.gray : Color.mainPurple
+        let color = attendanceStatus == .notAttending ? Color.white : Color.mainPurple
         
         return (icon, title, color)
     }

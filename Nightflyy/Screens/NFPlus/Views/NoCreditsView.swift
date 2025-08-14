@@ -13,7 +13,11 @@ struct NoCreditsView: View {
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
-        VStack(spacing: 36) {
+        VStack(spacing: 24) {
+            
+            Spacer()
+                .frame(height: 150)
+            
             Image("plus_button_bw")
                 .resizable()
                 .frame(width: 200, height: 200)
@@ -22,29 +26,48 @@ struct NoCreditsView: View {
                 .font(.system(size: 16))
                 .foregroundColor(.gray)
             
-            HStack {
-                Text(String(format: "%02d", viewModel.day))
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(.white)
+            HStack(alignment: .bottom) {
+                VStack(spacing: 8) {
+                    Text("D")
+                    
+                    Text(String(format: "%02d", viewModel.day))
+                }
                 
                 colon
                 
-                Text(String(format: "%02d", viewModel.hour))
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(.white)
+                VStack(spacing: 8) {
+                    Text("H")
+                    
+                    Text(String(format: "%02d", viewModel.hour))
+                }
                 
                 colon
                 
-                Text(String(format: "%02d", viewModel.minute))
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(.white)
+                VStack(spacing: 8) {
+                    Text("M")
+                    
+                    Text(String(format: "%02d", viewModel.minute))
+                }
                 
                 colon
                 
-                Text(String(format: "%02d", viewModel.second))
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(.white)
+                VStack(spacing: 8) {
+                    Text("S")
+                    
+                    Text(String(format: "%02d", viewModel.second))
+                }
             }
+            .font(.system(size: 14, weight: .bold))
+            .foregroundColor(.white)
+            
+            Spacer()
+            
+//            Button("See All Nightflyy+ Venues") {
+//                viewModel.changeView(to: .venues)
+//            }
+//            .foregroundStyle(.mainPurple)
+//            .font(.system(size: 14, weight: .medium))
+//            .padding()
             
         }
         .onReceive(timer) { _ in

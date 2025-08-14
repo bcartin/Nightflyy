@@ -46,12 +46,18 @@ class CreateEventViewModel: NSObject {
     
     var startDate: Date {
         get { event.startDate ?? Date() }
-        set { event.startDate = newValue}
+        set {
+            event.startDate = newValue
+            event.startTime = newValue.getTime()
+        }
     }
     
     var endDate: Date {
         get { event.endDate ?? Date() }
-        set { event.endDate = newValue }
+        set {
+            event.endDate = newValue
+            event.endTime = newValue.getTime()
+        }
     }
     
     var guestsCanInvite: Bool {
@@ -170,6 +176,7 @@ class CreateEventViewModel: NSObject {
     
     func setAdditionalEventVaues() async {
         event.createdBy = AccountManager.shared.account?.uid ?? ""
+        event.createdDate = Date()
         if let location = await MapsManager.getLocation(from: event.eventAddress ?? "") {
             event.latitude = location.coordinate.latitude
             event.longitude = location.coordinate.longitude
