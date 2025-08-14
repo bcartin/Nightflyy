@@ -55,7 +55,7 @@ struct NightflyyApp: App {
                     LoadingView()
                 }
                 
-                if appState.showSplashScreen && authenticationManager.isSignedIn {
+                if appState.showSplashScreen {
                     SplashScreenView()
                 }
                 
@@ -65,7 +65,6 @@ struct NightflyyApp: App {
                 
             }
             .task {
-//                MainCoordinator().initialAppSetup()
                 navigator = Navigator(router: router)
                 pushNotificationsManager.navigator = navigator
                 

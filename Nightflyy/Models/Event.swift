@@ -17,6 +17,7 @@ struct Event: Identifiable, Codable {
     var assignedTo: String?
     var attending: [String]?
     var createdBy: String?
+    var createdDate: Date?
     var endDate: Date?
     var endTime: String?
     var eventAddress: String?
@@ -40,7 +41,6 @@ struct Event: Identifiable, Codable {
     var longitude: Double?
     var maxPrice: Int?
     var minPrice: Int?
-//    var photoFileName: String?
     var rating: Float?
     var recurringID: String?
     var startDate: Date?
@@ -100,7 +100,6 @@ struct Event: Identifiable, Codable {
         case latitude = "lat"
         case longitude = "lng"
         case geohash = "g"
-//        case photoFileName = "photo_file_name"
         case rating
         case status
         case recurringID = "recurring_id"

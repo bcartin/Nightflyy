@@ -54,6 +54,9 @@ class AuthenticationManager {
     func checkAuthState() {
         _ = Auth.auth().addStateDidChangeListener { _, user in
             self.isSignedIn = user != nil
+            if user == nil {
+                AppState.shared.showSplashScreen = false
+            }
         }
     }
     

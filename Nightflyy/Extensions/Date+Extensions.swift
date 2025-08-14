@@ -25,4 +25,10 @@ extension Date {
         let calendar = Calendar.current
         return calendar.isDate(self, inSameDayAs: date)
     }
+    
+    func getTime() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a"
+        return formatter.string(from: self)
+    }
 }

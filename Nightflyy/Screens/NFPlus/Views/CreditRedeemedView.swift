@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CreditRedeemedView: View {
     
+    @Environment(\.dismiss) var dismiss
     @Binding var viewModel: NFPRedeemViewModel
     
     var body: some View {
@@ -26,7 +27,7 @@ struct CreditRedeemedView: View {
                 .foregroundStyle(.white)
             
             Button {
-                viewModel.dismiss()
+                dismiss()
             } label: {
                 Text("Continue")
             }

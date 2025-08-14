@@ -116,6 +116,15 @@ class NFPSignUpViewModel {
         }
     }
     
+    func validateReferral() {
+        if referralVenue == nil {
+            error = SignupError.noReferralVenueSelected
+        }
+        else {
+            changeView(to: .confirm)
+        }
+    }
+    
     func purchaseNightFlyyPlus() {
         Task {
             do {

@@ -112,6 +112,9 @@
 		CB1ABE522E25700F00843490 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB1ABE512E25700700843490 /* AnalyticsManager.swift */; };
 		CB2A1BFD2CBEB4350041495F /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB2A1BFC2CBEB4350041495F /* BottomSheetView.swift */; };
 		CB4BCB7C2E4146DB00FC54A5 /* Airbridge in Frameworks */ = {isa = PBXBuildFile; productRef = CB4BCB7B2E4146DB00FC54A5 /* Airbridge */; };
+		CB4BCBB92E4D26B900FC54A5 /* NFPVenuesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4BCBB82E4D26B900FC54A5 /* NFPVenuesView.swift */; };
+		CB4BCBBB2E4E251C00FC54A5 /* NFPHelpOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4BCBBA2E4E251200FC54A5 /* NFPHelpOption.swift */; };
+		CB4BCBBD2E4E67E100FC54A5 /* NFPHelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4BCBBC2E4E67E100FC54A5 /* NFPHelpView.swift */; };
 		CB6BCACA2CB7108C003D851F /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6BCAC92CB71087003D851F /* AppState.swift */; };
 		CB6BCAD12CB71357003D851F /* SideBarMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6BCAD02CB71357003D851F /* SideBarMenuView.swift */; };
 		CB6BCAD42CB81617003D851F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6BCAD32CB81617003D851F /* HomeView.swift */; };
@@ -383,6 +386,9 @@
 		CB1ABE4F2E15709500843490 /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		CB1ABE512E25700700843490 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
 		CB2A1BFC2CBEB4350041495F /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
+		CB4BCBB82E4D26B900FC54A5 /* NFPVenuesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFPVenuesView.swift; sourceTree = "<group>"; };
+		CB4BCBBA2E4E251200FC54A5 /* NFPHelpOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFPHelpOption.swift; sourceTree = "<group>"; };
+		CB4BCBBC2E4E67E100FC54A5 /* NFPHelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFPHelpView.swift; sourceTree = "<group>"; };
 		CB6BCAC92CB71087003D851F /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		CB6BCAD02CB71357003D851F /* SideBarMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarMenuView.swift; sourceTree = "<group>"; };
 		CB6BCAD32CB81617003D851F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -637,17 +643,18 @@
 		CB09CB562CF7BEB00066987A /* Enums */ = {
 			isa = PBXGroup;
 			children = (
-				CBC2705E2E034F060075C931 /* UniversalLinkType.swift */,
-				CBB78CB22DE4C56100FD0DA4 /* SignUpMethod.swift */,
-				CBB78C712DC40D8700FD0DA4 /* AppNotificationType.swift */,
-				CBB78C1B2DBFE1B100FD0DA4 /* SearchObjectType.swift */,
-				CB8AD0CE2DB6D3B2008E8A76 /* EventEnums.swift */,
 				CB8AD0C62DB0319E008E8A76 /* AccountEnums.swift */,
-				CB8AD0C42DAEA925008E8A76 /* PushNotificationTarget.swift */,
-				CB8AD0622DA5723E008E8A76 /* MenuItem.swift */,
+				CBB78C712DC40D8700FD0DA4 /* AppNotificationType.swift */,
+				CB8AD0CE2DB6D3B2008E8A76 /* EventEnums.swift */,
 				CB09CB572CF7BEC50066987A /* EventsViewFilter.swift */,
 				CB14219D2CDD27F9009220E1 /* Lists.swift */,
+				CB8AD0622DA5723E008E8A76 /* MenuItem.swift */,
 				CBCE117B2D4BF53300527060 /* MessageType.swift */,
+				CB4BCBBA2E4E251200FC54A5 /* NFPHelpOption.swift */,
+				CBB78C1B2DBFE1B100FD0DA4 /* SearchObjectType.swift */,
+				CBB78CB22DE4C56100FD0DA4 /* SignUpMethod.swift */,
+				CB8AD0C42DAEA925008E8A76 /* PushNotificationTarget.swift */,
+				CBC2705E2E034F060075C931 /* UniversalLinkType.swift */,
 				CBB78C772DC546CC00FD0DA4 /* UserDefaultsKeys.swift */,
 			);
 			path = Enums;
@@ -1320,6 +1327,8 @@
 				CBB78C982DD2829100FD0DA4 /* CreditRedeemedView.swift */,
 				CBB78C922DD24A3D00FD0DA4 /* MemberView.swift */,
 				CBB78C902DD243F000FD0DA4 /* NFPContainerView.swift */,
+				CB4BCBBC2E4E67E100FC54A5 /* NFPHelpView.swift */,
+				CB4BCBB82E4D26B900FC54A5 /* NFPVenuesView.swift */,
 				CBB78C942DD24BDF00FD0DA4 /* NoCreditsView.swift */,
 				CB812C602CCC261600D3F07D /* PaywallView.swift */,
 				CBB78CC72DE6443200FD0DA4 /* PromoCodeView.swift */,
@@ -1510,6 +1519,7 @@
 			files = (
 				CBCE117A2D4BE13400527060 /* View+HideNavbarBackground.swift in Sources */,
 				CB09CB4B2CF61DF20066987A /* ChatsManager.swift in Sources */,
+				CB4BCBB92E4D26B900FC54A5 /* NFPVenuesView.swift in Sources */,
 				CB0BF8AE2C01043600C4612C /* OverlayView.swift in Sources */,
 				CBB78C8F2DD2419100FD0DA4 /* NFPManager.swift in Sources */,
 				CBB78C7E2DCBE29E00FD0DA4 /* DiscoverResultsListView.swift in Sources */,
@@ -1663,6 +1673,7 @@
 				CBB78CB32DE4C56700FD0DA4 /* SignUpMethod.swift in Sources */,
 				CB8AD0C52DAEA92C008E8A76 /* PushNotificationTarget.swift in Sources */,
 				CB8AD0C92DB17FCD008E8A76 /* InviteToEventView.swift in Sources */,
+				CB4BCBBD2E4E67E100FC54A5 /* NFPHelpView.swift in Sources */,
 				CBB78C992DD2829100FD0DA4 /* CreditRedeemedView.swift in Sources */,
 				CBB78C0D2DB93BE800FD0DA4 /* AddressSearchViewModel.swift in Sources */,
 				CB1421E82CE79D61009220E1 /* ExpandableText.swift in Sources */,
@@ -1751,6 +1762,7 @@
 				CBB656692CDBFDE500B279A2 /* View+RoundedCorner.swift in Sources */,
 				CB8AD0D32DB6DA14008E8A76 /* EventGuestListViewModel.swift in Sources */,
 				CB8AD0A72DA9854C008E8A76 /* ChipsView.swift in Sources */,
+				CB4BCBBB2E4E251C00FC54A5 /* NFPHelpOption.swift in Sources */,
 				CBB78CAB2DDF6E1800FD0DA4 /* SU_ProfileView.swift in Sources */,
 				CB8AD0B92DA9B67C008E8A76 /* NotificationsSettingsViewModel.swift in Sources */,
 				CB72E1FA2DA4597100A25EF6 /* DateValue.swift in Sources */,
@@ -1894,7 +1906,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Nightflyy/Nightflyy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nightflyy/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1915,7 +1927,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 3.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.com.slydelife.Slyde;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1936,7 +1948,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Nightflyy/Nightflyy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nightflyy/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -1958,7 +1970,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 3.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.slydelife.Slyde;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

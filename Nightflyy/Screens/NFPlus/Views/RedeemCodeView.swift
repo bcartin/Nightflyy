@@ -44,13 +44,6 @@ struct RedeemCodeView: View {
             }
             .mainButtonStyle()
             .padding(.top, 16)
-            
-            Button {
-                viewModel.dismiss()
-            } label: {
-                Text("Cancel")
-            }
-            .mainButtonStyle(color: .gray)
 
         }
         .onAppear {

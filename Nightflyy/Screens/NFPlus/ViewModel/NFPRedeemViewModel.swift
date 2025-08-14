@@ -14,15 +14,17 @@ enum RedeemView {
     case noCredits
     case codeScreen
     case redeemSuccess
+    case venues
+    case help
 }
 
 @Observable
 class NFPRedeemViewModel {
     
     var displayView: RedeemView = .hasCredits
-    var shouldDismiss: Bool = false
     var venueCode: String = ""
     var error: Error?
+    var nfpVenues: [Account] = .init()
     
     var nextCreditDate = NFPManager.shared.nextCreditDate
     
@@ -31,10 +33,11 @@ class NFPRedeemViewModel {
     var minute: Int = 0
     var second: Int = 0
     
+    var helpOptions: [NFPHelpOption] = [.FAQ, .Support, .Report, .Issue, .Feedback, .Locations]
+    
     init() {
-        displayView = NFPManager.shared.hasCredits ? .hasCredits : .noCredits
+        displayView = mainDisplayView
         updateTimer()
-        
     }
     
     func nfpButtonTapped() {
@@ -43,14 +46,14 @@ class NFPRedeemViewModel {
         }
     }
     
-    func dismiss() {
-        shouldDismiss = true
-    }
-    
     func changeView(to view: RedeemView) {
         withAnimation {
             displayView = view
         }
+    }
+    
+    var mainDisplayView: RedeemView {
+        return NFPManager.shared.hasCredits ? .hasCredits : .noCredits
     }
     
     func redeemCredit() {
@@ -76,4 +79,9 @@ class NFPRedeemViewModel {
         self.minute = timeValue.minute ?? 0
         self.second = timeValue.second ?? 0
     }
+    
+    func fetchNFPVenues() async {
+        nfpVenues = await AccountClient.fetchNightflyyPlusProviders().filter{$0.accountType == .venue}
+    }
+    
 }
