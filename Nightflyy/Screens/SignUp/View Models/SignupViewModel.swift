@@ -85,7 +85,6 @@ class SignupViewModel {
     func signupWithNightflyy() async {
         do {
             let uid = try await AuthenticationManager.shared.createUser(email: email, password: password)
-            AppState.shared.showSplashScreen = false
             try await createAccount(uid: uid)
         }
         catch {
@@ -109,7 +108,6 @@ class SignupViewModel {
         
         do {
             let uid = try await AuthenticationManager.shared.signIn(with: credential)
-            AppState.shared.showSplashScreen = false
             try await createAccount(uid: uid)
         }
         catch {

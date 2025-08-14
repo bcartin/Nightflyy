@@ -15,20 +15,6 @@ struct MemberView: View {
     var body: some View {
         VStack {
             
-            HStack {
-                Spacer()
-                Button {
-                    
-                } label: {
-                    Image(systemName: "questionmark.circle.fill")
-                        .foregroundStyle(.gray)
-                        .font(.system(size: 24))
-                        .padding()
-                }
-            }
-            
-            Spacer()
-            
             switch viewModel.displayView {
             case .noCredits:
                 NoCreditsView(viewModel: $viewModel)
@@ -41,16 +27,11 @@ struct MemberView: View {
             case .redeemSuccess:
                 CreditRedeemedView(viewModel: $viewModel)
                     .transition(.blurReplace)
+            case .venues:
+                NFPVenuesView(viewModel: $viewModel)
+            case .help:
+                NFPHelpView(viewModel: $viewModel)
             }
-            
-            Spacer()
-            
-            Button("See All Nightflyy+ Venues") {
-                
-            }
-            .foregroundStyle(.mainPurple)
-            .font(.system(size: 14, weight: .medium))
-            .padding()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .backgroundImage("slyde_background")
@@ -66,14 +47,49 @@ struct MemberView: View {
                 })
         )
         .overlay(alignment: .top) {
-            RoundedRectangle(cornerRadius: 3)
-                .fill(.gray.opacity(0.9))
-                .frame(width: 86, height: 6)
-        }
-        .onChange(of: viewModel.shouldDismiss) { _, newValue in
-            if newValue {
-                dismiss()
+            HStack(alignment: .top) {
+                Button {
+                    switch viewModel.displayView {
+                    case .hasCredits, .noCredits, .redeemSuccess:
+                        dismiss()
+                    case .codeScreen, .venues, .help:
+                        viewModel.changeView(to: viewModel.mainDisplayView)
+                    }
+                } label: {
+                    Image(systemName: "x.circle.fill")
+                        .foregroundStyle(.gray)
+                        .font(.system(size: 24))
+                }
+                
+                Spacer()
+                
+                RoundedRectangle(cornerRadius: 3)
+                    .fill(.gray.opacity(0.9))
+                    .frame(width: 86, height: 6)
+                
+                Spacer()
+                
+                Button {
+                    viewModel.changeView(to: .help)
+                } label: {
+                    Image(systemName: "questionmark.circle.fill")
+                        .foregroundStyle(.gray)
+                        .font(.system(size: 24))
+                }
             }
+            .padding()
+            
+        }
+        .overlay(alignment: .bottom, content: {
+            Button("See All Nightflyy+ Venues") {
+                viewModel.changeView(to: .venues)
+            }
+            .foregroundStyle(.mainPurple)
+            .font(.system(size: 14, weight: .medium))
+            .padding()
+        })
+        .task {
+            await viewModel.fetchNFPVenues()
         }
         .errorAlert(error: $viewModel.error, buttonTitle: "OK")
     }

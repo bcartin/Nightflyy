@@ -13,7 +13,6 @@ class MainCoordinator {
         Task {
             AuthenticationManager.shared.checkAuthState() 
             guard let uid = AuthenticationManager.shared.currentUser?.uid else { return } //MARK: if it should do something when not logged in do it before this line
-//                                let uid = "Ya2VB47Ei2QlfN4XB25BOUgoM6S2" //TODO: remove
             AnalyticsManager.setUserID(value: uid)
             await AccountManager.shared.fetchAccount(uid: uid)
             await EventsManager.shared.initialEventFetch()

@@ -71,6 +71,11 @@ struct EventCardView: View {
                                 .padding(8)
                                 .frame(width: 42, height: 42)
                                 .foregroundStyle(viewModel.attendingButtonProperties.color)
+                                .background(
+                                    Circle()
+                                        .fill(.black.opacity(0.2))
+                                        .shadow(color: .white, radius: 10)
+                                )
                                 .overlay {
                                     Circle()
                                         .stroke(viewModel.attendingButtonProperties.color, lineWidth: 1)
@@ -78,9 +83,6 @@ struct EventCardView: View {
                         }
                         
                         Menu {
-//                            Button("Invite Friends") {
-//                                viewModel.handleInviteFriendsTapped()
-//                            }
                             ShareLink(item: viewModel.shareLink, message: Text("Check out this event on Nightflyy!")) {
                                 Label("Share Event", systemImage: "")
                             }
@@ -92,10 +94,15 @@ struct EventCardView: View {
                                 .resizable()
                                 .padding(8)
                                 .frame(width: 42, height: 42)
-                                .foregroundStyle(.gray)
+                                .foregroundStyle(.white)
+                                .background(
+                                    Circle()
+                                        .fill(.black.opacity(0.2))
+                                        .shadow(color: .white, radius: 10)
+                                )
                                 .overlay {
                                     Circle()
-                                        .stroke(.gray, lineWidth: 1)
+                                        .stroke(.white, lineWidth: 1)
                                 }
                         }
                         
@@ -106,10 +113,15 @@ struct EventCardView: View {
                                 .resizable()
                                 .padding(8)
                                 .frame(width: 42, height: 42)
-                                .foregroundStyle(.gray)
+                                .foregroundStyle(.white)
+                                .background(
+                                    Circle()
+                                        .fill(.black.opacity(0.2))
+                                        .shadow(color: .white, radius: 10)
+                                )
                                 .overlay {
                                     Circle()
-                                        .stroke(.gray, lineWidth: 1)
+                                        .stroke(.white, lineWidth: 1)
                                 }
                         }
                         
