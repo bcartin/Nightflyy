@@ -32,7 +32,7 @@ enum SendgridLists {
 
 class SendgridManager {
     
-    static func createContactInSendgrid(account: Account, lists: [SendgridLists]) async throws {
+    static func createContactInSendgrid(account: Account, lists: [SendgridLists]) async {
 #if RELEASE
         let dateformatter = DateFormatter()
         dateformatter.dateFormat = "MMM dd, yyyy"
@@ -47,7 +47,13 @@ class SendgridManager {
         let body = ContactRequestBody(list_ids: list_ids, contacts: [contact])
         
         guard let request = ContactRequest(body: body) else { return }
-        _ = try await AddContacts(request: request)
+        do {
+            _ = try await AddContacts(request: request)
+        }
+        catch {
+            print("Error creating contact in Sendgrid: \(error.localizedDescription)")
+            return
+        }
 #endif
     }
     

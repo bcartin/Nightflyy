@@ -24,7 +24,9 @@ class NotificationsSettingsViewModel {
             PushNotificationsManager.shared.authorizationStatus == .authorized
         }
         set(newValue) {
-            try? PushNotificationsManager.shared.requestPermission()
+            Task {
+                try? await PushNotificationsManager.shared.requestPermission()
+            }
         }
     }
     
