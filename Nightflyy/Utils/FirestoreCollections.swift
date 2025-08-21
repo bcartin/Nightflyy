@@ -49,7 +49,7 @@ class FirestoreCollections {
     }
     
     class Usernames {
-        static var value = "usernames2"
+        static var value = "usernames"
         
         static var usernames = "usernames"
     }

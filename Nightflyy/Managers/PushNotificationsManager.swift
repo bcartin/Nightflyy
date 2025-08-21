@@ -22,14 +22,12 @@ class PushNotificationsManager: NSObject, UIApplicationDelegate {
         setPermission()
     }
     
-    func requestPermission() throws {
-        Task {
-            if authorizationStatus == .notDetermined {
-                if try await unCenter.requestAuthorization(options: [.alert, .badge, .sound]) {
-                    configure()
-                    saveToken()
-                    setPermission()
-                }
+    func requestPermission() async throws {
+        if authorizationStatus == .notDetermined {
+            if try await unCenter.requestAuthorization(options: [.alert, .badge, .sound]) {
+                configure()
+                saveToken()
+                setPermission()
             }
         }
     }

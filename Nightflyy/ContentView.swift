@@ -47,15 +47,6 @@ struct ContentView: View {
                 }
                 .accentColor(.mainPurple)
                 .environment(\.colorScheme, .dark)
-                .task {
-                    do {
-                        try PushNotificationsManager.shared.requestPermission()
-                        LocationManager.shared.askPermission()
-                    }
-                    catch {
-                        print(error.localizedDescription)
-                    }
-                }
             
             } menuView: { safeArea in
                 SideBarMenuView(showMenu: $showMenu, safeArea: safeArea, viewModel: $menuViewModel)

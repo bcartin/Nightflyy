@@ -53,6 +53,7 @@ struct MemberView: View {
                     case .hasCredits, .noCredits, .redeemSuccess:
                         dismiss()
                     case .codeScreen, .venues, .help:
+                        viewModel.seeVenuesButtonIsVisible = true
                         viewModel.changeView(to: viewModel.mainDisplayView)
                     }
                 } label: {
@@ -82,11 +83,13 @@ struct MemberView: View {
         }
         .overlay(alignment: .bottom, content: {
             Button("See All Nightflyy+ Venues") {
+                viewModel.seeVenuesButtonIsVisible = false
                 viewModel.changeView(to: .venues)
             }
             .foregroundStyle(.mainPurple)
             .font(.system(size: 14, weight: .medium))
             .padding()
+            .opacity(viewModel.seeVenuesButtonIsVisible ? 1 : 0)
         })
         .task {
             await viewModel.fetchNFPVenues()

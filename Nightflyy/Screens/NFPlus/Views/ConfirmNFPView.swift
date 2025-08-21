@@ -40,6 +40,12 @@ struct ConfirmNFPView: View {
                 viewModel.purchaseNightFlyyPlus()
             }
             
+            Button("Maybe Later") {
+                dismiss()
+            }
+            .foregroundStyle(.mainPurple)
+            .font(.system(size: 14))
+            
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .backgroundImage("slyde_background")

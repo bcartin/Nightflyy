@@ -136,7 +136,7 @@ class SignupViewModel {
         try SearchManager.shared.updateSearchIndex(objectID: uid, objectType: .person, name: name, username: username, venue: nil)
         
         // Create contact in sendgrid
-        try await SendgridManager.createContactInSendgrid(account: account!, lists: [.ALL])
+        await SendgridManager.createContactInSendgrid(account: account!, lists: [.ALL])
         
         MainCoordinator().initialAppSetup()
         

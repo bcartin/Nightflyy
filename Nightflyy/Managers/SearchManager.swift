@@ -56,18 +56,6 @@ class SearchManager {
         return .init()
     }
     
-//    private func updateSearchIndex(object: AlgoliaSearchResult) throws {
-//        #if RELEASE
-//        guard let client = searchClient else { return }
-//        let index = client.index(withName: IndexName(rawValue: C_DEVSEARCHINDEX))
-//        let result = try index.saveObject(object)
-//        let status = try index.waitTask(withID: result.task.taskID)
-//        if status == .published {
-//            print("Search Index Updated")
-//        }
-//        #endif
-//    }
-    
     func updateFirestoreSearchIndex(object: AlgoliaSearchResult) throws {
         #if RELEASE
         try FirebaseManager.shared.db.collection(C_PRODSEARCHINDEX).document(object.objectID).setData(from: object)

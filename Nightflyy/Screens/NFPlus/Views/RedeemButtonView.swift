@@ -20,6 +20,7 @@ struct RedeemButtonView: View {
                 .foregroundColor(.gray)
             
             Button {
+                viewModel.seeVenuesButtonIsVisible = false
                 viewModel.changeView(to: .codeScreen)
             } label: {
                 ZStack {

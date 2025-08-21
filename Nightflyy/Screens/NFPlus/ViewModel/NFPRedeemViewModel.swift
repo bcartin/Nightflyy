@@ -25,6 +25,7 @@ class NFPRedeemViewModel {
     var venueCode: String = ""
     var error: Error?
     var nfpVenues: [Account] = .init()
+    var seeVenuesButtonIsVisible = true
     
     var nextCreditDate = NFPManager.shared.nextCreditDate
     
