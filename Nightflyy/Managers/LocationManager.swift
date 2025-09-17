@@ -26,6 +26,10 @@ class LocationManager: NSObject {
         locationManager.location
     }
     
+    var permissionChosen: Bool {
+        locationManager.authorizationStatus != .notDetermined
+    }
+    
     private func commonSetup() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters

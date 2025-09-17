@@ -45,22 +45,6 @@ struct EventGuestListView: View {
                                 .onTapGesture {
                                     viewModel.goToProfile()
                                 }
-                            
-                        }
-                    }
-                }
-                else {
-                    ForEach(viewModel.event.invited ?? [], id: \.self) { uid in
-                        LazyVStack(spacing: 0) {
-                            let viewModel = NetworkUserViewModel(selectedSegment: viewModel.selectedSegment)
-                            NetworkUserView(viewModel: viewModel)
-                                .task {
-                                    await viewModel.fetchAccount(uid: uid)
-                                }
-                                .onTapGesture {
-                                    viewModel.goToProfile()
-                                }
-                            
                         }
                     }
                 }
