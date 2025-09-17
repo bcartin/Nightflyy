@@ -56,7 +56,12 @@ class HomeViewModel {
     }
     
     func openSettings() {
-        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+        if LocationManager.shared.permissionChosen {
+            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+        }
+        else {
+            LocationManager.shared.askPermission()
+        }
     }
     
     func navigateToCreateNewEvent() {
@@ -64,7 +69,7 @@ class HomeViewModel {
         Router.shared.navigateTo(.CreateEvent(viewModel))
     }
     
-    func showNFPVIew() {
+    func showNFPView() {
         NFPManager.shared.showNFPView = true
     }
 }

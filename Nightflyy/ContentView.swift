@@ -17,13 +17,15 @@ struct ContentView: View {
     @Namespace private var animation
     @State var menuViewModel = SideBarMenuViewModel()
     @Environment(ToastsManager.self) private var toastsManager
+    @Environment(AppState.self) private var appState
     
     var body: some View {
         @Bindable var toastsManager = toastsManager
+        @Bindable var appState = appState
  
             AnimatedSideBar(showMenu: $showMenu)
             { safeArea in
-                TabView(selection: $selection) {
+                TabView(selection: $appState.selectedTab) {
                     Tab("", image: "ic_home", value: 0) {
                         HomeView(showMenu: $showMenu, viewModel: HomeViewModel())
                             .toolbarVisibility(Router.shared.path.isEmpty ? .visible : .hidden, for: .tabBar)

@@ -13,7 +13,7 @@ class EventGuestListViewModel: NSObject {
     
     var event: Event
     var selectedSegment: Int
-    let segments = [SegmentedViewOption(id: 1, title: "Going"), SegmentedViewOption(id: 2, title: "Interested"), SegmentedViewOption(id: 3, title: "Invited")]
+    let segments = [SegmentedViewOption(id: 1, title: "Going"), SegmentedViewOption(id: 2, title: "Interested")]
     
     init(event: Event, selectedSegment: Int) {
         self.event = event
@@ -21,6 +21,6 @@ class EventGuestListViewModel: NSObject {
     }
     
     var displayArray: [String] {
-        selectedSegment == 1 ? event.attending ?? [] : selectedSegment == 2 ? event.interested ?? [] : event.invited ?? []
+        selectedSegment == 1 ? event.attending ?? [] : event.interested ?? [] 
     }
 }

@@ -22,16 +22,16 @@ class InboxViewModel {
         }
     }
     
-    func markAsRead(viewModel: InboxRowViewModel) {
-        var chat = viewModel.chat
+    func markAsRead(chat: Chat) {
         if chat.lastMessageSender != AccountManager.shared.account?.uid {
+            var chat = chat
             chat.isNew = false
             try? chat.save()
         }
     }
     
     func navigateToChat(viewModel: InboxRowViewModel) {
-        markAsRead(viewModel: viewModel)
+        markAsRead(chat: viewModel.chat)
         Router.shared.navigateTo(.ChatView(viewModel))
     }
     

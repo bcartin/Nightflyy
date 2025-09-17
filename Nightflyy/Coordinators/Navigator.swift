@@ -32,6 +32,8 @@ class Navigator {
             case .nfplus:
                 UserDefaultsKeys.nfpReferred.setValue(id)
                 await openNFPpaywall(accountId: id)
+            case .chat:
+                print("chat")
             case .other:
                 print("other")
             }
@@ -65,6 +67,8 @@ class Navigator {
                 await navigateToAccount(accountId: id)
             case .nfplus:
                 await openNFPpaywall(accountId: id)
+            case .chat:
+                print("chat")
             case .other:
                 print("other")
             case .none:
@@ -95,6 +99,13 @@ class Navigator {
         }
         guard AuthenticationManager.shared.isSignedIn else {return}
         NFPManager.shared.showNFPView = true
+    }
+    
+    private func navigateToChat(chatId: String) async {
+        AppState.shared.selectedTab = 4
+        if let viewModel = ChatsManager.shared.viewModels.first(where: {$0.chatID == chatId}) {
+            router.navigateTo(.ChatView(viewModel))
+        }
     }
     
 }
