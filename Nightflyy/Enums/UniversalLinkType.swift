@@ -13,5 +13,6 @@ enum UniversalLinkType: String {
     case venue
     case person
     case nfplus
+    case chat
     case other
 }

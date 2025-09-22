@@ -11,9 +11,10 @@ class MainCoordinator {
     
     func initialAppSetup() {
         Task {
-            AuthenticationManager.shared.checkAuthState() 
+            AuthenticationManager.shared.checkAuthState()
             guard let uid = AuthenticationManager.shared.currentUser?.uid else { return } //MARK: if it should do something when not logged in do it before this line
             AnalyticsManager.setUserID(value: uid)
+            try await PushNotificationsManager.shared.requestPermission()
             await AccountManager.shared.fetchAccount(uid: uid)
             await EventsManager.shared.initialEventFetch()
             await NFPManager.shared.checkSubscriptionStatus()

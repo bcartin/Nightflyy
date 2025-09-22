@@ -17,6 +17,8 @@ class AppState {
     var isLoading: Bool = false
     
     var showSplashScreen = true
+    
+    var selectedTab = 0
 
     var showUpdateScreen: Bool {
         return (RemoteConfigManager.shared.string(forKey: .latest_app_version) > UIApplication.appVersion) && RemoteConfigManager.shared.bool(forKey: .force_update)

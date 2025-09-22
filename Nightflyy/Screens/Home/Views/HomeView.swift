@@ -110,7 +110,7 @@ struct HomeView: View {
             .overlay(alignment: .bottom) {
                 BottomSheetView()
                     .onTapGesture {
-                        viewModel.showNFPVIew()
+                        viewModel.showNFPView()
                     }
                     .fullScreenCover(isPresented: $viewModel.isShowingNFPView) {
                         NFPContainerView()

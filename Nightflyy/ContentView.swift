@@ -17,13 +17,15 @@ struct ContentView: View {
     @Namespace private var animation
     @State var menuViewModel = SideBarMenuViewModel()
     @Environment(ToastsManager.self) private var toastsManager
+    @Environment(AppState.self) private var appState
     
     var body: some View {
         @Bindable var toastsManager = toastsManager
+        @Bindable var appState = appState
  
             AnimatedSideBar(showMenu: $showMenu)
             { safeArea in
-                TabView(selection: $selection) {
+                TabView(selection: $appState.selectedTab) {
                     Tab("", image: "ic_home", value: 0) {
                         HomeView(showMenu: $showMenu, viewModel: HomeViewModel())
                             .toolbarVisibility(Router.shared.path.isEmpty ? .visible : .hidden, for: .tabBar)
@@ -47,15 +49,6 @@ struct ContentView: View {
                 }
                 .accentColor(.mainPurple)
                 .environment(\.colorScheme, .dark)
-                .task {
-                    do {
-                        try PushNotificationsManager.shared.requestPermission()
-                        LocationManager.shared.askPermission()
-                    }
-                    catch {
-                        print(error.localizedDescription)
-                    }
-                }
             
             } menuView: { safeArea in
                 SideBarMenuView(showMenu: $showMenu, safeArea: safeArea, viewModel: $menuViewModel)

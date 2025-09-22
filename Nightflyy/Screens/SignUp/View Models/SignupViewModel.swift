@@ -82,6 +82,11 @@ class SignupViewModel {
         }
     }
     
+    func setValuesFromAppleCredential() {
+        self.name = appleIDCredential?.fullName?.givenName ?? ""
+        self.email = appleIDCredential?.email ?? ""
+    }
+    
     func signupWithNightflyy() async {
         do {
             let uid = try await AuthenticationManager.shared.createUser(email: email, password: password)
@@ -136,7 +141,7 @@ class SignupViewModel {
         try SearchManager.shared.updateSearchIndex(objectID: uid, objectType: .person, name: name, username: username, venue: nil)
         
         // Create contact in sendgrid
-        try await SendgridManager.createContactInSendgrid(account: account!, lists: [.ALL])
+        await SendgridManager.createContactInSendgrid(account: account!, lists: [.ALL])
         
         MainCoordinator().initialAppSetup()
         

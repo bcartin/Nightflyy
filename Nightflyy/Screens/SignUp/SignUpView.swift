@@ -48,6 +48,7 @@ struct SignUpView: View {
                         case .success(let authorization):
                             viewModel.setSignupMethod(.apple)
                             viewModel.appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential
+                            viewModel.setValuesFromAppleCredential()
                             viewModel.goToScreen(.profile)
                         case .failure(let error):
                             viewModel.error = error

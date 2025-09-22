@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Firebase
+import FirebaseAuth
 
 @Observable
 class PushNotificationsManager: NSObject, UIApplicationDelegate {
@@ -22,14 +23,12 @@ class PushNotificationsManager: NSObject, UIApplicationDelegate {
         setPermission()
     }
     
-    func requestPermission() throws {
-        Task {
-            if authorizationStatus == .notDetermined {
-                if try await unCenter.requestAuthorization(options: [.alert, .badge, .sound]) {
-                    configure()
-                    saveToken()
-                    setPermission()
-                }
+    func requestPermission() async throws {
+        if authorizationStatus == .notDetermined {
+            if try await unCenter.requestAuthorization(options: [.alert, .badge, .sound]) {
+                configure()
+                saveToken()
+                setPermission()
             }
         }
     }
@@ -75,13 +74,16 @@ extension PushNotificationsManager: MessagingDelegate {
     
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("Token Received: ", fcmToken ?? "")
-        saveToken()
+        saveToken(token: fcmToken)
     }
     
-    func saveToken() {
-        if let token = Messaging.messaging().fcmToken, var account = AccountManager.shared.account {
-            account.token = token
-            try? account.save()
+    func saveToken(token: String? = nil) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        if let token = token {
+            AccountClient.saveCustomData(uid: uid, data: [FirestoreCollections.Accounts.token: token])
+        }
+        else if let token = Messaging.messaging().fcmToken {
+            AccountClient.saveCustomData(uid: uid, data: [FirestoreCollections.Accounts.token: token])
         }
     }
     

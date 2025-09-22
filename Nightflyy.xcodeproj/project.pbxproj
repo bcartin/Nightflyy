@@ -220,7 +220,6 @@
 		CBB78C6E2DC408EE00FD0DA4 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB78C6D2DC408EE00FD0DA4 /* NotificationView.swift */; };
 		CBB78C702DC4098700FD0DA4 /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB78C6F2DC4098000FD0DA4 /* NotificationViewModel.swift */; };
 		CBB78C722DC40D8D00FD0DA4 /* AppNotificationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB78C712DC40D8700FD0DA4 /* AppNotificationType.swift */; };
-		CBB78C762DC5468900FD0DA4 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB78C752DC5468200FD0DA4 /* UserDefaultsManager.swift */; };
 		CBB78C782DC546DA00FD0DA4 /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB78C772DC546CC00FD0DA4 /* UserDefaultsKeys.swift */; };
 		CBB78C7A2DC5487B00FD0DA4 /* NotificationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB78C792DC5487300FD0DA4 /* NotificationsViewModel.swift */; };
 		CBB78C7C2DCBAFEF00FD0DA4 /* TagSelectViewFull.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB78C7B2DCBAFEF00FD0DA4 /* TagSelectViewFull.swift */; };
@@ -244,7 +243,6 @@
 		CBB78CAB2DDF6E1800FD0DA4 /* SU_ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB78CAA2DDF6E1800FD0DA4 /* SU_ProfileView.swift */; };
 		CBB78CAD2DDF72CB00FD0DA4 /* SU_LocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB78CAC2DDF72CB00FD0DA4 /* SU_LocationView.swift */; };
 		CBB78CAF2DDF810A00FD0DA4 /* SU_Paywall.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB78CAE2DDF810A00FD0DA4 /* SU_Paywall.swift */; };
-		CBB78CB12DDFA71200FD0DA4 /* SignupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB78CB02DDFA70200FD0DA4 /* SignupManager.swift */; };
 		CBB78CB32DE4C56700FD0DA4 /* SignUpMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB78CB22DE4C56100FD0DA4 /* SignUpMethod.swift */; };
 		CBB78CB62DE4E35700FD0DA4 /* SendGrid in Frameworks */ = {isa = PBXBuildFile; productRef = CBB78CB52DE4E35700FD0DA4 /* SendGrid */; };
 		CBB78CB82DE4E3B800FD0DA4 /* SendgridManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB78CB72DE4E3B200FD0DA4 /* SendgridManager.swift */; };
@@ -494,7 +492,6 @@
 		CBB78C6D2DC408EE00FD0DA4 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		CBB78C6F2DC4098000FD0DA4 /* NotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewModel.swift; sourceTree = "<group>"; };
 		CBB78C712DC40D8700FD0DA4 /* AppNotificationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNotificationType.swift; sourceTree = "<group>"; };
-		CBB78C752DC5468200FD0DA4 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		CBB78C772DC546CC00FD0DA4 /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
 		CBB78C792DC5487300FD0DA4 /* NotificationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsViewModel.swift; sourceTree = "<group>"; };
 		CBB78C7B2DCBAFEF00FD0DA4 /* TagSelectViewFull.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectViewFull.swift; sourceTree = "<group>"; };
@@ -518,7 +515,6 @@
 		CBB78CAA2DDF6E1800FD0DA4 /* SU_ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SU_ProfileView.swift; sourceTree = "<group>"; };
 		CBB78CAC2DDF72CB00FD0DA4 /* SU_LocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SU_LocationView.swift; sourceTree = "<group>"; };
 		CBB78CAE2DDF810A00FD0DA4 /* SU_Paywall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SU_Paywall.swift; sourceTree = "<group>"; };
-		CBB78CB02DDFA70200FD0DA4 /* SignupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupManager.swift; sourceTree = "<group>"; };
 		CBB78CB22DE4C56100FD0DA4 /* SignUpMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpMethod.swift; sourceTree = "<group>"; };
 		CBB78CB72DE4E3B200FD0DA4 /* SendgridManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendgridManager.swift; sourceTree = "<group>"; };
 		CBB78CB92DE4F62C00FD0DA4 /* NetworkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkHelper.swift; sourceTree = "<group>"; };
@@ -812,10 +808,8 @@
 				CB8AD0BF2DAEA201008E8A76 /* PushNotificationsManager.swift */,
 				CBB78C172DBBE4AD00FD0DA4 /* SearchManager.swift */,
 				CBB78CB72DE4E3B200FD0DA4 /* SendgridManager.swift */,
-				CBB78CB02DDFA70200FD0DA4 /* SignupManager.swift */,
 				CB8AD08F2DA82C83008E8A76 /* StorageManager.swift */,
 				CB8AD07B2DA6AF8B008E8A76 /* ToastsManager.swift */,
-				CBB78C752DC5468200FD0DA4 /* UserDefaultsManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -1459,7 +1453,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					CB0BF8032BFBE61F00C4612C = {
 						CreatedOnToolsVersion = 15.4;
@@ -1564,7 +1558,6 @@
 				CBC2706E2E0B05A80075C931 /* CalendarViewModel.swift in Sources */,
 				CBB6566F2CDC0CFA00B279A2 /* City.swift in Sources */,
 				CB1421E02CE55B6C009220E1 /* EventListItemViewModel.swift in Sources */,
-				CBB78C762DC5468900FD0DA4 /* UserDefaultsManager.swift in Sources */,
 				CBC270432DFA01860075C931 /* SendObjectAsMessageView.swift in Sources */,
 				CB0BF8BB2C01206300C4612C /* MainButton.swift in Sources */,
 				CB0BF8D02C07A4CB00C4612C /* Router.swift in Sources */,
@@ -1606,7 +1599,6 @@
 				CBB78CCC2DE6570F00FD0DA4 /* PromoCodesClient.swift in Sources */,
 				CBC2705B2E00AC840075C931 /* ReportsClient.swift in Sources */,
 				CBB78C1E2DBFE7BD00FD0DA4 /* VenueSearchView.swift in Sources */,
-				CBB78CB12DDFA71200FD0DA4 /* SignupManager.swift in Sources */,
 				CB8AD0882DA745B2008E8A76 /* ListSelectView.swift in Sources */,
 				CBB656712CDD0BA500B279A2 /* CitySearchResult.swift in Sources */,
 				CB6BCACA2CB7108C003D851F /* AppState.swift in Sources */,
@@ -1835,6 +1827,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -1892,6 +1885,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = RELEASE;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
@@ -1906,7 +1900,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Nightflyy/Nightflyy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Nightflyy/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1927,7 +1921,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.2;
+				MARKETING_VERSION = 3.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.com.slydelife.Slyde;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1948,7 +1942,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Nightflyy/Nightflyy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Nightflyy/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
@@ -1970,7 +1964,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.2;
+				MARKETING_VERSION = 3.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.slydelife.Slyde;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

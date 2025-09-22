@@ -20,6 +20,7 @@ class FirestoreCollections {
         static var blocked = "blocked"
         static var blockedBy = "blocked_by"
         static var requested = "requested"
+        static var token = "token"
     }
     
     class Events {
@@ -49,7 +50,7 @@ class FirestoreCollections {
     }
     
     class Usernames {
-        static var value = "usernames2"
+        static var value = "usernames"
         
         static var usernames = "usernames"
     }

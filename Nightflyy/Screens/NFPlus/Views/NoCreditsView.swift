@@ -62,13 +62,6 @@ struct NoCreditsView: View {
             
             Spacer()
             
-//            Button("See All Nightflyy+ Venues") {
-//                viewModel.changeView(to: .venues)
-//            }
-//            .foregroundStyle(.mainPurple)
-//            .font(.system(size: 14, weight: .medium))
-//            .padding()
-            
         }
         .onReceive(timer) { _ in
             viewModel.updateTimer()

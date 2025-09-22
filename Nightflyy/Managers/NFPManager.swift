@@ -94,7 +94,7 @@ class NFPManager {
                 PromoCodesClient.addRedemption(code: promoCode)
             }
             if let account = AccountManager.shared.account {
-                try await SendgridManager.createContactInSendgrid(account: account, lists: [.NFPLUS])
+                await SendgridManager.createContactInSendgrid(account: account, lists: [.NFPLUS])
             }
             do {
                 try AccountManager.shared.account?.save()
