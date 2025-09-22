@@ -82,6 +82,11 @@ class SignupViewModel {
         }
     }
     
+    func setValuesFromAppleCredential() {
+        self.name = appleIDCredential?.fullName?.givenName ?? ""
+        self.email = appleIDCredential?.email ?? ""
+    }
+    
     func signupWithNightflyy() async {
         do {
             let uid = try await AuthenticationManager.shared.createUser(email: email, password: password)
