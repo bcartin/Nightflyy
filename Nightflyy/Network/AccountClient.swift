@@ -11,6 +11,10 @@ import OSLog
 
 class AccountClient {
     
+    static func saveCustomData(uid: String, data: [String: Any]) {
+        FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value).document(uid).setData(data, merge: true)
+    }
+    
     static func fetchAccount(uid: String) async -> Result<Account, Error> {
         if let cached = firebaseCache[uid] {
             switch cached {
