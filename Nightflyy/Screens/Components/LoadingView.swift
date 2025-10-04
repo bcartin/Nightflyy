@@ -18,10 +18,10 @@ struct LoadingView: View {
                 Circle()
                     .trim(from: 0.0,to: spinnerLength)
                     .stroke(LinearGradient(colors: [.mainPurple,.onlineBlue], startPoint: .topLeading, endPoint: .bottomTrailing),style: StrokeStyle(lineWidth: 4.0,lineCap: .round,lineJoin:.round))
-                    .animation(Animation.easeIn(duration: 1.2).repeatForever(autoreverses: true))
+                    .animation(.easeIn(duration: 1.2).repeatForever(autoreverses: true), value: spinnerLength)
                     .frame(width: 60,height: 60)
                     .rotationEffect(Angle(degrees: Double(degree)))
-                    .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false))
+                    .animation(.linear(duration: 1).repeatForever(autoreverses: false), value: degree)
                     .onAppear{
                         degree = 270 + 360
                         spinnerLength = 0

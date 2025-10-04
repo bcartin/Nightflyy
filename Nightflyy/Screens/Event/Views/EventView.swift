@@ -210,9 +210,6 @@ struct EventView: View {
             }
         })
         .buttonDialog(isPresented: $viewModel.presentShareDialog, buttons: {
-//            Button("Invite Friends") {
-//                viewModel.handleInviteFriendsTapped()
-//            }
             
             ShareLink(item: viewModel.shareLink, message: Text("Check out this event on Nightflyy!")) {
                 Label("Share Event", systemImage: "")
@@ -260,17 +257,29 @@ struct EventView: View {
             let titleProress = minY / height
             
             HStack(spacing: 10) {
-                Button {
-                    router.navigateBack()
-                } label: {
-                    HStack {
-                        Spacer()
-                            .frame(width: 12)
-                        Image(systemName: "chevron.left")
-                            .font(.title3)
+                if #available(iOS 26.0, *) {
+                    Button {
+                        router.navigateBack()
+                    } label: {
+                        Label("Back", systemImage: "chevron.left")
+                            .labelStyle(.iconOnly)
+                            .frame(width: 50, height: 50)
                             .foregroundStyle(.white)
-                        Spacer()
-                            .frame(width: 48)
+                    }
+                    .glassEffect()
+                } else {
+                    Button {
+                        router.navigateBack()
+                    } label: {
+                        HStack {
+                            Spacer()
+                                .frame(width: 12)
+                            Image(systemName: "chevron.left")
+                                .font(.title3)
+                                .foregroundStyle(.white)
+                            Spacer()
+                                .frame(width: 48)
+                        }
                     }
                 }
                 

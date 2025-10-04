@@ -33,26 +33,19 @@ class Navigator {
                 UserDefaultsKeys.nfpReferred.setValue(id)
                 await openNFPpaywall(accountId: id)
             case .chat:
-                print("chat")
+                await navigateToChat(chatId: id)
             case .other:
                 print("other")
             }
         }
     }
     
-//    func handleDeepLink(url: URL) {
-//        Task {
-//            let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
-//            if let accountId = components?.queryItems?.first(where: {$0.name == "id"})?.value {
-//                UserDefaultsKeys.nfpReferred.setValue(accountId)
-//                await openNFPpaywall(accountId: accountId)
-//            }
-//        }
-//    }
-    
     func handlePushNotification(userInfo: [AnyHashable:Any]) {
         Task {
-            guard let typeString = userInfo["type"] as? String else { return }
+            guard let typeString = userInfo["type"] as? String else {
+                print("Notification has no type")
+                return
+            }
             let type = UniversalLinkType(rawValue: typeString)
             let id = userInfo["id"] as? String
             switch type {
@@ -68,9 +61,9 @@ class Navigator {
             case .nfplus:
                 await openNFPpaywall(accountId: id)
             case .chat:
-                print("chat")
+                await navigateToChat(chatId: id)
             case .other:
-                print("other")
+                navigateToNotificationsTab()
             case .none:
                 print("none")
             }
@@ -101,11 +94,16 @@ class Navigator {
         NFPManager.shared.showNFPView = true
     }
     
-    private func navigateToChat(chatId: String) async {
+    private func navigateToChat(chatId: String?) async {
         AppState.shared.selectedTab = 4
+        guard let chatId else {return}
         if let viewModel = ChatsManager.shared.viewModels.first(where: {$0.chatID == chatId}) {
             router.navigateTo(.ChatView(viewModel))
         }
+    }
+    
+    private func navigateToNotificationsTab() {
+        AppState.shared.selectedTab = 3
     }
     
 }

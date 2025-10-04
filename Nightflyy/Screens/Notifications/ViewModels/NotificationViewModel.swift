@@ -140,7 +140,6 @@ class NotificationViewModel: NSObject {
     
     func goToEvent() {
         guard let eventId =  notification.notificationData.event_id else { return }
-        print(eventId)
         Task {
             if let event = await EventClient.fetchEvent(eventId: eventId) {
                 let viewModel = EventViewModel(event: event)

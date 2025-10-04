@@ -168,14 +168,28 @@ struct DiscoverView: View {
             }
             .overlay(alignment: .bottom) {
                 if viewModel.hasResults && !isSearhing {
-                    Button {
-                        viewModel.navigateToResultsView()
-                    } label: {
-                        Text("Browse (\(viewModel.resultsCount) Results)")
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
-                            .background(.mainPurple)
+                    if #available(iOS 26.0, *) {
+                        Button {
+                            viewModel.navigateToResultsView()
+                        } label: {
+                            Text("Browse (\(viewModel.resultsCount) Results)")
+                                .foregroundStyle(.white)
+                                .padding(.vertical)
+                                .padding(.horizontal, 32)
+                                .glassEffect(.regular.tint(.mainPurple).interactive())
+                        }
+                        .padding(.bottom, 8)
+                    }
+                    else {
+                        Button {
+                            viewModel.navigateToResultsView()
+                        } label: {
+                            Text("Browse (\(viewModel.resultsCount) Results)")
+                                .foregroundStyle(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(.mainPurple)
+                        }
                     }
                 }
             }
