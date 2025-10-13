@@ -89,7 +89,7 @@ class NFPManager {
             AccountManager.shared.account?.plusMember = true
             AccountManager.shared.account?.plusCredits = 1
             AccountManager.shared.account?.nextCreditDate = nextCreditDate
-            if let promoCode = promoCode {
+            if let promoCode = promoCode, promoCode != "" {
                 AccountManager.shared.account?.bonusCreditDate = bonusCreditDate
                 PromoCodesClient.addRedemption(code: promoCode)
             }
