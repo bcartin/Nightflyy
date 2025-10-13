@@ -21,7 +21,7 @@ enum NFPSignUpScreen {
 class NFPSignUpViewModel {
  
     var displayView: NFPSignUpScreen = .paywall
-    var promoCode: String = ""
+    var promoCode: String?
     var codeIsValid: Bool = false
     var codeRedeemed: Bool = false
     var error: Error?
@@ -40,7 +40,7 @@ class NFPSignUpViewModel {
     
     var promoCodeCased: String {
         get {
-            return promoCode.uppercased()
+            return promoCode?.uppercased() ?? ""
         }
         set {
             promoCode = newValue.uppercased()
@@ -90,6 +90,10 @@ class NFPSignUpViewModel {
     
     func validatePromoCode() {
         Task {
+            guard let promoCode, !promoCode.isEmpty else {
+                error = NFPError.invalidCode
+                return
+            }
             AppState.shared.isLoading = true
             codeIsValid = await PromoCodesClient.codeIsValid(code: promoCode)
             AppState.shared.isLoading = false
