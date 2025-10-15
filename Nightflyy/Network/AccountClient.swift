@@ -170,4 +170,21 @@ class AccountClient {
         try FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value).document(accountId).collection(FirestoreCollections.Accounts.reviews).addDocument(from: review)
     }
     
+    static func fetchNightflyyPlusMember() async -> [Account] {
+        var accounts: [Account] = .init()
+        do {
+            let dbRef = FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value)
+                .whereField(FirestoreCollections.Accounts.plus_member, isEqualTo: true)
+            let snapshot = try await dbRef.getDocuments()
+            accounts = try snapshot.documents.map({ document in
+                return try document.data(as: Account.self)
+            })
+            return accounts.sorted { $0.name ?? "" < $1.name ?? "" }
+        }
+        catch {
+            print(error.localizedDescription)
+            return accounts
+        }
+    }
+    
 }

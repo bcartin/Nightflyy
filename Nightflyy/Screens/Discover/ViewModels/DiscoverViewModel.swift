@@ -149,13 +149,23 @@ class DiscoverViewModel {
         var events = events
         
         //Filter By Music
-        events = selectedMusic.isEmpty ? events : events.filter{$0.eventMusic!.contains(where: selectedMusic.contains)}
+        events = selectedMusic.isEmpty ? events : events.filter({ event in
+            if let music = event.eventMusic {
+                return music.contains(where: selectedMusic.contains)
+            }
+            return false
+        })
         
         //Filter By Venue Type
         events = selectedVenues.isEmpty ? events : events.filter{ selectedVenues.contains($0.eventVenueType ?? "")}
         
         //Filter By Crowds
-        events = selectedCrowds.isEmpty ? events : events.filter{$0.eventCrowds!.contains(where: selectedCrowds.contains)}
+        events = selectedCrowds.isEmpty ? events : events.filter({ event in
+            if let crowds = event.eventCrowds {
+                return crowds.contains(where: selectedCrowds.contains)
+            }
+            return false
+        })
         
         //Filter By Date
         if let selectedDate = selectedDate {

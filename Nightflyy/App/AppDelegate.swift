@@ -45,6 +45,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         #endif
 
         UNUserNotificationCenter.current().delegate = self
+        UIApplication.shared.registerForRemoteNotifications()
         
         let coordinator = MainCoordinator()
         coordinator.setUpInAppPurchases()
