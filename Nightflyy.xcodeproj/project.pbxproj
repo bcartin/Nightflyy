@@ -257,6 +257,7 @@
 		CBB78CCC2DE6570F00FD0DA4 /* PromoCodesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB78CCB2DE6570800FD0DA4 /* PromoCodesClient.swift */; };
 		CBB78CCE2DE7760000FD0DA4 /* NFPInvitesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB78CCD2DE775F900FD0DA4 /* NFPInvitesClient.swift */; };
 		CBB78CD02DE7887B00FD0DA4 /* SignUpCompletedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB78CCF2DE7887B00FD0DA4 /* SignUpCompletedView.swift */; };
+		CBB91A162EB907480061738F /* AppTabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBB91A152EB9073E0061738F /* AppTabs.swift */; };
 		CBC270112DEE25F10075C931 /* SkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBC270102DEE25EC0075C931 /* SkeletonView.swift */; };
 		CBC270132DEE260C0075C931 /* SkeletonModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBC270122DEE26080075C931 /* SkeletonModifier.swift */; };
 		CBC270152DEE26780075C931 /* CachedAsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBC270142DEE26720075C931 /* CachedAsyncImage.swift */; };
@@ -527,6 +528,7 @@
 		CBB78CCB2DE6570800FD0DA4 /* PromoCodesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromoCodesClient.swift; sourceTree = "<group>"; };
 		CBB78CCD2DE775F900FD0DA4 /* NFPInvitesClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFPInvitesClient.swift; sourceTree = "<group>"; };
 		CBB78CCF2DE7887B00FD0DA4 /* SignUpCompletedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpCompletedView.swift; sourceTree = "<group>"; };
+		CBB91A152EB9073E0061738F /* AppTabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTabs.swift; sourceTree = "<group>"; };
 		CBC270102DEE25EC0075C931 /* SkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonView.swift; sourceTree = "<group>"; };
 		CBC270122DEE26080075C931 /* SkeletonModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonModifier.swift; sourceTree = "<group>"; };
 		CBC270142DEE26720075C931 /* CachedAsyncImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedAsyncImage.swift; sourceTree = "<group>"; };
@@ -641,6 +643,7 @@
 			children = (
 				CB8AD0C62DB0319E008E8A76 /* AccountEnums.swift */,
 				CBB78C712DC40D8700FD0DA4 /* AppNotificationType.swift */,
+				CBB91A152EB9073E0061738F /* AppTabs.swift */,
 				CB8AD0CE2DB6D3B2008E8A76 /* EventEnums.swift */,
 				CB09CB572CF7BEC50066987A /* EventsViewFilter.swift */,
 				CB14219D2CDD27F9009220E1 /* Lists.swift */,
@@ -1574,6 +1577,7 @@
 				CBC2706A2E099B240075C931 /* ReviewVenueView.swift in Sources */,
 				CB8AD0D12DB6D9BD008E8A76 /* EventGuestListView.swift in Sources */,
 				CB960CE02E2596AC007D3110 /* SearchResultsView.swift in Sources */,
+				CBB91A162EB907480061738F /* AppTabs.swift in Sources */,
 				CB09CB532CF678890066987A /* EventsManager.swift in Sources */,
 				CB0BF8B32C01185E00C4612C /* AuthenticationManager.swift in Sources */,
 				CBB656752CDD0D5A00B279A2 /* EventsFilterViewModel.swift in Sources */,
@@ -1901,7 +1905,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nightflyy/Nightflyy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"Nightflyy/Preview Content\"";
 				DEVELOPMENT_TEAM = YVH7KZM656;
 				ENABLE_PREVIEWS = YES;
@@ -1923,7 +1927,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.5;
+				MARKETING_VERSION = 3.0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.com.slydelife.Slyde;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1946,7 +1950,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nightflyy/Nightflyy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"Nightflyy/Preview Content\"";
 				DEVELOPMENT_TEAM = YVH7KZM656;
 				ENABLE_PREVIEWS = YES;
@@ -1969,7 +1973,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.5;
+				MARKETING_VERSION = 3.0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.slydelife.Slyde;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

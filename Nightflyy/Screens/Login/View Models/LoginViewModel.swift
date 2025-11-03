@@ -31,6 +31,7 @@ class LoginViewModel {
             case .success(let uid):
                 Logger.auth.info("Successfully logged in for user \(uid)")
                 MainCoordinator().initialAppSetup()
+                try await PushNotificationsManager.shared.requestPermission()
             case .failure(let error):
                 self.error = error
                 Logger.auth.error("Error login in.")
@@ -56,6 +57,7 @@ class LoginViewModel {
         do {
             _ = try await AuthenticationManager.shared.signIn(with: credential)
             MainCoordinator().initialAppSetup()
+            try await PushNotificationsManager.shared.requestPermission()
         }
         catch {
             print(error.localizedDescription)

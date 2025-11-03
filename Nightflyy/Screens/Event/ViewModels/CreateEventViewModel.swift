@@ -19,6 +19,7 @@ class CreateEventViewModel: NSObject {
     var isShowingOptions: Bool = false
     var error: Error?
     var uiImage: UIImage?
+    var updatedEvent: ((Event) -> Void)?
     
     init(event: Event) {
         self.event = event
@@ -166,7 +167,8 @@ class CreateEventViewModel: NSObject {
                 updateSearchIndex()
                 try? await Task.sleep(for: .seconds(2))
                 isLoading = false
-                General.showSavedMessage()
+                updatedEvent?(event)
+                Router.shared.navigateBack()
             }
             catch {
                 self.error = error

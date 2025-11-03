@@ -31,7 +31,11 @@ class EventViewModel: NSObject {
         self.event = event
         self.eventOwner = eventOwner
         super.init()
-        self.setAttendanceStatus()
+        
+        Task {
+            await fetchEventOwner()
+            self.setAttendanceStatus()
+        }
         
         print(event.uid)
     }
@@ -174,6 +178,10 @@ class EventViewModel: NSObject {
     func goToEditEvent() {
         presentOptionsDialog = false
         let viewModel = CreateEventViewModel(event: event)
+        viewModel.updatedEvent = { [weak self] event in
+            self?.event = event
+            General.showSavedMessage()
+        }
         Router.shared.navigateTo(.CreateEvent(viewModel))
     }
     
@@ -196,8 +204,9 @@ class EventViewModel: NSObject {
             do {
                 guard let uid = AccountManager.shared.account?.uid else {return}
                 try await EventClient.setEventOwner(eventId: event.uid, uid: uid)
-                event.createdBy = AccountManager.shared.account?.uid
-                event.updateCache()
+                event.createdBy = uid
+                firebaseCache.removeObject(forKey: event.uid as NSString)
+                eventOwner = AccountManager.shared.account
                 EventsManager.shared.updateEventLists(with: event)
                 General.showSuccessMessage(message: "Event Claimed")
             }
@@ -236,6 +245,14 @@ class EventViewModel: NSObject {
     func handleSendAsMessageTapped() {
         presentShareDialog = false
         presentSendAsMessageScreen = true
+    }
+    
+    func fetchEventOwner() async {
+        if self.eventOwner == nil {
+            if let uid = event.createdBy, uid != "unclaimed" {
+                self.eventOwner = await AccountClient.fetchAccount(accountId: uid)
+            }
+        }
     }
     
     func fetchEventComments(since: Date? = nil) async {

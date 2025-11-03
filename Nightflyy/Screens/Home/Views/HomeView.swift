@@ -21,7 +21,7 @@ struct HomeView: View {
         RouterView {
             VStack {
                 Spacer()
-                    .frame(height: 64)
+                    .frame(height: 54)
                 
                 if !locationManager.permissionGranted && viewModel.selectedFiler == .nearby {
                     NoPermissionsView()
