@@ -63,7 +63,7 @@ class Navigator {
             case .chat:
                 await navigateToChat(chatId: id)
             case .other:
-                navigateToNotificationsTab()
+                navigateToTab(.Home)
             case .none:
                 print("none")
             }
@@ -102,8 +102,8 @@ class Navigator {
         }
     }
     
-    private func navigateToNotificationsTab() {
-        AppState.shared.selectedTab = 3
+    private func navigateToTab(_ tab: AppTab) {
+        AppState.shared.selectedTab = tab.rawValue
     }
     
 }
