@@ -35,6 +35,7 @@ struct Account: Identifiable, Codable, Savable {
     var invited: [String]?
     var interested: [String]?
     var isAdmin: Bool? = false
+    var isTester: Bool? = false
     var location: GeoPoint?
     var messageCount: Int?
     var music: [String]?
@@ -118,6 +119,7 @@ struct Account: Identifiable, Codable, Savable {
         case hidden
         case invited
         case isAdmin = "is_admin"
+        case isTester = "is_tester"
         case numberOfReviews = "number_of_reviews"
         case chats
         case reviews

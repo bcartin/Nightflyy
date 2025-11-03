@@ -49,6 +49,7 @@ class PushNotificationsManager: NSObject, UIApplicationDelegate {
         unCenter.delegate = self
         UIApplication.shared.registerForRemoteNotifications()
         Messaging.messaging().delegate = self
+        subscribeToTester()
     }
     
     func didRegisterForNotifications(_ deviceToken: Data) {
@@ -56,6 +57,12 @@ class PushNotificationsManager: NSObject, UIApplicationDelegate {
         print("APNs token: \(apnsToken)")
         Messaging.messaging().apnsToken = deviceToken
         subscribeToNotifications(target: .everyone)
+    }
+    
+    func subscribeToTester() {
+        if AccountManager.shared.account?.isTester ?? false {
+            subscribeToNotifications(target: .test)
+        }
     }
     
 }
