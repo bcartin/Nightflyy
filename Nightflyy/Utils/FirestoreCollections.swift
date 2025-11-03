@@ -17,6 +17,7 @@ class FirestoreCollections {
         static var redemptionCode = "redemption_code"
         static var accountType = "account_type"
         static var plusProvider = "plus_provider"
+        static var plus_member = "plus_member"
         static var blocked = "blocked"
         static var blockedBy = "blocked_by"
         static var requested = "requested"

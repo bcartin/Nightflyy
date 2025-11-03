@@ -91,6 +91,7 @@ class SignupViewModel {
         do {
             let uid = try await AuthenticationManager.shared.createUser(email: email, password: password)
             try await createAccount(uid: uid)
+            try await PushNotificationsManager.shared.requestPermission()
         }
         catch {
             print(error.localizedDescription)
@@ -114,6 +115,7 @@ class SignupViewModel {
         do {
             let uid = try await AuthenticationManager.shared.signIn(with: credential)
             try await createAccount(uid: uid)
+            try await PushNotificationsManager.shared.requestPermission()
         }
         catch {
             print(error.localizedDescription)

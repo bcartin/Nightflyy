@@ -45,6 +45,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         #endif
 
         UNUserNotificationCenter.current().delegate = self
+        UIApplication.shared.registerForRemoteNotifications()
         
         let coordinator = MainCoordinator()
         coordinator.setUpInAppPurchases()
@@ -86,5 +87,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: any Error) {
         print("Failed to register for notifications")
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+        PushNotificationsManager.shared.userInfo = response.notification.request.content.userInfo
     }
 }

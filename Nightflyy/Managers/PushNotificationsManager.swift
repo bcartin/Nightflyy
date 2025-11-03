@@ -16,7 +16,12 @@ class PushNotificationsManager: NSObject, UIApplicationDelegate {
     
     let unCenter = UNUserNotificationCenter.current()
     var authorizationStatus: UNAuthorizationStatus = .notDetermined
-    var navigator: Navigator?
+    var userInfo: [AnyHashable: Any]?
+    var navigator: Navigator? {
+        didSet {
+            handlePendingPushNotification()
+        }
+    }
     
     private override init() {
         super.init()
@@ -44,6 +49,7 @@ class PushNotificationsManager: NSObject, UIApplicationDelegate {
         unCenter.delegate = self
         UIApplication.shared.registerForRemoteNotifications()
         Messaging.messaging().delegate = self
+        subscribeToTester()
     }
     
     func didRegisterForNotifications(_ deviceToken: Data) {
@@ -53,19 +59,31 @@ class PushNotificationsManager: NSObject, UIApplicationDelegate {
         subscribeToNotifications(target: .everyone)
     }
     
+    func subscribeToTester() {
+        if AccountManager.shared.account?.isTester ?? false {
+            subscribeToNotifications(target: .test)
+        }
+    }
+    
 }
 
 extension PushNotificationsManager: UNUserNotificationCenterDelegate {
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         
-        let userInfo = response.notification.request.content.userInfo
-        navigator?.handlePushNotification(userInfo: userInfo)
+        userInfo = response.notification.request.content.userInfo
+        handlePendingPushNotification()
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
         return [.sound, .badge]
         //TODO: Present in app message
+    }
+    
+    func handlePendingPushNotification () {
+        guard let userInfo else { return }
+        navigator?.handlePushNotification(userInfo: userInfo)
+        self.userInfo = nil
     }
     
 }
@@ -74,6 +92,9 @@ extension PushNotificationsManager: MessagingDelegate {
     
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("Token Received: ", fcmToken ?? "")
+        if let apnsToken = messaging.apnsToken {
+            print("APNs Token: ", apnsToken)
+        }
         saveToken(token: fcmToken)
     }
     
