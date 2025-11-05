@@ -14,14 +14,15 @@ struct Account: Identifiable, Codable, Savable {
     @DocumentID var id = UUID().uuidString
     var accountIsPrivate: Bool?
     var accountType: AccountType?
-    var attending: [String]?
     var address: String?
+    var appVersion: String?
+    var attending: [String]?
     var badgeCount: Int?
+    var bio: String?
     var blocked: [String]?
     var blockedBy: [String]?
     @ExplicitNull var bonusCreditDate: Date? = nil
     var businessEmail: String?
-    var bio: String?
     var chats: [String]?
     var city: String?
     var clientele: [String]?
@@ -36,6 +37,7 @@ struct Account: Identifiable, Codable, Savable {
     var interested: [String]?
     var isAdmin: Bool? = false
     var isTester: Bool? = false
+    var lastOnline: Date?
     var location: GeoPoint?
     var messageCount: Int?
     var music: [String]?
@@ -78,55 +80,57 @@ struct Account: Identifiable, Codable, Savable {
     
     enum CodingKeys: String, CodingKey {
         case id
-        case email
-        case accountType = "account_type"
-        case music
-        case venues
-        case clientele
-        case venueType = "venue_type"
-        case address
-        case city
-        case state
-        case username
-        case name
-        case dob
-        case gender
-        case bio
-        case photoFileName = "photo_file_name"
-        case phoneNumber = "phone_number"
-        case badgeCount = "badge_count"
-        case notificationSettings = "notification_settings"
-        case profileImageUrl = "profile_image_url"
-        case website
-        case businessEmail = "business_email"
-        case followers
-        case following
         case accountIsPrivate = "account_is_private"
-        case location = "l"
-        case geohash = "g"
-        case plusMember = "plus_member"
-        case plusProvider = "plus_provider"
-        case plusCredits = "plus_credits"
-        case nextCreditDate = "next_credit_date"
-        case rating
-        case redemptionCode = "redemption_code"
-        case perkName = "perk_name"
-        case perkDetails = "perk_details"
-        case messageCount = "messages_count"
-        case requested
+        case accountType = "account_type"
+        case address
+        case appVersion = "app_version"
         case attending
-        case interested
-        case hidden
-        case invited
-        case isAdmin = "is_admin"
-        case isTester = "is_tester"
-        case numberOfReviews = "number_of_reviews"
-        case chats
-        case reviews
+        case badgeCount = "badge_count"
+        case bio
         case blocked
         case blockedBy = "blocked_by"
         case bonusCreditDate = "bonus_credit_date"
+        case businessEmail = "business_email"
+        case chats
+        case city
+        case clientele
+        case dob
+        case email
+        case followers
+        case following
+        case gender
+        case geohash = "g"
+        case hidden
+        case invited
+        case interested
+        case isAdmin = "is_admin"
+        case isTester = "is_tester"
+        case lastOnline = "last_online"
+        case location = "l"
+        case messageCount = "messages_count"
+        case music
+        case name
+        case nextCreditDate = "next_credit_date"
+        case notificationSettings = "notification_settings"
+        case numberOfReviews = "number_of_reviews"
+        case perkDetails = "perk_details"
+        case perkName = "perk_name"
+        case phoneNumber = "phone_number"
+        case photoFileName = "photo_file_name"
+        case plusCredits = "plus_credits"
+        case plusMember = "plus_member"
+        case plusProvider = "plus_provider"
+        case profileImageUrl = "profile_image_url"
+        case rating
+        case redemptionCode = "redemption_code"
+        case requested
+        case reviews
+        case state
         case token
+        case username
+        case venues
+        case venueType = "venue_type"
+        case website
     }
 }
 

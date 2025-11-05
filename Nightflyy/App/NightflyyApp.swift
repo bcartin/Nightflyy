@@ -96,6 +96,7 @@ struct NightflyyApp: App {
                     print("App moved to active")
                     Task {
                         await RemoteConfigManager.shared.syncVariables()
+                        AccountManager.shared.updateTrackInfo()
                     }
                 @unknown default:
                     break
