@@ -509,8 +509,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/qonversion/qonversion-ios-sdk";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.13.3;
+				kind = exactVersion;
+				version = 6.0.0;
 			};
 		};
 		CBC270662E0487C20075C931 /* XCRemoteSwiftPackageReference "mixpanel-swift" */ = {
