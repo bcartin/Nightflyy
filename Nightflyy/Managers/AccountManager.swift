@@ -107,4 +107,10 @@ class AccountManager {
         try AppNotificationClient.saveNotification(for: newFollower.uid, notification: notification)
         try await AccountClient.removeFromRequested(accountId: newFollower.uid)
     }
+    
+    func updateTrackInfo() {
+        account?.appVersion = UIApplication.appVersion
+        account?.lastOnline = Date()
+        try? account?.save()
+    }
 }
