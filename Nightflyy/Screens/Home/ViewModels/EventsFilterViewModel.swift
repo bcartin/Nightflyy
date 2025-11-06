@@ -56,4 +56,11 @@ class EventsFilterViewModel {
             venues = await AccountClient.fetchVenuesFrom(city: city)
         }
     }
+    
+    func fetchFollowingEvents() {
+        Task {
+            guard let account =  AccountManager.shared.account else {return}
+            await EventsManager.shared.fetchFollowingEvents(account: account)
+        }
+    }
 }

@@ -52,6 +52,7 @@ struct EventsFilterView: View {
                 
                 
                 Button {
+                    viewModel.fetchFollowingEvents()
                     viewModel.selectedFiler = .following
                     dismiss()
                 } label: {
