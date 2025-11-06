@@ -257,7 +257,7 @@ struct EventView: View {
             let titleProress = minY / height
             
             HStack(spacing: 10) {
-                if #available(iOS 26.0, *) {
+                if #available(iOS 26.0, *) { //TODO: Remove when min version is iOS 26
                     Button {
                         router.navigateBack()
                     } label: {
@@ -286,13 +286,25 @@ struct EventView: View {
                 Spacer()
                 
                 if viewModel.shouldShowOptionsButton {
-                    Button {
-                        viewModel.presentOptionsDialog.toggle()
-                    } label: {
-                        Image("ic_dotmenu")
-                            .font(.title3)
-                            .foregroundStyle(.white)
-                            .tint(.white)
+                    if #available(iOS 26.0, *) { //TODO: Remove when min version is iOS 26
+                        Button {
+                            viewModel.presentOptionsDialog.toggle()
+                        } label: {
+                            Label("Menu", image: "ic_dotmenu")
+                                .labelStyle(.iconOnly)
+                                .frame(width: 50, height: 50)
+                                .foregroundStyle(.white)
+                        }
+                        .glassEffect()
+                    } else {
+                        Button {
+                            viewModel.presentOptionsDialog.toggle()
+                        } label: {
+                            Image("ic_dotmenu")
+                                .font(.title3)
+                                .foregroundStyle(.white)
+                                .tint(.white)
+                        }
                     }
                 }
 

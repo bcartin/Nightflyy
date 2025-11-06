@@ -89,6 +89,23 @@ class EventClient {
         return events
     }
     
+    static func fetchFutureEventsHostedBy(uid: String) async -> [Event] {
+        var events: [Event] = .init()
+        do {
+            let eventsRef = FirebaseManager.shared.db.collection(FirestoreCollections.Events.value)
+                .whereField(FirestoreCollections.Events.createdBy, isEqualTo: uid)
+                .whereField("end_date", isGreaterThan: Date())
+            let snapshot = try await eventsRef.getDocuments()
+            events = try snapshot.documents.map({ document in
+                return try document.data(as: Event.self)
+            })
+        }
+        catch {
+            return events
+        }
+        return events
+    }
+    
     static func fetchEventsAttending(uid: String) async -> [Event] {
         var events: [Event] = .init()
         do {

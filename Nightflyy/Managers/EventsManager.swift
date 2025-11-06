@@ -23,12 +23,6 @@ class EventsManager {
     
     private init() {  }
     
-    func initialEventFetch() async {
-        await fetchNearbyEvents()
-        guard let account = AccountManager.shared.account else { return }
-        await fetchFollowingEvents(account: account)
-    }
-    
     func fetchNearbyEvents() async {
         do {
             guard let location = LocationManager.shared.currentLocation else { return }
@@ -123,7 +117,7 @@ class EventsManager {
         await withTaskGroup(of: [Event]?.self) { group in
             for uid in followingIDs {
                 group.addTask {
-                    return await EventClient.fetchEventsHostedBy(uid: uid)
+                    return await EventClient.fetchFutureEventsHostedBy(uid: uid)
                 }
             }
             for await eventGroup in group {

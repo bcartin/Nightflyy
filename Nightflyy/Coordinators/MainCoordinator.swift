@@ -16,7 +16,7 @@ class MainCoordinator {
             AnalyticsManager.setUserID(value: uid)
             await AccountManager.shared.fetchAccount(uid: uid)
             await PushNotificationsManager.shared.configure()
-            await EventsManager.shared.initialEventFetch()
+            await EventsManager.shared.fetchNearbyEvents()
             await NFPManager.shared.checkSubscriptionStatus()
             AppState.shared.showSplashScreen = false
             await ChatsManager.shared.initChatsListener(uid: uid)

@@ -247,29 +247,58 @@ struct ProfileView: View {
             let titleProress = minY / height
             
             HStack(spacing: 10) {
-                Button {
-                    router.navigateBack()
-                } label: {
-                    HStack {
-                        Image(systemName: "chevron.left")
-                            .font(.title3)
+                if #available(iOS 26.0, *) { //TODO: Remove when min version is iOS 26
+                    Button {
+                        router.navigateBack()
+                    } label: {
+                        Label("Back", systemImage: "chevron.left")
+                            .labelStyle(.iconOnly)
+                            .frame(width: 50, height: 50)
                             .foregroundStyle(.white)
-                        Spacer()
-                            .frame(width: 40)
+                    }
+                    .glassEffect()
+                } else {
+                    Button {
+                        router.navigateBack()
+                    } label: {
+                        HStack {
+                            Spacer()
+                                .frame(width: 12)
+                            Image(systemName: "chevron.left")
+                                .font(.title3)
+                                .foregroundStyle(.white)
+                            Spacer()
+                                .frame(width: 48)
+                        }
                     }
                 }
                 
                 Spacer()
                 
-                Button {
-                    viewModel.handleOptionsTapped()
-                } label: {
-                    Image(viewModel.isSelf ? "ic_edit" : "ic_dotmenu")
-                        .font(.title3)
-                        .foregroundStyle(.white)
-                        .tint(.white)
-                }
-                
+                if #available(iOS 26.0, *) { //TODO: Remove when min version is iOS 26
+                    Button {
+                        viewModel.handleOptionsTapped()
+                    } label: {
+                        Label("Options", image: viewModel.isSelf ? "ic_edit" : "ic_dotmenu")
+                            .labelStyle(.iconOnly)
+                            .frame(width: 50, height: 50)
+                            .foregroundStyle(.white)
+                    }
+                    .glassEffect()
+                } else {
+                    Button {
+                        viewModel.handleOptionsTapped()
+                    } label: {
+                        Button {
+                            viewModel.handleOptionsTapped()
+                        } label: {
+                            Image(viewModel.isSelf ? "ic_edit" : "ic_dotmenu")
+                                .font(.title3)
+                                .foregroundStyle(.white)
+                                .tint(.white)
+                        }
+                    }
+                }                
                 
             }
             .overlay(content: {
