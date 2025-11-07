@@ -54,6 +54,7 @@ struct ProfileView: View {
                             Text("Followers")
                             Text("\(viewModel.account.followers?.count ?? 0)")
                         }
+                        .font(.system(size: 14))
                         .onTapGesture {
                             let viewModel = NetworkViewModel(account: viewModel.account, selectedSegment: 1)
                             router.navigateTo(.Network(viewModel))
@@ -63,6 +64,7 @@ struct ProfileView: View {
                             Text("Following")
                             Text("\(viewModel.account.following?.count ?? 0)")
                         }
+                        .font(.system(size: 14))
                         .onTapGesture {
                             let viewModel = NetworkViewModel(account: viewModel.account, selectedSegment: 2)
                             router.navigateTo(.Network(viewModel))

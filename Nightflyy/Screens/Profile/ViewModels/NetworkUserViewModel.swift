@@ -33,46 +33,46 @@ class NetworkUserViewModel: NSObject {
         Router.shared.navigateTo(.Profile(viewModel))
     }
     
-    var buttonLabel: String {
-        let followers = AccountManager.shared.account?.followers ?? []
-        let following = AccountManager.shared.account?.following ?? []
-        if followers.contains(account?.uid ?? "") && selectedSegment == 1 {
-            return "Remove"
-        }
-        else if following.contains(account?.uid ?? "") {
-            return "Unfollow"
-        }
-        else {
-            return "Follow"
-        }
-    }
+//    var buttonLabel: String {
+//        let followers = AccountManager.shared.account?.followers ?? []
+//        let following = AccountManager.shared.account?.following ?? []
+//        if followers.contains(account?.uid ?? "") && selectedSegment == 1 {
+//            return "Remove"
+//        }
+//        else if following.contains(account?.uid ?? "") {
+//            return "Unfollow"
+//        }
+//        else {
+//            return "Follow"
+//        }
+//    }
     
-    var buttonBackgroundColor: Color {
-        let followers = AccountManager.shared.account?.followers ?? []
-        let following = AccountManager.shared.account?.following ?? []
-        if followers.contains(account?.uid ?? "") && selectedSegment == 1 {
-            return Color.mainPurple
-        }
-        else if following.contains(account?.uid ?? "") {
-            return Color.clear
-        }
-        else {
-            return Color.mainPurple
-        }
-    }
-    
-    var buttonBorderColor: Color {
-        let followers = AccountManager.shared.account?.followers ?? []
-        let following = AccountManager.shared.account?.following ?? []
-        if followers.contains(account?.uid ?? "") && selectedSegment == 1 {
-            return Color.clear
-        }
-        else if following.contains(account?.uid ?? "") {
-            return Color.white
-        }
-        else {
-            return Color.clear
-        }
-    }
+//    var buttonBackgroundColor: Color {
+//        let followers = AccountManager.shared.account?.followers ?? []
+//        let following = AccountManager.shared.account?.following ?? []
+//        if followers.contains(account?.uid ?? "") && selectedSegment == 1 {
+//            return Color.mainPurple
+//        }
+//        else if following.contains(account?.uid ?? "") {
+//            return Color.clear
+//        }
+//        else {
+//            return Color.mainPurple
+//        }
+//    }
+//    
+//    var buttonBorderColor: Color {
+//        let followers = AccountManager.shared.account?.followers ?? []
+//        let following = AccountManager.shared.account?.following ?? []
+//        if followers.contains(account?.uid ?? "") && selectedSegment == 1 {
+//            return Color.clear
+//        }
+//        else if following.contains(account?.uid ?? "") {
+//            return Color.white
+//        }
+//        else {
+//            return Color.clear
+//        }
+//    }
     
 }
