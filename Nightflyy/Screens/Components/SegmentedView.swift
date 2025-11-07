@@ -19,12 +19,14 @@ struct SegmentedView: View {
     let segments: [SegmentedViewOption]
     @Binding var selected: Int
     @Namespace var name
+    @State var isDisabled: Bool = false
 
     var body: some View {
         HStack(spacing: 0) {
             ForEach(segments) { segment in
                 Button {
                     if selected != segment.id {
+                        disableButtons()
                         withAnimation {
                             selected = segment.id
                         }
@@ -49,7 +51,16 @@ struct SegmentedView: View {
                     }
                     .padding(.top, 12)
                 }
+                .disabled(isDisabled)
             }
+        }
+    }
+    
+    
+    func disableButtons() {
+        isDisabled = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+            self.isDisabled = false
         }
     }
 }
