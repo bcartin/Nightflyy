@@ -11,7 +11,6 @@ struct NetworkView: View {
     
     @Environment(Router.self) private var router
     @Bindable var viewModel: NetworkViewModel
-    @State var isSearhing: Bool = false
     @FocusState private var isKeyboardActive: Bool
     
     var body: some View {

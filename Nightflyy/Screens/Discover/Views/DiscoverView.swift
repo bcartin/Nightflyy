@@ -22,28 +22,47 @@ struct DiscoverView: View {
                 
                 VStack(alignment: .leading, spacing: 0) {
                     
-                    TextField("", text: $viewModel.searchText, prompt: Text("Search").foregroundStyle(.white.opacity(0.5)))
-                        .foregroundStyle(.white)
-                        .padding(8)
-                        .padding(.horizontal, 25)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(8)
-                        .disabled(true)
-                        .onTapGesture {
-                            withAnimation {
-                                self.isSearhing = true
-                            }
+                    Button {
+                        withAnimation {
+                            self.isSearhing = true
                         }
-                        .overlay {
-                            HStack {
+                    } label: {
+                        if #available(iOS 26.0, *) { // TODO: Remove when min version is iOS 26
+                            HStack(spacing: 8) {
                                 Image(systemName: "magnifyingglass")
+                                    .font(.callout)
                                     .foregroundStyle(.white.opacity(0.5))
-                                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-                                    .padding(.leading, 8)
+                                
+                                Text("Search").foregroundStyle(.white.opacity(0.5))
+                                
+                                Spacer()
+                               
                             }
+                            .padding(.horizontal, 16)
+                            .frame(height: 44)
+                            .glassEffect(.regular, in: .capsule)
+                            .padding(.top, 8)
+                            .padding(.horizontal, 16)
                         }
-                        .padding(.horizontal)
-                        .padding(.top, 8)
+                        else {
+                            HStack(spacing: 8) {
+                                Image(systemName: "magnifyingglass")
+                                    .font(.callout)
+                                    .foregroundStyle(.white.opacity(0.5))
+                                
+                                Text("Search").foregroundStyle(.white.opacity(0.5))
+                                
+                                Spacer()
+                            }
+                            .padding(.horizontal, 16)
+                            .frame(height: 40)
+                            .background(Color(.systemGray6))
+                            .cornerRadius(8)
+                            .padding(.top, 8)
+                            .padding(.horizontal, 16)
+                            
+                        }
+                    }
                     
                     VStack(alignment: .leading) {
                         
