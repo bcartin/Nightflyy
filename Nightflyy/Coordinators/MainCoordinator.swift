@@ -17,6 +17,7 @@ class MainCoordinator {
             await AccountManager.shared.fetchAccount(uid: uid)
             await PushNotificationsManager.shared.configure()
             await EventsManager.shared.fetchNearbyEvents()
+            await EventsManager.shared.fetchNearbyVenues()
             await NFPManager.shared.checkSubscriptionStatus()
             AppState.shared.showSplashScreen = false
             await ChatsManager.shared.initChatsListener(uid: uid)
