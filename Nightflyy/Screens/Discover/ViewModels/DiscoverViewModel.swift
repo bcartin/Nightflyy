@@ -106,7 +106,7 @@ class DiscoverViewModel {
     }
     
     var filteredVenues: [Account] {
-        filterViewModel.venues
+        EventsManager.shared.locationVenues
             .filter {
                 selectedVenues.contains($0.venueType ?? "") || selectedVenues.isEmpty
             }
