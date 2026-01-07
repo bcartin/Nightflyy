@@ -35,7 +35,7 @@ class IAPManager {
     }
     
     func purchase(venue: Account?) async throws -> Bool {
-        let purchaseResult = try await Qonversion.shared().purchase("basic_subscription")
+        let purchaseResult = try await Qonversion.shared().purchase("basic_subscription_2026")
         let entitlements = purchaseResult.0
         if let subscription: Qonversion.Entitlement = entitlements["Basic"], subscription.isActive {
             if let uid = AccountManager.shared.account?.uid {
