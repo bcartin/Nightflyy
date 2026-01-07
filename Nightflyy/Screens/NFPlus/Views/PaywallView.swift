@@ -26,62 +26,117 @@ struct PaywallView: View {
                     .frame(width: 86, height: 6)
                     .safeAreaPadding(.top, 64)
                 
+                HStack {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .foregroundStyle(.gray)
+                            .font(.title2.bold())
+                            .offset(y: -12)
+                    }
+                    .padding(.horizontal)
+                    
+                    Spacer()
+                }
+                
                 Spacer()
                 
-                HStack {
-                    Text("Upgrade to Nightflyy+")
-                        .foregroundStyle(.white)
-                        .font(.custom("NeuropolXRg-Regular", size: 17))
-                        .padding()
-                }
-                .background(
-                    RoundedRectangle(cornerRadius: 50)
-                        .fill(
-                            LinearGradient(gradient: Gradient(colors: [.backgroundBlack, .backgroundBlack, .mainPurple]), startPoint: .leading, endPoint: .trailing)
+                ZStack {
+                    RoundedRectangle(cornerRadius: 48)
+                        .fill(.backgroundBlack)
+                        .frame(height: 160)
+                        .shadow(color: .onlineBlue, radius: 24)
+                        
+                    VStack {
+                        HStack {
+                            Text("Upgrade to Nightflyy+")
+                                .foregroundStyle(.white)
+                                .font(.custom("NeuropolXRg-Regular", size: 18))
+                                .padding()
+                        }
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(
+                                    LinearGradient(gradient: Gradient(colors: [.backgroundBlack, .backgroundBlack, .mainPurple]), startPoint: .leading, endPoint: .trailing)
+                                )
                         )
-                )
-                .padding(.bottom, 4)
-                
-                Text("Join for the perks, stay for the vibes!")
-                    .foregroundStyle(.gray)
-                    .font(.system(size: 12, weight: .medium))
-                    .padding(.bottom, 20)
-                
-                Text("Limited Time Offer")
-                    .foregroundStyle(.onlineBlue)
-                    .font(.system(size: 12, weight: .medium))
-                
-                Text("Free for 7 Days then $7.99/month")
-                    .foregroundStyle(.gray)
-                    .font(.system(size: 18, weight: .medium))
-                
-                FeaturesView()
-                
-                Text("By tapping the button I agree to the Terms and automatic monthly charge of $7.99 until I cancel. Cancel in account prior to any renewal to avoid charges. Perks will vary depending on the venue. Cancel anytime.")
-                    .foregroundStyle(.gray)
-                    .font(.system(size: 10))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
-                    .padding(.vertical, 16)
-                
-                Button {
-                    viewModel.checkForReferral()
-                } label: {
-                    Text("Join Now, First Round On Us")
+                        .padding(.bottom, 4)
+                        
+                        Text("Better Vibes Start Here")
+                            .foregroundStyle(.white)
+                            .font(.system(size: 13, weight: .medium))
+                            .padding(.bottom, 20)
+                    }
+                    
                 }
-                .mainButtonStyle()
+                .offset(x: 0, y: 50)
                 
-                
-                Button {
-                    viewModel.restoreSubscriptionOrSkip()
-                } label: {
-                    Text(authenticationManager.isSigningUp ? "Skip" : "Renew Subscription")
-                        .foregroundStyle(.mainPurple)
-                        .font(.system(size: 17))
-                        .padding()
+                VStack {
+                    
+                    Spacer()
+                        .frame(height: 40)
+                    
+                    VStack(alignment: .leading, spacing: 16) {
+                        FeatureView(title: "VIP Perks. Every Week.",
+                                    subtitle: "Drink specials, food discounts, free entry & more.",
+                                    iconName: "ic_perks")
+                        
+                        FeatureView(title: "Explore Your City.",
+                                    subtitle: "Try new bars, clubs & restaurants",
+                                    iconName: "ic_explore")
+                        
+                        FeatureView(title: "Find Your People.",
+                                    subtitle: "A community that matches your vibe",
+                                    iconName: "ic_crowds")
+                        
+                        FeatureView(title: "It Pays For Itself.",
+                                    subtitle: "Value you feel the first time",
+                                    iconName: "ic_value")
+                    }
+                    
+                    HStack(spacing: 0) {
+                        Text("14 days free trial.")
+                            .foregroundStyle(.onlineBlue)
+                        
+                        Text("Then $12.00/month")
+                            .foregroundStyle(.white)
+                    }
+                    .font(.system(size: 14, weight: .medium))
+                    .padding(.top, 44)
+                    .padding(.bottom)
+                    
+                    Button {
+                        viewModel.checkForReferral()
+                    } label: {
+                        Text("Start Free Trial")
+                            .padding()
+                            .padding(.horizontal, 85)
+                            .foregroundStyle(.white)
+                            .background(.onlineBlue.gradient)
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    
+                    Text("By tapping the button I agree to the Terms and automatic monthly charge of $12.00 until I cancel. Cancel in account prior to any renewal to avoid charges. Perks will vary depending on the venue. Cancel anytime.")
+                        .foregroundStyle(.gray)
+                        .font(.system(size: 10))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 32)
+                        .padding(.vertical, 16)
+                    
+                    Button {
+                        viewModel.restoreSubscriptionOrSkip()
+                    } label: {
+                        Text(authenticationManager.isSigningUp ? "Skip" : "Restore Subscription")
+                            .foregroundStyle(.white)
+                            .font(.system(size: 14))
+                            .padding(.bottom, 36)
+                    }
+                  
                 }
+                .frame(maxWidth: .infinity)
+                .background(.backgroundBlack)
             }
-            .padding(.bottom, 32)
         }
         .ignoresSafeArea(.container, edges: .all)
         .gesture(
@@ -97,69 +152,31 @@ struct PaywallView: View {
 }
 
 #Preview {
-    PaywallView(viewModel: .constant(NFPSignUpViewModel()))
+//    PaywallView()
 }
 
-
-struct FeaturesView: View {
-    
-    struct Feature: Identifiable {
-        let id = UUID()
-        let title: String
-        let subtitle: String
-        let color: Color
-    }
-    
-    var features: [Feature] = [
-        Feature(title: "Exclusive Perks", subtitle: "Enjoy exclusive perks at your favorite spots weekly", color: .onlineBlue),
-        Feature(title: "Explore", subtitle: "Discover new bars, clubs, breweries, and more in your area.", color: .orange),
-        Feature(title: "VIP Experience", subtitle: "Unlock the VIP Nightflyy experience.", color: .red),
-        Feature(title: "Amazing Value", subtitle: "Redeem just 1 perk to get your money's worth!", color: .green)
-    ]
+struct FeatureView: View {
+    let title: String
+    let subtitle: String
+    let iconName: String
     
     var body: some View {
-        
-        let width = UIScreen.main.bounds.width
-        - 140
-        
-        ScrollView(.horizontal) {
-            HStack(spacing: 25) {
-                ForEach(features) { feature in
-                    HStack {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(feature.title)
-                                .foregroundStyle(.gray)
-                                .font(.system(size: 17, weight: .medium))
-                            
-                            Text(feature.subtitle)
-                                .foregroundStyle(.gray)
-                                .font(.system(size: 12))
-                                .multilineTextAlignment(.leading)
-                        }
-                        .padding(.leading, 20)
-                        
-                        Spacer()
-                    }
-                    .frame(width: width, height: 80)
-                    .background {
-                        ZStack(alignment: .trailing) {
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(feature.color)
-                                .frame(width: width, height: 80)
-                            
-                            Rectangle()
-                                .fill(.backgroundBlack)
-                                .frame(width: width - 10, height: 80)
-                        }
-                    }
-                }
+        HStack(alignment: .top, spacing: 12) {
+            Image(iconName)
+                .resizable()
+                .frame(width: 25, height: 25)
+                .clipShape(Circle())
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .foregroundStyle(.white)
+                    .font(.system(size: 18, weight: .bold))
+                Text(subtitle)
+                    .foregroundStyle(.gray)
+                    .font(.system(size: 12))
             }
-            .scrollTargetLayout()
         }
-        .safeAreaPadding(.horizontal, 70)
-        .padding(.top, 8)
-        .scrollTargetBehavior(.viewAligned)
-        .scrollIndicators(.hidden)
-        
     }
 }
+
+

@@ -85,4 +85,9 @@ class NFPRedeemViewModel {
         nfpVenues = await AccountClient.fetchNightflyyPlusProviders().filter{$0.accountType == .venue}
     }
     
+    func navigateToProfile(account: Account) {
+        let viewModel = ProfileViewModel(account: account)
+        Router.shared.navigateTo(.Profile(viewModel))
+    }
+    
 }

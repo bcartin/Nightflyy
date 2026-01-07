@@ -14,19 +14,30 @@ struct NetworkUserView: View {
     
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
-            UserImageRound(imageUrl: viewModel.account?.profileImageUrl, size: 48)
-            Text(viewModel.account?.username ?? "")
+            ZStack(alignment: .topTrailing) {
+                UserImageRound(imageUrl: viewModel.account?.profileImageUrl, size: 48)
+                
+                if viewModel.account?.plusProvider ?? false {
+                    Image("plus_badge")
+                        .resizable()
+                        .frame(width: 18, height: 18)
+                        .padding(.trailing, -4)
+                }
+                else if viewModel.account?.plusMember ?? false {
+                    Image("plus_badge_user")
+                        .resizable()
+                        .frame(width: 18, height: 18)
+                        .padding(.trailing, -4)
+                }
+            }
             
-            if viewModel.account?.plusProvider ?? false {
-                Image("plus_badge")
-                    .resizable()
-                    .frame(width: 18, height: 18)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(viewModel.account?.username ?? "")
+                
+                Text(viewModel.account?.name ?? "")
+                    .foregroundStyle(.gray)
             }
-            else if viewModel.account?.plusMember ?? false {
-                Image("plus_badge_user")
-                    .resizable()
-                    .frame(width: 18, height: 18)
-            }
+            .font(.system(size: 12))
             
             Spacer()
             

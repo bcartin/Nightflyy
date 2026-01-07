@@ -30,7 +30,7 @@ struct EventsFilterView: View {
             
             HStack(spacing: 12) {
                 Button {
-                    viewModel.selectedFiler = .nearby
+                    viewModel.setFilterAsNearby()
                     dismiss()
                 } label: {
                     HStack {
@@ -52,6 +52,7 @@ struct EventsFilterView: View {
                 
                 
                 Button {
+                    viewModel.fetchFollowingEvents()
                     viewModel.selectedFiler = .following
                     dismiss()
                 } label: {

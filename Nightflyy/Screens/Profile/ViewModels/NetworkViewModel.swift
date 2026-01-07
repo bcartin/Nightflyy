@@ -7,30 +7,51 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 @Observable
 class NetworkViewModel: NSObject {
     
     var account: Account
-    var searchText: String = ""
+    var displayFollowers: [String] = []
+    var displayFollowing: [String] = []
     var selectedSegment: Int
     let segments = [SegmentedViewOption(id: 1, title: "Followers"), SegmentedViewOption(id: 2, title: "Following")]
     
+    @ObservationIgnored
+    @Published var searchText: String = ""
+    private var searchCancellable: AnyCancellable?
+    
     init(account: Account, selectedSegment: Int) {
         self.account = account
+        self.displayFollowers = account.followers ?? []
+        self.displayFollowing = account.following ?? []
         self.selectedSegment = selectedSegment
+        super.init()
+        
+        searchCancellable = $searchText
+            .receive(on: DispatchQueue.main)
+            .debounce(for: .seconds(1), scheduler: RunLoop.main)
+            .sink(receiveValue: { [weak self] fragment in
+                self?.performSearch(searchText: fragment)
+            })
     }
     
-    var displayArray: [String] {
-        selectedSegment == 1 ? account.followers ?? [] : account.following ?? []
-    }
-    
-    var filteredFollowers: [String] {
+    private func performSearch(searchText: String) {
         if searchText.isEmpty {
-            return account.followers ?? []
+            self.displayFollowers = self.account.followers ?? []
+            self.displayFollowing = self.account.following ?? []
         }
         else {
-            return account.followers?.filter {$0.contains(searchText)} ?? []
+            let algoliaSearchResults = SearchManager.shared.performSearch(searchText: searchText).compactMap(\.objectID)
+            let followers = account.followers ?? []
+            self.displayFollowers = followers.filter {
+                algoliaSearchResults.contains($0)
+            }
+            let following = account.following ?? []
+            self.displayFollowing = following.filter {
+                algoliaSearchResults.contains($0)
+            }
         }
     }
 }

@@ -244,9 +244,7 @@ extension ProfileViewModel { // VENUE SPECIFIC FIELDS & FUNCTIONS
 //    }
     
     func openWebsite() {
-        guard var urlString = account.website else { return }
-        urlString = "https://" + urlString
-        guard let url = URL(string: urlString) else { return }
+        guard let url = URL(string: account.website ?? "") else { return }
         UIApplication.shared.open(url)
     }
     

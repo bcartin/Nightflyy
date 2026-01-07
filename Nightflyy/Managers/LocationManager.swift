@@ -48,6 +48,10 @@ extension LocationManager: CLLocationManagerDelegate {
             permissionGranted = false
         case .authorizedWhenInUse:
             permissionGranted = true
+            Task {
+                await EventsManager.shared.fetchNearbyEvents()
+                await EventsManager.shared.fetchNearbyVenues()
+            }
         case .denied, .restricted:
             permissionGranted = false
         case .authorizedAlways:

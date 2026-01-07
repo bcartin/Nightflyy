@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ab180/airbridge-ios-sdk-deployment",
       "state" : {
-        "revision" : "0c47fb40cf638e2aa1b05b9ddb58c807fbbdaddc",
-        "version" : "4.7.0"
+        "revision" : "21687865c1461956706cef5506f9e5f8bdf97444",
+        "version" : "4.8.1"
       }
     },
     {
@@ -87,8 +87,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/grpc-binary.git",
       "state" : {
-        "revision" : "cc0001a0cf963aa40501d9c2b181e7fc9fd8ec71",
-        "version" : "1.69.0"
+        "revision" : "75b31c842f664a0f46a2e590a570e370249fd8f6",
+        "version" : "1.69.1"
       }
     },
     {
@@ -124,7 +124,7 @@
       "location" : "https://github.com/mixpanel/mixpanel-swift",
       "state" : {
         "branch" : "master",
-        "revision" : "7459dd6b61665cce9f4f284ccd5dfd1d902aa568"
+        "revision" : "4088e46b2d76a70e227f790f5b683f8ff52951d0"
       }
     },
     {
@@ -150,8 +150,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/qonversion/qonversion-ios-sdk",
       "state" : {
-        "revision" : "74d685859dbfca34fb7df5575edbc7c7220b461b",
-        "version" : "5.14.0"
+        "revision" : "f610ca5d8d27c8010725d26e8d18283ae210be9d",
+        "version" : "6.0.0"
       }
     },
     {
@@ -177,8 +177,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-protobuf.git",
       "state" : {
-        "revision" : "e3f69fd321d0c9fcdc16fb576a0cdd956675face",
-        "version" : "1.31.0"
+        "revision" : "c169a5744230951031770e27e475ff6eefe51f9d",
+        "version" : "1.33.3"
       }
     }
   ],

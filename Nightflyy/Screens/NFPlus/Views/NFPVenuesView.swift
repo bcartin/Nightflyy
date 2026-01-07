@@ -9,6 +9,7 @@ import SwiftUI
 
 struct NFPVenuesView: View {
     
+    @Environment(\.dismiss) var dismiss
     @Binding var viewModel: NFPRedeemViewModel
     
     var body: some View {
@@ -22,7 +23,10 @@ struct NFPVenuesView: View {
             ScrollView(.vertical) {
                 ForEach(viewModel.nfpVenues) { account in
 
-                    VenueListItemView(viewModel: VenueListItemViewModel(venue: account)) {  }
+                    VenueListItemView(viewModel: VenueListItemViewModel(venue: account)) {
+                        dismiss()
+                        viewModel.navigateToProfile(account: account)
+                    }
                 }
             }
             .padding(.horizontal)
