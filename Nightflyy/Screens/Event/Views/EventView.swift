@@ -238,9 +238,6 @@ struct EventView: View {
         .sheet(isPresented: $viewModel.presentInviteScreen, onDismiss: nil) {
             InviteFromEventView(viewModel: InviteFromEventViewModel(event: viewModel.event))
         }
-        .sheet(isPresented: $viewModel.presentSendAsMessageScreen, onDismiss: nil) {
-            SendObjectAsMessageView(viewModel: SendObjectAsMessageViewModel(event: viewModel.event))
-        }
         .sheet(isPresented: $viewModel.preseentCommentsScreen) {
             EventCommentsListView(viewModel: viewModel)
                 .presentationDetents([.medium, .large])

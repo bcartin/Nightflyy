@@ -25,6 +25,7 @@ class Router {
         case SearchResultsListView(SearchResultsListViewModel)
         case ChatView(InboxRowViewModel)
         case ReviewVenueView(ReviewVenueViewModel)
+        case SendObjectAsMessage(SendObjectAsMessageViewModel)
     }
     
     var path: NavigationPath = NavigationPath()
@@ -68,6 +69,8 @@ class Router {
             ChatView(viewModel: viewModel)
         case .ReviewVenueView(let viewModel):
             ReviewVenueView(viewModel: viewModel)
+        case .SendObjectAsMessage(let viewModel):
+            SendObjectAsMessageView(viewModel: viewModel)
         }
     
     }

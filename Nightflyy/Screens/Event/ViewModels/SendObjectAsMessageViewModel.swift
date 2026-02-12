@@ -7,9 +7,10 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 @Observable
-class SendObjectAsMessageViewModel {
+class SendObjectAsMessageViewModel: NSObject {
     
     var event: Event?
     var account: Account?
@@ -20,11 +21,23 @@ class SendObjectAsMessageViewModel {
     var shouldDismiss: Bool = false
     var isEvent: Bool
     
+    @ObservationIgnored
+    @Published var searchText: String = ""
+    private var searchCancellable: AnyCancellable?
+    
     init(event: Event? = nil, account: Account? = nil) {
         self.event = event
         self.account = account
         self.isEvent = event != nil
+        super.init()
         createMessage()
+        
+        searchCancellable = $searchText
+            .receive(on: DispatchQueue.main)
+            .debounce(for: .seconds(1), scheduler: RunLoop.main)
+            .sink(receiveValue: { [weak self] fragment in
+                self?.performSearch(searchText: fragment)
+            })
     }
     
     func createMessage() {
@@ -57,6 +70,19 @@ class SendObjectAsMessageViewModel {
             }
             catch {
                 print(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func performSearch(searchText: String) {
+        if searchText.isEmpty {
+            self.followers = AccountManager.shared.account?.followers ?? []
+        }
+        else {
+            let algoliaSearchResults = SearchManager.shared.performSearch(searchText: searchText).compactMap(\.objectID)
+            let searchfollowers = AccountManager.shared.account?.followers ?? []
+            self.followers = searchfollowers.filter {
+                algoliaSearchResults.contains($0)
             }
         }
     }

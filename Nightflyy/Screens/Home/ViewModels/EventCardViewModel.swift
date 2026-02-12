@@ -15,7 +15,6 @@ class EventCardViewModel: NSObject {
     var eventOwner: Account?
     var attendanceStatus: AttendanceStatus = .notAttending
     var presentInviteScreen: Bool = false
-    var presentSendAsMessageScreen: Bool = false
     var error: Error?
 
     init(event: Event) {
@@ -97,6 +96,11 @@ class EventCardViewModel: NSObject {
         Router.shared.navigateTo(.EventGuestList(viewModel))
     }
     
+    func navigateToSendAsMessage() {
+        let viewModel = SendObjectAsMessageViewModel(event: self.event)
+        Router.shared.navigateTo(.SendObjectAsMessage(viewModel))
+    }
+    
     func markAsAttenging() {
         Task {
             do {
@@ -143,10 +147,6 @@ class EventCardViewModel: NSObject {
         else {
             error = EventError.cannotInvite
         }
-    }
-    
-    func handleSendAsMessageTapped() {
-        presentSendAsMessageScreen = true
     }
     
 }
