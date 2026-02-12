@@ -213,8 +213,6 @@ struct VenueProfileView: View {
             switch viewModel.selectedPresentView {
             case .editScreen:
                 EditVenueProfileView(viewModel: EditVenueProfileViewModel())
-            case .sendAsMessage:
-                SendObjectAsMessageView(viewModel: SendObjectAsMessageViewModel(account: viewModel.account))
             case .report:
                 ReportView(viewModel: ReportViewModel(objectId: viewModel.account.uid))
             case.paywall:
@@ -257,7 +255,7 @@ struct VenueProfileView: View {
             buttonBackground: .backgroundBlackLight
         ) {
             Button("Send Profile as Message") {
-                viewModel.selectPresentView(for: .sendAsMessage)
+                viewModel.navigateToSendAsMessage()
             }
             Button("Report") {
                 viewModel.selectPresentView(for: .report)

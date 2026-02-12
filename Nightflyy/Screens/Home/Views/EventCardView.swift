@@ -87,7 +87,7 @@ struct EventCardView: View {
                                 Label("Share Event", systemImage: "")
                             }
                             Button("Invite Friends") {
-                                viewModel.handleSendAsMessageTapped()
+                                viewModel.navigateToSendAsMessage()
                             }
                         } label: {
                             Image("ic_share")
@@ -154,9 +154,6 @@ struct EventCardView: View {
         .background(.clear)
         .sheet(isPresented: $viewModel.presentInviteScreen, onDismiss: nil) {
             InviteFromEventView(viewModel: InviteFromEventViewModel(event: viewModel.event))
-        }
-        .sheet(isPresented: $viewModel.presentSendAsMessageScreen, onDismiss: nil) {
-            SendObjectAsMessageView(viewModel: SendObjectAsMessageViewModel(event: viewModel.event))
         }
         .errorAlert(error: $viewModel.error, buttonTitle: "OK")
     }

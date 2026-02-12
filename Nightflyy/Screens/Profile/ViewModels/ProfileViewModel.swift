@@ -203,13 +203,17 @@ class ProfileViewModel: NSObject {
         }
     }
     
+    func navigateToSendAsMessage() {
+        let viewModel = SendObjectAsMessageViewModel(account: self.account)
+        Router.shared.navigateTo(.SendObjectAsMessage(viewModel))
+    }
+    
 }
 
 extension ProfileViewModel {
     
     enum PresentSheetView {
         case editScreen
-        case sendAsMessage
         case report
         case paywall
         case review

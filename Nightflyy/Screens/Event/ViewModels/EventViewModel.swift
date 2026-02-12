@@ -18,7 +18,6 @@ class EventViewModel: NSObject {
     var presentShareDialog: Bool = false
     var presentCancelAlert: Bool = false
     var presentInviteScreen: Bool = false
-    var presentSendAsMessageScreen: Bool = false
     var preseentCommentsScreen: Bool = false
     var error: Error?
     var attendanceStatus: AttendanceStatus = .notAttending
@@ -244,7 +243,8 @@ class EventViewModel: NSObject {
     
     func handleSendAsMessageTapped() {
         presentShareDialog = false
-        presentSendAsMessageScreen = true
+        let viewModel = SendObjectAsMessageViewModel(event: self.event)
+        Router.shared.navigateTo(.SendObjectAsMessage(viewModel))
     }
     
     func fetchEventOwner() async {
