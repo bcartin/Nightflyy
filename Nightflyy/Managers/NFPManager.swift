@@ -125,7 +125,8 @@ class NFPManager {
     
     func addReminderNotification() {
         if perkReminderDate > Date() {
-            PushNotificationsManager.shared.perkReminderNotification(for: perkReminderDate)
+            let data = ["type": "nfplus"]
+            LocalNotificationsManager.shared.scheduleLocalNotification(type: .perkReminder, date: perkReminderDate, data: data)
         }
     }
     
@@ -149,7 +150,7 @@ class NFPManager {
                 AccountManager.shared.account?.plusCredits = 0
                 try AccountManager.shared.account?.save()
             }
-            await PushNotificationsManager.shared.deleteDateNotificationRequest(identifiers: ["perk_reminder_notification"])
+            LocalNotificationsManager.shared.removeScheduledNotification(type: .perkReminder)
             return .success(true)
         }
         catch {

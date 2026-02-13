@@ -39,16 +39,26 @@ class EventAttendanceManager {
         removeFromInterested(event: &event)
         event.updateCache()
         
-        guard let eventCreator = event.createdBy else { return }
-        let notification = AppNotification(sender: uid,
-                                              date: Date(),
-                                              type: AppNotificationType.event_going,
-                                              notificationData: NotificationData(event_flyer_url: event.eventFlyerUrl,
-                                                                                 event_id: eventId,
-                                                                                 event_name: event.eventName,
-                                                                                 profile_image_url: AccountManager.shared.account?.profileImageUrl,
-                                                                                 username: AccountManager.shared.account?.username))
-        try AppNotificationClient.saveNotification(for: eventCreator, notification: notification)
+        // Send Notification to Event Owner
+        if let eventCreator = event.createdBy, !event.isUnclaimed {
+            let notification = AppNotification(sender: uid,
+                                               date: Date(),
+                                               type: AppNotificationType.event_going,
+                                               notificationData: NotificationData(event_flyer_url: event.eventFlyerUrl,
+                                                                                  event_id: eventId,
+                                                                                  event_name: event.eventName,
+                                                                                  profile_image_url: AccountManager.shared.account?.profileImageUrl,
+                                                                                  username: AccountManager.shared.account?.username))
+            try AppNotificationClient.saveNotification(for: eventCreator, notification: notification)
+        }
+        
+        //Schedule Local Notification
+        if let startDate = event.startDate {
+            let data = ["type":"event", "id":event.uid]
+            let date = startDate.addingTimeInterval(-60 * 60)
+            LocalNotificationsManager.shared.scheduleLocalNotification(type: .eventReminder(event), date: date, data: data)
+        }
+        
     }
     
     func markAsNotAttending(event: inout Event) async throws {
@@ -58,6 +68,7 @@ class EventAttendanceManager {
         removeFromAttending(event: &event)
         removeFromInterested(event: &event)
         event.updateCache()
+        LocalNotificationsManager.shared.removeScheduledNotification(type: .eventReminder(event))
     }
     
     private func removeFromAttending(event: inout Event) {
