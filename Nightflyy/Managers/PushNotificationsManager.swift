@@ -116,20 +116,3 @@ extension PushNotificationsManager: MessagingDelegate {
         Messaging.messaging().unsubscribe(fromTopic: target.rawValue)
     }
 }
-
-extension PushNotificationsManager { // Local Notifications
-    
-    func perkReminderNotification(for date: Date) {
-        let content = UNMutableNotificationContent()
-        content.title = "Remember to use your Plus Perk ✅"
-        content.sound = .default
-        let dateComponents = Calendar.current.dateComponents(Set(arrayLiteral: Calendar.Component.year, Calendar.Component.month, Calendar.Component.day, Calendar.Component.hour, Calendar.Component.minute), from: date)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-        let request = UNNotificationRequest(identifier: "perk_reminder_notification", content: content, trigger: trigger)
-        unCenter.add(request)
-    }
-    
-    func deleteDateNotificationRequest(identifiers: [String]) {
-        unCenter.removePendingNotificationRequests(withIdentifiers: identifiers)
-    }
-}
