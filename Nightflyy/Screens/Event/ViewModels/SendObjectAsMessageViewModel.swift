@@ -18,7 +18,6 @@ class SendObjectAsMessageViewModel: NSObject {
     var error: Error?
     var selectedAccounts: [String] = .init()
     var message: Message?
-    var shouldDismiss: Bool = false
     var isEvent: Bool
     
     @ObservationIgnored
@@ -65,8 +64,8 @@ class SendObjectAsMessageViewModel: NSObject {
             message.recipient = accountId
             do {
                 try ChatsManager.sendMessage(chatId: chat.uid, message: message)
-                shouldDismiss = true
                 General.showSuccessMessage(message: "Message Sent", imageName: "checkmark.circle.fill")
+                Router.shared.popLast(numberOfViews: 1)
             }
             catch {
                 print(error.localizedDescription)

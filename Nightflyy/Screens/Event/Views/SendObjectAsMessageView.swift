@@ -10,7 +10,6 @@ import SwiftUI
 struct SendObjectAsMessageView: View {
     
     @Bindable var viewModel: SendObjectAsMessageViewModel
-    @Environment(Router.self) private var router
     @FocusState private var isKeyboardActive: Bool
     
     var body: some View {
@@ -95,9 +94,6 @@ struct SendObjectAsMessageView: View {
         .backgroundImage("slyde_background")
         .background(.backgroundBlack)
         .errorAlert(error: $viewModel.error, buttonTitle: "OK")
-        .onChange(of: viewModel.shouldDismiss) { oldValue, newValue in
-            router.popLast(numberOfViews: 1)
-        }
     }
 }
 

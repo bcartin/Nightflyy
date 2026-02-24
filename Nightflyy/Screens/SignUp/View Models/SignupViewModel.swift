@@ -139,6 +139,11 @@ class SignupViewModel {
         try account?.save()
         await UsernamesClient.saveUsername(username: username)
         
+        // Follow Jameel
+        if var jameelAccount = await AccountClient.fetchAccount(accountId: "Ya2VB47Ei2QlfN4XB25BOUgoM6S2") {
+            try AccountManager.shared.followAccount(accountToFollow: &jameelAccount)
+        }
+        
         // Update search Index
         try SearchManager.shared.updateSearchIndex(objectID: uid, objectType: .person, name: name, username: username, venue: nil)
         
@@ -147,7 +152,6 @@ class SignupViewModel {
         
         MainCoordinator().initialAppSetup()
         
-        //TODO: Add follow to NF and Jameel
         AppState.shared.isLoading = false
         self.goToScreen(.location)
     }
