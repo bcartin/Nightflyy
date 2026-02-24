@@ -82,6 +82,7 @@ class Router {
     }
     
     func navigateBack() {
+        if path.count == 0 { return }
         withAnimation {
             path.removeLast()
         }
@@ -95,7 +96,7 @@ class Router {
     
     func popLast(numberOfViews: Int) {
         withAnimation {
-            for _ in 0...numberOfViews {
+            for _ in 1...numberOfViews {
                 navigateBack()
             }
         }

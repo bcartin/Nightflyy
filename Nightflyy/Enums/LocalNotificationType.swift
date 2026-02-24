@@ -25,8 +25,8 @@ enum LocalNotificationType {
             
         case .perkReminder:
             "Remember to use your Plus Perk ✅"
-        case .eventReminder(let event):
-            "\(event.eventName ?? "Event") is Starting Soon ✨"
+        case .eventReminder(_):
+            "Your Vibe Starts Soon ✨"
         }
     }
     
@@ -34,7 +34,7 @@ enum LocalNotificationType {
         switch self {
         case .perkReminder:
             nil
-        case .eventReminder(_):
-            "Your vibe begins in 1 hour. Tap for details."}
+        case .eventReminder(let event):
+            "\(event.eventName ?? "Event") begins in 1 hour. Tap for details."}
     }
 }
