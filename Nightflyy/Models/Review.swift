@@ -18,6 +18,7 @@ struct Review: Identifiable, Codable {
     var date: Date
     
     enum CodingKeys: String, CodingKey {
+        case id
         case reviewer
         case rating
         case likes

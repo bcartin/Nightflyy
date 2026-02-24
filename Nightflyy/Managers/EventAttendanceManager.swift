@@ -26,7 +26,7 @@ class EventAttendanceManager {
         removeFromAttending(event: &event)
     }
     
-    func markAsAttenging(event: inout Event) async throws {
+    func markAsAttending(event: inout Event) async throws {
         guard let uid = AccountManager.shared.account?.uid, let eventId = event.id else { return }
         try await EventClient.addUserToAttending(eventId: eventId, uid: uid)
         if event.attending != nil {

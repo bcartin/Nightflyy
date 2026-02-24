@@ -104,7 +104,7 @@ class EventCardViewModel: NSObject {
     func markAsAttenging() {
         Task {
             do {
-                try await EventAttendanceManager.shared.markAsAttenging(event: &event)
+                try await EventAttendanceManager.shared.markAsAttending(event: &event)
                 EventsManager.shared.updateEventLists(with: event)
                 setAttendanceStatus()
             }

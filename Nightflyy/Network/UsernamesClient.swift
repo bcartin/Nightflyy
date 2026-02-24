@@ -5,7 +5,7 @@
 //  Created by Bernie Cartin on 4/10/25.
 //
 
-import SwiftUI
+import Foundation
 import FirebaseFirestore
 
 class UsernamesClient {

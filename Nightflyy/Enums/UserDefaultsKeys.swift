@@ -16,7 +16,7 @@ enum UserDefaultsKeys :String {
         switch self {
             
         case .hideSwipeForActionsPrompt:
-            UserDefaults.standard.bool(forKey: rawValue) as? T ?? false as! T
+            UserDefaults.standard.bool(forKey: rawValue) as? T 
         case .bonusCredit:
             UserDefaults.standard.integer(forKey: rawValue) as? T
         case .nfpReferred:

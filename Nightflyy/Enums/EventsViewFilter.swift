@@ -1,5 +1,5 @@
 //
-//  HomeViewFilter.swift
+//  EventsViewFilter.swift
 //  Nightflyy
 //
 //  Created by Bernie Cartin on 11/27/24.

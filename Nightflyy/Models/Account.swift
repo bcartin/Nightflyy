@@ -65,7 +65,7 @@ struct Account: Identifiable, Codable, Savable {
     var website: String?
 
     var uid: String {
-        return self.id!
+        return self.id ?? ""
     }
     
     func getFollowingStatus(uid: String) -> FollowingStatus {

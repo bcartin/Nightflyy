@@ -12,10 +12,7 @@ import FirebaseFunctions
 
 class FirebaseManager {
     
-    private init() {
-        let settings = db.settings
-        db.settings = settings
-    }
+    private init() { }
     
     static let shared = FirebaseManager()
     

@@ -57,19 +57,19 @@ class SendgridManager {
 #endif
     }
     
-    private static func AddContacts(request: ContactRequest) async throws -> ContactReponse {
+    private static func AddContacts(request: ContactRequest) async throws -> ContactResponse {
         do {
             let (data, response) = try await URLSession.shared.data(for: request.httpRequest)
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw ContactError.failureReponse
+                throw ContactError.failureResponse
             }
             
             if httpResponse.statusCode == 202 {
-                let decodedResponse = try JSONDecoder().decode(ContactReponse.self, from: data)
+                let decodedResponse = try JSONDecoder().decode(ContactResponse.self, from: data)
                 return decodedResponse
             }
             else {
-                throw ContactError.failureReponse
+                throw ContactError.failureResponse
             }
             
         }

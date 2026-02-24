@@ -7,83 +7,83 @@
 
 import Foundation
 
-class FirestoreCollections {
+enum FirestoreCollections {
     
-    class Accounts {
-        static var value = "accounts"
+    enum Accounts {
+        static let value = "accounts"
         
-        static var reviews = "reviews"
-        static var notifications = "notifications"
-        static var redemptionCode = "redemption_code"
-        static var accountType = "account_type"
-        static var plusProvider = "plus_provider"
-        static var plus_member = "plus_member"
-        static var blocked = "blocked"
-        static var blockedBy = "blocked_by"
-        static var requested = "requested"
-        static var token = "token"
+        static let reviews = "reviews"
+        static let notifications = "notifications"
+        static let redemptionCode = "redemption_code"
+        static let accountType = "account_type"
+        static let plusProvider = "plus_provider"
+        static let plus_member = "plus_member"
+        static let blocked = "blocked"
+        static let blockedBy = "blocked_by"
+        static let requested = "requested"
+        static let token = "token"
     }
     
-    class Events {
-        static var value = "events"
+    enum Events {
+        static let value = "events"
         
-        static var attending = "attending"
-        static var invited = "invited"
-        static var interested = "interested"
-        static var createdBy = "created_by"
-        static var endDate = "end_date"
-        static var assigned_to = "assigned_to"
-        static var l = "l"
-        static var comments = "comments"
-        static var likes = "likes"
+        static let attending = "attending"
+        static let invited = "invited"
+        static let interested = "interested"
+        static let createdBy = "created_by"
+        static let endDate = "end_date"
+        static let assigned_to = "assigned_to"
+        static let l = "l"
+        static let comments = "comments"
+        static let likes = "likes"
     }
     
-    class Chats {
-        static var value = "chats"
+    enum Chats {
+        static let value = "chats"
         
-        static var members = "members"
+        static let members = "members"
     }
     
-    class Messages {
-        static var value = "messages"
+    enum Messages {
+        static let value = "messages"
         
-        static var date = "date"
+        static let date = "date"
     }
     
-    class Usernames {
-        static var value = "usernames"
+    enum Usernames {
+        static let value = "usernames"
         
-        static var usernames = "usernames"
+        static let usernames = "usernames"
     }
     
-    class Notifications {
-        static var value = "notifications"
+    enum Notifications {
+        static let value = "notifications"
         
-        static var date = "date"
+        static let date = "date"
     }
     
-    class NFPRedemptions {
-        static var value = "nfp_redemptions"
+    enum NFPRedemptions {
+        static let value = "nfp_redemptions"
     }
     
-    class NFPInvites {
-        static var value = "nfp_invites"
+    enum NFPInvites {
+        static let value = "nfp_invites"
     }
     
-    class BACodes {
-        static var value = "ba_codes"
+    enum BACodes {
+        static let value = "ba_codes"
         
-        static var code = "code"
-        static var isEnabled = "is_enabled"
-        static var redemptions = "redemptions"
+        static let code = "code"
+        static let isEnabled = "is_enabled"
+        static let redemptions = "redemptions"
     }
     
-    class Reports {
-        static var value = "reports"
+    enum Reports {
+        static let value = "reports"
     }
     
-    class GenericFields {
-        static var date = "date"
+    enum GenericFields {
+        static let date = "date"
     }
     
 }

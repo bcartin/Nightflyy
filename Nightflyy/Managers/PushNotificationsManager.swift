@@ -54,7 +54,9 @@ class PushNotificationsManager: NSObject, UIApplicationDelegate {
     
     func didRegisterForNotifications(_ deviceToken: Data) {
         let apnsToken = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
+        #if DEBUG
         print("APNs token: \(apnsToken)")
+        #endif
         Messaging.messaging().apnsToken = deviceToken
         subscribeToNotifications(target: .everyone)
     }
@@ -91,10 +93,12 @@ extension PushNotificationsManager: UNUserNotificationCenterDelegate {
 extension PushNotificationsManager: MessagingDelegate {
     
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        #if DEBUG
         print("Token Received: ", fcmToken ?? "")
         if let apnsToken = messaging.apnsToken {
             print("APNs Token: ", apnsToken)
         }
+        #endif
         saveToken(token: fcmToken)
     }
     

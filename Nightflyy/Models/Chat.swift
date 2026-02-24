@@ -20,7 +20,7 @@ struct Chat: Codable, Identifiable, Savable {
     var members: [String]
     
     var uid: String {
-        return self.id!
+        return self.id ?? ""
     }
         
     enum CodingKeys: String, CodingKey {

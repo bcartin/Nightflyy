@@ -49,7 +49,7 @@ struct Event: Identifiable, Codable {
     var ticketingUrl: String?
     
     var uid: String {
-        return self.id!
+        return self.id ?? ""
     }
     
     var isFutureEvent: Bool {

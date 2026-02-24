@@ -167,7 +167,7 @@ class NotificationViewModel: NSObject {
         Task {
             do {
                 guard var event = await EventClient.fetchEvent(eventId: eventId) else { return }
-                try await EventAttendanceManager.shared.markAsAttenging(event: &event)
+                try await EventAttendanceManager.shared.markAsAttending(event: &event)
             }
             catch {
                 self.error = error

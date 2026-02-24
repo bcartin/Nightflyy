@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ContactReponse: Codable {
+struct ContactResponse: Codable {
     let job_id: String?
 }
 
@@ -31,9 +31,3 @@ struct CustomFields: Codable {
     let dob: String?
 }
 
-
-enum ContactError: Error {
-    
-    case failureReponse
-    
-}

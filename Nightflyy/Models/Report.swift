@@ -18,6 +18,7 @@ struct Report: Identifiable, Codable {
     var date: Date
     
     enum CodingKeys: String, CodingKey {
+        case id
         case reason
         case accountReported = "account_reported"
         case reportedBy = "reported_by"

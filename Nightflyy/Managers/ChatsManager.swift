@@ -43,27 +43,6 @@ class ChatsManager {
         }
     }
     
-//    func createChatsListenerChats(uid: String, completion: @escaping ([Chat]) -> Void) {
-//        var chats = [Chat]()
-//        listener?.remove()
-//        let db = FirebaseManager.shared.db
-//        let query = db.collection(FirestoreCollections.Chats.value).whereField(FirestoreCollections.Chats.members, arrayContainsAny: [uid])
-//        listener = query.addSnapshotListener { snapshot, error in
-//            guard let documents = snapshot?.documents else { return }
-//            chats = documents.compactMap({ documentSnapshot in
-//                let result = Result<Chat, Error> { try documentSnapshot.data(as: Chat.self) }
-//                switch result {
-//                case .success(let chat):
-//                    return chat
-//                case .failure(let error):
-//                    print(error.localizedDescription)
-//                    return nil
-//                }
-//            })
-//            completion(chats)
-//        }
-//    }
-    
     func removeChat(chatId: String) {
         if let index = self.viewModels.firstIndex(where: { oldViewModel in
             return oldViewModel.chatID == chatId
@@ -77,17 +56,17 @@ class ChatsManager {
         listener?.remove()
         let db = FirebaseManager.shared.db
         let query = db.collection(FirestoreCollections.Chats.value).whereField(FirestoreCollections.Chats.members, arrayContainsAny: [uid])
-        listener = query.addSnapshotListener { snapshot, error in
+        listener = query.addSnapshotListener { [weak self] snapshot, error in
             snapshot?.documentChanges.forEach { change in
                 let chat = try! change.document.data(as: Chat.self)
                 switch change.type {
                 case .added, .modified:
                     chats.append(chat)
                 case .removed:
-                    if let index = self.viewModels.firstIndex(where: { oldViewModel in
+                    if let index = self?.viewModels.firstIndex(where: { oldViewModel in
                         return oldViewModel.chatID == chat.id
                     }) {
-                        self.viewModels.remove(at: index)
+                        self?.viewModels.remove(at: index)
                     }
                 }
             }
@@ -102,7 +81,7 @@ class ChatsManager {
         let query = db.collection(FirestoreCollections.Chats.value).document(uid).collection(FirestoreCollections.Messages.value)
 //            .whereField("date", isGreaterThan: Date().addingTimeInterval(-3600))
             .order(by: FirestoreCollections.Messages.date, descending: false)
-        listener = query.addSnapshotListener { snapshot, error in
+        messagesListener = query.addSnapshotListener { snapshot, error in
             snapshot?.documentChanges.forEach { change in
                 if change.type == .added {
                     let message = try! change.document.data(as: Message.self)
