@@ -95,7 +95,7 @@ class Navigator {
     }
     
     private func navigateToChat(chatId: String?) async {
-        AppState.shared.selectedTab = 4
+        AppState.shared.selectedTab = .inbox
         guard let chatId else {return}
         if let viewModel = ChatsManager.shared.viewModels.first(where: {$0.chatID == chatId}) {
             router.navigateTo(.ChatView(viewModel))
@@ -103,7 +103,7 @@ class Navigator {
     }
     
     private func navigateToTab(_ tab: AppTab) {
-        AppState.shared.selectedTab = tab.rawValue
+        AppState.shared.selectedTab = tab
     }
     
 }

@@ -18,7 +18,7 @@ class AppState {
     
     var showSplashScreen = true
     
-    var selectedTab = 0
+    var selectedTab: AppTab = .home
 
     var showUpdateScreen: Bool {
         let appVersion = UIApplication.appVersion
