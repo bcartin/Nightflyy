@@ -15,12 +15,16 @@ class AppNotificationsManager {
     
     var notifications: [AppNotification] = .init()
     
-    private init() { }
+    private let notificationClient: any AppNotificationClientProtocol
+    
+    private init(notificationClient: any AppNotificationClientProtocol = AppNotificationClient.shared) {
+        self.notificationClient = notificationClient
+    }
     
     func fetchNotifications(refetch: Bool = false) async {
         if notifications.isEmpty || refetch {
             do {
-                notifications = try await AppNotificationClient.fetchNewAppNotifications()
+                notifications = try await notificationClient.fetchNewAppNotifications(lastUpdated: nil)
                 notifications.sort { $0.date > $1.date }
             }
             catch {
@@ -32,7 +36,7 @@ class AppNotificationsManager {
     func deleteNotification(withId notificationId: String) {
         Task {
             do {
-                try await AppNotificationClient.deleteNotification(notificationId)
+                try await notificationClient.deleteNotification(notificationId)
                 notifications.removeAll { $0.id == notificationId }
             }
             catch {

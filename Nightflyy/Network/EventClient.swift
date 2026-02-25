@@ -11,6 +11,8 @@ import OSLog
 
 class EventClient {
     
+    static let shared = EventClient()
+    
     static func fetchEvent(eventId: String) async -> Event? {
         if let cached = firebaseCache[eventId] {
             switch cached {
@@ -195,3 +197,71 @@ class EventClient {
     }
     
 }
+// MARK: - EventClientProtocol
+
+extension EventClient: EventClientProtocol {
+    func fetchEvent(eventId: String) async -> Event? {
+        await Self.fetchEvent(eventId: eventId)
+    }
+    
+    func fetchEventGroup(eventIds: [String]) async -> [Event] {
+        await Self.fetchEventGroup(eventIds: eventIds)
+    }
+    
+    func fetchEventsHostedBy(uid: String) async -> [Event] {
+        await Self.fetchEventsHostedBy(uid: uid)
+    }
+    
+    func fetchFutureEventsHostedBy(uid: String) async -> [Event] {
+        await Self.fetchFutureEventsHostedBy(uid: uid)
+    }
+    
+    func fetchEventsAttending(uid: String) async -> [Event] {
+        await Self.fetchEventsAttending(uid: uid)
+    }
+    
+    func fetchEventsInvited(uid: String) async -> [Event] {
+        await Self.fetchEventsInvited(uid: uid)
+    }
+    
+    func fetchEventsInterested(uid: String) async -> [Event] {
+        await Self.fetchEventsInterested(uid: uid)
+    }
+    
+    func addUserToAttending(eventId: String, uid: String) async throws {
+        try await Self.addUserToAttending(eventId: eventId, uid: uid)
+    }
+    
+    func addUserToInterested(eventId: String, uid: String) async throws {
+        try await Self.addUserToInterested(eventId: eventId, uid: uid)
+    }
+    
+    func addUserToInvited(eventId: String, uid: String) async throws {
+        try await Self.addUserToInvited(eventId: eventId, uid: uid)
+    }
+    
+    func removeUserFromAttending(eventId: String, uid: String) async throws {
+        try await Self.removeUserFromAttending(eventId: eventId, uid: uid)
+    }
+    
+    func removeUserFromInterested(eventId: String, uid: String) async throws {
+        try await Self.removeUserFromInterested(eventId: eventId, uid: uid)
+    }
+    
+    func removeUserFromInvited(eventId: String, uid: String) async throws {
+        try await Self.removeUserFromInvited(eventId: eventId, uid: uid)
+    }
+    
+    func setEventOwner(eventId: String, uid: String) async throws {
+        try await Self.setEventOwner(eventId: eventId, uid: uid)
+    }
+    
+    func deleteEvent(eventId: String) async throws {
+        try await Self.deleteEvent(eventId: eventId)
+    }
+    
+    func declineClaim(eventId: String) async throws {
+        try await Self.declineClaim(eventId: eventId)
+    }
+}
+

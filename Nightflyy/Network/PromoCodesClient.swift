@@ -12,6 +12,8 @@ import OSLog
 
 class PromoCodesClient {
     
+    static let shared = PromoCodesClient()
+    
     static func codeIsValid(code: String) async -> Bool {
         do {
             let query = FirebaseManager.shared.db.collection(FirestoreCollections.BACodes.value)
@@ -34,6 +36,18 @@ class PromoCodesClient {
         
     }
     
+}
+
+// MARK: - PromoCodesClientProtocol
+
+extension PromoCodesClient: PromoCodesClientProtocol {
+    func codeIsValid(code: String) async -> Bool {
+        await Self.codeIsValid(code: code)
+    }
+    
+    func addRedemption(code: String) {
+        Self.addRedemption(code: code)
+    }
 }
 
 

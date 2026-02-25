@@ -11,6 +11,8 @@ import OSLog
 
 class UsernamesClient {
     
+    static let shared = UsernamesClient()
+    
     static func isUsernameAvailable(_ username: String) async -> Bool {
         do {
             let reference = FirebaseManager.shared.db.collection(FirestoreCollections.Usernames.value)
@@ -53,3 +55,19 @@ class UsernamesClient {
     }
     
 }
+// MARK: - UsernamesClientProtocol
+
+extension UsernamesClient: UsernamesClientProtocol {
+    func isUsernameAvailable(_ username: String) async -> Bool {
+        await Self.isUsernameAvailable(username)
+    }
+    
+    func saveUsername(username: String) async {
+        await Self.saveUsername(username: username)
+    }
+    
+    func deleteUsername(username: String) async {
+        await Self.deleteUsername(username: username)
+    }
+}
+

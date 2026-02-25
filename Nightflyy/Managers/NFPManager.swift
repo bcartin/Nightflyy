@@ -14,7 +14,19 @@ class NFPManager {
     
     static let shared = NFPManager()
     
-    private init() { }
+    private let accountClient: any AccountClientProtocol
+    private let invitesClient: any NFPInvitesClientProtocol
+    private let promoCodesClient: any PromoCodesClientProtocol
+    
+    private init(
+        accountClient: any AccountClientProtocol = AccountClient.shared,
+        invitesClient: any NFPInvitesClientProtocol = NFPInvitesClient.shared,
+        promoCodesClient: any PromoCodesClientProtocol = PromoCodesClient.shared
+    ) {
+        self.accountClient = accountClient
+        self.invitesClient = invitesClient
+        self.promoCodesClient = promoCodesClient
+    }
     
     var isPlusMember: Bool {
         AccountManager.shared.account?.hasActiveSubscription ?? false
@@ -76,7 +88,7 @@ class NFPManager {
             }
             else {
                 self.cancelPlusMember()
-                try await NFPInvitesClient.deleteInvites()
+                try await invitesClient.deleteInvites()
             }
             AccountManager.shared.saveAccount()
         }
@@ -92,7 +104,7 @@ class NFPManager {
             AccountManager.shared.account?.nextCreditDate = nextCreditDate
             if let promoCode = promoCode, promoCode != "" {
                 AccountManager.shared.account?.bonusCreditDate = bonusCreditDate
-                PromoCodesClient.addRedemption(code: promoCode)
+                promoCodesClient.addRedemption(code: promoCode)
             }
             if let account = AccountManager.shared.account {
                 await SendgridManager.createContactInSendgrid(account: account, lists: [.NFPLUS])
@@ -131,7 +143,7 @@ class NFPManager {
     }
     
     func redeemCredit(code: String) async throws {
-        let venue = try await AccountClient.fetchVenueByRedemptionCode(code: code)
+        let venue = try await accountClient.fetchVenueByRedemptionCode(code: code)
         
         guard let uid = AccountManager.shared.account?.uid,
               let venueID = venue?.id,

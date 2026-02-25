@@ -11,6 +11,8 @@ import CoreLocation
 
 class GeoqueriesClient {
     
+    static let shared = GeoqueriesClient()
+    
     private static let maxDistanceKm: Double = 40 // 40Km = 25 Miles
     
     static func fetchEventsForLocation(_ location: CLLocation) async throws -> [Event] {
@@ -71,3 +73,15 @@ class GeoqueriesClient {
         return CLLocationCoordinate2D(latitude: lat, longitude: long)
     }
 }
+// MARK: - GeoqueriesClientProtocol
+
+extension GeoqueriesClient: GeoqueriesClientProtocol {
+    func fetchEventsForLocation(_ location: CLLocation) async throws -> [Event] {
+        try await Self.fetchEventsForLocation(location)
+    }
+    
+    func fetchVenuesForLocation(_ location: CLLocation) async throws -> [Account] {
+        try await Self.fetchVenuesForLocation(location)
+    }
+}
+

@@ -11,6 +11,8 @@ import OSLog
 
 class CommentsClient {
     
+    static let shared = CommentsClient()
+    
     static func fetchComments(for eventId: String, since: Date? = nil) async throws -> [Comment] {
         var comments: [Comment] = .init()
         let date = since ?? Date().addingTimeInterval(-10000000)
@@ -53,3 +55,23 @@ class CommentsClient {
     }
     
 }
+// MARK: - CommentsClientProtocol
+
+extension CommentsClient: CommentsClientProtocol {
+    func fetchComments(for eventId: String, since: Date?) async throws -> [Comment] {
+        try await Self.fetchComments(for: eventId, since: since)
+    }
+    
+    func getNumberOfComments(for eventId: String) async -> Int {
+        await Self.getNumberOfComments(for: eventId)
+    }
+    
+    func saveComment(for eventId: String, comment: Comment) throws {
+        try Self.saveComment(for: eventId, comment: comment)
+    }
+    
+    func likeComment(eventId: String, commentId: String) async throws {
+        try await Self.likeComment(eventId: eventId, commentId: commentId)
+    }
+}
+

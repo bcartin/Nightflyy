@@ -11,6 +11,8 @@ import OSLog
 
 class AccountClient {
     
+    static let shared = AccountClient()
+    
     static func saveCustomData(uid: String, data: [String: Any]) {
         FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value).document(uid).setData(data, merge: true)
     }
@@ -162,3 +164,51 @@ class AccountClient {
     }
     
 }
+// MARK: - AccountClientProtocol
+
+extension AccountClient: AccountClientProtocol {
+    func saveCustomData(uid: String, data: [String: Any]) {
+        Self.saveCustomData(uid: uid, data: data)
+    }
+    
+    func fetchAccount(accountId: String) async -> Account? {
+        await Self.fetchAccount(accountId: accountId)
+    }
+    
+    func fetchAccountGroup(accountIds: [String]) async -> [Account] {
+        await Self.fetchAccountGroup(accountIds: accountIds)
+    }
+    
+    func fetchVenuesFrom(city: City) async -> [Account] {
+        await Self.fetchVenuesFrom(city: city)
+    }
+    
+    func fetchNightflyyPlusProviders() async -> [Account] {
+        await Self.fetchNightflyyPlusProviders()
+    }
+    
+    func fetchAccountReviews(for uid: String) async -> [Review] {
+        await Self.fetchAccountReviews(for: uid)
+    }
+    
+    func getAccountReviewCount(for uid: String) async -> Int {
+        await Self.getAccountReviewCount(for: uid)
+    }
+    
+    func fetchVenueByRedemptionCode(code: String) async throws -> Account? {
+        try await Self.fetchVenueByRedemptionCode(code: code)
+    }
+    
+    func removeFromRequested(accountId: String) async throws {
+        try await Self.removeFromRequested(accountId: accountId)
+    }
+    
+    func submitReview(accountId: String, review: Review) throws {
+        try Self.submitReview(accountId: accountId, review: review)
+    }
+    
+    func fetchNightflyyPlusMember() async -> [Account] {
+        await Self.fetchNightflyyPlusMember()
+    }
+}
+
