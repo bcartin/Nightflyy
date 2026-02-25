@@ -21,7 +21,7 @@ class PromoCodesClient {
             return !snapshot.documents.isEmpty
         }
         catch {
-            print(error.localizedDescription)
+            Logger.network.error("Error validating promo code: \(error.localizedDescription)")
             return false
         }
     }

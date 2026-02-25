@@ -59,15 +59,12 @@ class NFPRedeemViewModel {
     
     func redeemCredit() {
         Task {
-            let redemptionResult = await NFPManager.shared.redeemCredit(code: venueCode)
-            switch redemptionResult {
-                
-            case .success(_):
+            do {
+                try await NFPManager.shared.redeemCredit(code: venueCode)
                 changeView(to: .redeemSuccess)
-            case .failure(let error):
+            } catch {
                 self.error = error
             }
-            
         }
     }
     

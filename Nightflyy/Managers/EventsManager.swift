@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreLocation
+import OSLog
 
 @Observable
 class EventsManager {
@@ -29,7 +30,7 @@ class EventsManager {
             nearbyEvents = try await GeoqueriesClient.fetchEventsForLocation(location)
         }
         catch {
-            print(error.localizedDescription)
+            Logger.general.error("Error fetching nearby events: \(error.localizedDescription)")
         }
     }
     
@@ -40,7 +41,7 @@ class EventsManager {
             locationVenues = try await GeoqueriesClient.fetchVenuesForLocation(location)
         }
         catch {
-            print(error.localizedDescription)
+            Logger.general.error("Error fetching nearby venues: \(error.localizedDescription)")
         }
     }
     
@@ -65,7 +66,7 @@ class EventsManager {
                 self.locationEvents = try await GeoqueriesClient.fetchEventsForLocation(location)
             }
             catch {
-                print(error.localizedDescription)
+                Logger.general.error("Error setting location events: \(error.localizedDescription)")
             }
         }
     }
@@ -77,7 +78,7 @@ class EventsManager {
                 self.locationVenues = try await GeoqueriesClient.fetchVenuesForLocation(location)
             }
             catch {
-                print(error.localizedDescription)
+                Logger.general.error("Error setting location venues: \(error.localizedDescription)")
             }
         }
     }

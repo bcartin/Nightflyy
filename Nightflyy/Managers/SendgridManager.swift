@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OSLog
 
 enum SendgridLists {
     
@@ -51,30 +52,24 @@ class SendgridManager {
             _ = try await AddContacts(request: request)
         }
         catch {
-            print("Error creating contact in Sendgrid: \(error.localizedDescription)")
+            Logger.network.error("Error creating contact in Sendgrid: \(error.localizedDescription)")
             return
         }
 #endif
     }
     
     private static func AddContacts(request: ContactRequest) async throws -> ContactResponse {
-        do {
-            let (data, response) = try await URLSession.shared.data(for: request.httpRequest)
-            guard let httpResponse = response as? HTTPURLResponse else {
-                throw ContactError.failureResponse
-            }
-            
-            if httpResponse.statusCode == 202 {
-                let decodedResponse = try JSONDecoder().decode(ContactResponse.self, from: data)
-                return decodedResponse
-            }
-            else {
-                throw ContactError.failureResponse
-            }
-            
+        let (data, response) = try await URLSession.shared.data(for: request.httpRequest)
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw ContactError.failureResponse
         }
-        catch {
-            throw error
+        
+        if httpResponse.statusCode == 202 {
+            let decodedResponse = try JSONDecoder().decode(ContactResponse.self, from: data)
+            return decodedResponse
+        }
+        else {
+            throw ContactError.failureResponse
         }
     }
     

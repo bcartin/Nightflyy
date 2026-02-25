@@ -11,27 +11,6 @@ import OSLog
 
 class EventClient {
     
-    static func fetchEvent(uid: String) async -> Result<Event, Error> {
-        if let cached = firebaseCache[uid] {
-            switch cached {
-            case .event(let event):
-                Logger.network.info("\(Logger.Category.Network.rawValue): Fetched event \(uid) from cache.")
-                return .success(event)
-            default:
-                return .failure(NetworkError.noRecordFound)
-            }
-        }
-        do {
-            guard let event =  try await FirebaseManager.shared.getDocument(collection: FirestoreCollections.Events.value, documentId: uid, Event.self) else { return .failure(NetworkError.noRecordFound) }
-            firebaseCache[uid] = .event(event)
-            Logger.network.info("\(Logger.Category.Network.rawValue): Fetched event \(uid) from firebase.")
-            return .success(event)
-        }
-        catch {
-            return .failure(error)
-        }
-    }
-    
     static func fetchEvent(eventId: String) async -> Event? {
         if let cached = firebaseCache[eventId] {
             switch cached {
@@ -51,6 +30,7 @@ class EventClient {
             return event
         }
         catch {
+            Logger.network.error("Error fetching event \(eventId): \(error.localizedDescription)")
             return nil
         }
     }
@@ -83,6 +63,7 @@ class EventClient {
             })
         }
         catch {
+            Logger.network.error("Error fetching events hosted by \(uid): \(error.localizedDescription)")
             return events
         }
         return events
@@ -100,6 +81,7 @@ class EventClient {
             })
         }
         catch {
+            Logger.network.error("Error fetching future events hosted by \(uid): \(error.localizedDescription)")
             return events
         }
         return events
@@ -117,6 +99,7 @@ class EventClient {
             })
         }
         catch {
+            Logger.network.error("Error fetching events attending for \(uid): \(error.localizedDescription)")
             return events
         }
         return events
@@ -134,6 +117,7 @@ class EventClient {
             })
         }
         catch {
+            Logger.network.error("Error fetching events invited for \(uid): \(error.localizedDescription)")
             return events
         }
         return events
@@ -151,6 +135,7 @@ class EventClient {
             })
         }
         catch {
+            Logger.network.error("Error fetching events interested for \(uid): \(error.localizedDescription)")
             return events
         }
         return events

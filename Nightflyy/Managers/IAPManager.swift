@@ -28,7 +28,7 @@ class IAPManager {
             return true
         }
         else {
-            print("Subscription is inactive")
+            Logger.iap.info("Subscription is inactive")
             return false
         }
         

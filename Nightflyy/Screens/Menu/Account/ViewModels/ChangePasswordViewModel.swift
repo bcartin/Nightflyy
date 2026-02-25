@@ -21,18 +21,11 @@ class ChangePasswordViewModel {
         if validatePasswords() {
             if let email = AuthenticationManager.shared.currentUser?.email {
                 Task {
-                    let result = await AuthenticationManager.shared.signIn(email: email, password: currentPassword)
-                    switch result {
-                        
-                    case .success(_):
-                        do {
-                            try await AuthenticationManager.shared.updatePassword(newPassword: newPassword)
-                            General.showSuccessMessage(message: "Password Changed Successfully", imageName: "checkmark.circle.fill")
-                        }
-                        catch {
-                            self.error = error
-                        }
-                    case .failure(let error):
+                    do {
+                        _ = try await AuthenticationManager.shared.signIn(email: email, password: currentPassword)
+                        try await AuthenticationManager.shared.updatePassword(newPassword: newPassword)
+                        General.showSuccessMessage(message: "Password Changed Successfully", imageName: "checkmark.circle.fill")
+                    } catch {
                         self.error = error
                     }
                 }

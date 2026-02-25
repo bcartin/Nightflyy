@@ -38,7 +38,7 @@ class AccountManager {
             try account?.save()
         }
         catch {
-            print(error.localizedDescription)
+            Logger.general.error("Error saving account: \(error.localizedDescription)")
         }
     }
     
@@ -108,6 +108,10 @@ class AccountManager {
     func updateTrackInfo() {
         account?.appVersion = UIApplication.appVersion
         account?.lastOnline = Date()
-        try? account?.save()
+        do {
+            try account?.save()
+        } catch {
+            Logger.general.error("Error updating track info: \(error.localizedDescription)")
+        }
     }
 }

@@ -24,7 +24,7 @@ class AppNotificationsManager {
                 notifications.sort { $0.date > $1.date }
             }
             catch {
-                print(error.localizedDescription)
+                Logger.general.error("Error fetching notifications: \(error.localizedDescription)")
             }
         }
     }
@@ -36,7 +36,7 @@ class AppNotificationsManager {
                 notifications.removeAll { $0.id == notificationId }
             }
             catch {
-                print(error.localizedDescription)
+                Logger.general.error("Error deleting notification \(notificationId): \(error.localizedDescription)")
             }
         }
     }

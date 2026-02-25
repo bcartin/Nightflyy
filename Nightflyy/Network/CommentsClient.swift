@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseFirestore
+import OSLog
 
 class CommentsClient {
     
@@ -30,6 +31,7 @@ class CommentsClient {
             return Int(truncating: snapshot.count)
         }
         catch {
+            Logger.network.error("Error getting comment count for event \(eventId): \(error.localizedDescription)")
             return 0
         }
     }

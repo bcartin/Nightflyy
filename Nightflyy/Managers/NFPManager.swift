@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseFirestore
+import OSLog
 
 @Observable
 class NFPManager {
@@ -80,7 +81,7 @@ class NFPManager {
             AccountManager.shared.saveAccount()
         }
         catch {
-            print(error.localizedDescription)
+            Logger.iap.error("Error checking subscription status: \(error.localizedDescription)")
         }
     }
     
@@ -96,13 +97,8 @@ class NFPManager {
             if let account = AccountManager.shared.account {
                 await SendgridManager.createContactInSendgrid(account: account, lists: [.NFPLUS])
             }
-            do {
-                try AccountManager.shared.account?.save()
-                await PushNotificationsManager.shared.subscribeToNotifications(target: .nfplus)
-            }
-            catch {
-                throw error
-            }
+            try AccountManager.shared.account?.save()
+            await PushNotificationsManager.shared.subscribeToNotifications(target: .nfplus)
         }
     }
     
@@ -120,7 +116,11 @@ class NFPManager {
     func addCredits() {
         AccountManager.shared.account?.plusCredits = 1
         AccountManager.shared.account?.nextCreditDate = nextCreditDate
-        try? AccountManager.shared.account?.save()
+        do {
+            try AccountManager.shared.account?.save()
+        } catch {
+            Logger.iap.error("Error saving credits: \(error.localizedDescription)")
+        }
     }
     
     func addReminderNotification() {
@@ -130,31 +130,25 @@ class NFPManager {
         }
     }
     
-    func redeemCredit(code: String) async -> Result<Bool, Error> {
-        do {
-            let venue = try await AccountClient.fetchVenueByRedemptionCode(code: code)
-            
-            guard let uid = AccountManager.shared.account?.uid,
-                  let venueID = venue?.id,
-                  let venueName = venue?.name
-            else {
-                return .failure(AccountError.invalidCode)
-            }
-            
-            let redemption = NFPRedemption(venueID: venueID, venueName: venueName, city: venue?.city, state: venue?.state, date: Date(), clientID: uid)
-            try redemption.save()
-            if UserDefaultsKeys.bonusCredit.getValue() ?? 0 > 0 {
-                UserDefaultsKeys.bonusCredit.removeValue()
-            }
-            else {
-                AccountManager.shared.account?.plusCredits = 0
-                try AccountManager.shared.account?.save()
-            }
-            LocalNotificationsManager.shared.removeScheduledNotification(type: .perkReminder)
-            return .success(true)
+    func redeemCredit(code: String) async throws {
+        let venue = try await AccountClient.fetchVenueByRedemptionCode(code: code)
+        
+        guard let uid = AccountManager.shared.account?.uid,
+              let venueID = venue?.id,
+              let venueName = venue?.name
+        else {
+            throw AccountError.invalidCode
         }
-        catch {
-            return .failure(AccountError.invalidCode)
+        
+        let redemption = NFPRedemption(venueID: venueID, venueName: venueName, city: venue?.city, state: venue?.state, date: Date(), clientID: uid)
+        try redemption.save()
+        if UserDefaultsKeys.bonusCredit.getValue() ?? 0 > 0 {
+            UserDefaultsKeys.bonusCredit.removeValue()
         }
+        else {
+            AccountManager.shared.account?.plusCredits = 0
+            try AccountManager.shared.account?.save()
+        }
+        LocalNotificationsManager.shared.removeScheduledNotification(type: .perkReminder)
     }
 }

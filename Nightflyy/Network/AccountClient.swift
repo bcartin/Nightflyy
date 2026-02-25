@@ -70,7 +70,7 @@ class AccountClient {
             return accounts
         }
         catch {
-            print(error.localizedDescription)
+            Logger.network.error("Error fetching venues for city: \(error.localizedDescription)")
             return accounts
         }
         
@@ -88,7 +88,7 @@ class AccountClient {
             return accounts.sorted { $0.name ?? "" < $1.name ?? "" }
         }
         catch {
-            print(error.localizedDescription)
+            Logger.network.error("Error fetching Nightflyy Plus providers: \(error.localizedDescription)")
             return accounts
         }
     }
@@ -104,6 +104,7 @@ class AccountClient {
             return reviews
         }
         catch {
+            Logger.network.error("Error fetching account reviews for \(uid): \(error.localizedDescription)")
             return []
         }
     }
@@ -116,6 +117,7 @@ class AccountClient {
             return snapshot.count as? Int ?? 0
         }
         catch {
+            Logger.network.error("Error fetching review count for \(uid): \(error.localizedDescription)")
             return 0
         }
     }
@@ -154,7 +156,7 @@ class AccountClient {
             return accounts.sorted { $0.name ?? "" < $1.name ?? "" }
         }
         catch {
-            print(error.localizedDescription)
+            Logger.network.error("Error fetching Nightflyy Plus members: \(error.localizedDescription)")
             return accounts
         }
     }

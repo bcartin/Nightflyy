@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseFirestore
+import OSLog
 
 @Observable
 class ChatsManager {
@@ -58,7 +59,7 @@ class ChatsManager {
         let query = db.collection(FirestoreCollections.Chats.value).whereField(FirestoreCollections.Chats.members, arrayContainsAny: [uid])
         listener = query.addSnapshotListener { [weak self] snapshot, error in
             snapshot?.documentChanges.forEach { change in
-                let chat = try! change.document.data(as: Chat.self)
+                guard let chat = try? change.document.data(as: Chat.self) else { return }
                 switch change.type {
                 case .added, .modified:
                     chats.append(chat)
@@ -84,7 +85,7 @@ class ChatsManager {
         messagesListener = query.addSnapshotListener { snapshot, error in
             snapshot?.documentChanges.forEach { change in
                 if change.type == .added {
-                    let message = try! change.document.data(as: Message.self)
+                    guard let message = try? change.document.data(as: Message.self) else { return }
                     messages.append(message)
                 }
             }
@@ -116,6 +117,7 @@ class ChatsManager {
             return chats.first
         }
         catch {
+            Logger.network.error("Error fetching chat: \(error.localizedDescription)")
             return nil
         }
     }

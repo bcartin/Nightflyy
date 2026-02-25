@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseFirestore
+import OSLog
 
 class UsernamesClient {
     
@@ -18,6 +19,7 @@ class UsernamesClient {
             return snapshot.isEmpty
         }
         catch {
+            Logger.network.error("Error checking username availability: \(error.localizedDescription)")
             return false
         }
     }
@@ -31,7 +33,7 @@ class UsernamesClient {
                     FirestoreCollections.Usernames.usernames: FieldValue.arrayUnion([username])])
         }
         catch {
-            print("Error saving username: \(error)")
+            Logger.network.error("Error saving username: \(error.localizedDescription)")
             try? await FirebaseManager.shared.db.collection(FirestoreCollections.Usernames.value)
                 .document(document).setData([FirestoreCollections.Usernames.usernames: [username]])
         }
@@ -46,7 +48,7 @@ class UsernamesClient {
                     FirestoreCollections.Usernames.usernames: FieldValue.arrayRemove([username])])
         }
         catch {
-            print("Error deleting username: \(error)")
+            Logger.network.error("Error deleting username: \(error.localizedDescription)")
         }
     }
     
