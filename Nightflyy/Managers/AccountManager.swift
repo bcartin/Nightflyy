@@ -9,7 +9,7 @@ import SwiftUI
 import OSLog
 
 @Observable
-class AccountManager {
+class AccountManager: AccountManaging {
     
     static let shared = AccountManager()
     

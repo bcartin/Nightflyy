@@ -10,7 +10,7 @@ import CoreLocation
 import OSLog
 
 @Observable
-class EventsManager {
+class EventsManager: EventsManaging {
     
     static let shared = EventsManager()
     var nearbyEvents: [Event] = []
@@ -24,13 +24,16 @@ class EventsManager {
     
     private let eventClient: any EventClientProtocol
     private let geoClient: any GeoqueriesClientProtocol
+    private let accountManager: any AccountManaging
     
     private init(
         eventClient: any EventClientProtocol = EventClient.shared,
-        geoClient: any GeoqueriesClientProtocol = GeoqueriesClient.shared
+        geoClient: any GeoqueriesClientProtocol = GeoqueriesClient.shared,
+        accountManager: any AccountManaging = AccountManager.shared
     ) {
         self.eventClient = eventClient
         self.geoClient = geoClient
+        self.accountManager = accountManager
     }
     
     func fetchNearbyEvents() async {
@@ -118,28 +121,28 @@ class EventsManager {
     }
     
     func fetchHostingEvents(refetch: Bool = false) async {
-        guard let account = AccountManager.shared.account else { return }
+        guard let account = accountManager.account else { return }
         if hostingEvents.isEmpty || refetch {
             hostingEvents = await eventClient.fetchEventsHostedBy(uid: account.uid)
         }
     }
     
     func fetchAttendingEvents(refetch: Bool = false) async {
-        guard let account = AccountManager.shared.account else { return }
+        guard let account = accountManager.account else { return }
         if attendingEvents.isEmpty || refetch {
             attendingEvents = await eventClient.fetchEventsAttending(uid: account.uid)
         }
     }
     
     func fetchInvitedEvents(refetch: Bool = false) async {
-        guard let account = AccountManager.shared.account else { return }
+        guard let account = accountManager.account else { return }
         if invitedEvents.isEmpty || refetch {
             invitedEvents = await eventClient.fetchEventsInvited(uid: account.uid)
         }
     }
     
     func fetchInterestedEvents(refetch: Bool = false) async {
-        guard let account = AccountManager.shared.account else { return }
+        guard let account = accountManager.account else { return }
         if interestedEvents.isEmpty || refetch {
             interestedEvents = await eventClient.fetchEventsInterested(uid: account.uid)
         }

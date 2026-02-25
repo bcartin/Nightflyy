@@ -10,11 +10,17 @@ import OSLog
 import Qonversion
 
 @Observable
-class IAPManager {
+class IAPManager: IAPManaging {
     
     static let shared = IAPManager()
     
-    private init() { }
+    private let accountManager: any AccountManaging
+    
+    private init(
+        accountManager: any AccountManaging = AccountManager.shared
+    ) {
+        self.accountManager = accountManager
+    }
     
     func configure(with key: String) -> Bool {
         let configuration = Qonversion.Configuration(projectKey: key, launchMode: .subscriptionManagement)
@@ -38,7 +44,7 @@ class IAPManager {
         let purchaseResult = try await Qonversion.shared().purchase("basic_subscription_2026")
         let entitlements = purchaseResult.0
         if let subscription: Qonversion.Entitlement = entitlements["Basic"], subscription.isActive {
-            if let uid = AccountManager.shared.account?.uid {
+            if let uid = accountManager.account?.uid {
                 Qonversion.shared().setUserProperty(.userID, value: uid)
             }
             if let venueId = venue?.uid  {

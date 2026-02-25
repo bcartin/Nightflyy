@@ -14,7 +14,13 @@ class ChatsManager {
     
     static let shared = ChatsManager()
     
-    private init() { }
+    private let accountManager: any AccountManaging
+    
+    private init(
+        accountManager: any AccountManaging = AccountManager.shared
+    ) {
+        self.accountManager = accountManager
+    }
     
     var chats: [Chat] = []
     var viewModels: [InboxRowViewModel] = []
@@ -99,7 +105,7 @@ class ChatsManager {
             return chat
         }
         else {
-            let uid = AccountManager.shared.account?.uid ?? ""
+            let uid = accountManager.account?.uid ?? ""
             let newChat = Chat(id: UUID().uuidString, members: [accountId, uid])
             return newChat
         }

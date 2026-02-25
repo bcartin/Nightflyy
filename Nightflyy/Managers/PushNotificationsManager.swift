@@ -10,7 +10,7 @@ import Firebase
 import FirebaseAuth
 
 @Observable
-class PushNotificationsManager: NSObject, UIApplicationDelegate {
+class PushNotificationsManager: NSObject, UIApplicationDelegate, PushNotificationsManaging {
     
     static let shared = PushNotificationsManager()
     
@@ -23,7 +23,12 @@ class PushNotificationsManager: NSObject, UIApplicationDelegate {
         }
     }
     
-    private override init() {
+    private let accountManager: any AccountManaging
+    
+    private init(
+        accountManager: any AccountManaging = AccountManager.shared
+    ) {
+        self.accountManager = accountManager
         super.init()
         setPermission()
     }
@@ -62,7 +67,7 @@ class PushNotificationsManager: NSObject, UIApplicationDelegate {
     }
     
     func subscribeToTester() {
-        if AccountManager.shared.account?.isTester ?? false {
+        if accountManager.account?.isTester ?? false {
             subscribeToNotifications(target: .test)
         }
     }

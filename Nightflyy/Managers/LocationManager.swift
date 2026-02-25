@@ -17,7 +17,12 @@ class LocationManager: NSObject {
     
     var permissionGranted: Bool = false
     
-    override private init() {
+    private let eventsManager: any EventsManaging
+    
+    private init(
+        eventsManager: any EventsManaging = EventsManager.shared
+    ) {
+        self.eventsManager = eventsManager
         super.init()
         commonSetup();
     }
@@ -48,9 +53,9 @@ extension LocationManager: CLLocationManagerDelegate {
             permissionGranted = false
         case .authorizedWhenInUse:
             permissionGranted = true
-            Task {
-                await EventsManager.shared.fetchNearbyEvents()
-                await EventsManager.shared.fetchNearbyVenues()
+            Task { [eventsManager] in
+                await eventsManager.fetchNearbyEvents()
+                await eventsManager.fetchNearbyVenues()
             }
         case .denied, .restricted:
             permissionGranted = false

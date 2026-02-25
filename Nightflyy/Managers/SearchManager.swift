@@ -10,7 +10,7 @@ import Firebase
 import AlgoliaSearchClient
 import OSLog
 
-class SearchManager {
+class SearchManager: SearchManaging {
     
     private init() {
         getSearchKeys()
