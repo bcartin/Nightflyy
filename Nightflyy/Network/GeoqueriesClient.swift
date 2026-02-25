@@ -14,57 +14,39 @@ class GeoqueriesClient {
     private static let maxDistanceKm: Double = 40 // 40Km = 25 Miles
     
     static func fetchEventsForLocation(_ location: CLLocation) async throws -> [Event] {
-        var events = [Event]()
-        do {
+        let greaterCoordinates = makeGreaterQueryCoordinates(center: location.coordinate, maxDistanceKm: maxDistanceKm)
+        let lesserCoordinates = makeLesserQueryCoordinates(center: location.coordinate, maxDistanceKm: maxDistanceKm)
         
-            let greaterCoordinates = makeGreaterQueryCoordinates(center: location.coordinate, maxDistanceKm: maxDistanceKm)
-            let lesserCoordinates = makeLesserQueryCoordinates(center: location.coordinate, maxDistanceKm: maxDistanceKm)
-            
-            let eventsRef = FirebaseManager.shared.db.collection(FirestoreCollections.Events.value)
-                .whereField("lng", isGreaterThanOrEqualTo: greaterCoordinates.longitude)
-                .whereField("lng", isLessThanOrEqualTo: lesserCoordinates.longitude)
-                .whereField("lat", isGreaterThanOrEqualTo: greaterCoordinates.latitude)
-                .whereField("lat", isLessThanOrEqualTo: lesserCoordinates.latitude)
-                .whereField("end_date", isGreaterThan: Date())
-            let snapshot = try await eventsRef.getDocuments()
-            let documents = snapshot.documents
-            let filteredEvents = try documents.compactMap { document in
-                let event = try document.data(as: Event.self)
-                if event.isFutureEvent && !(event.eventIsPrivate ?? false) {
-                    return event
-                }
-                return nil
+        let eventsRef = FirebaseManager.shared.db.collection(FirestoreCollections.Events.value)
+            .whereField("lng", isGreaterThanOrEqualTo: greaterCoordinates.longitude)
+            .whereField("lng", isLessThanOrEqualTo: lesserCoordinates.longitude)
+            .whereField("lat", isGreaterThanOrEqualTo: greaterCoordinates.latitude)
+            .whereField("lat", isLessThanOrEqualTo: lesserCoordinates.latitude)
+            .whereField("end_date", isGreaterThan: Date())
+        let snapshot = try await eventsRef.getDocuments()
+        let filteredEvents = try snapshot.documents.compactMap { document in
+            let event = try document.data(as: Event.self)
+            if event.isFutureEvent && !(event.eventIsPrivate ?? false) {
+                return event
             }
-            events.append(contentsOf: filteredEvents)
-            events.sort{$0.startDate ?? .init() < $1.startDate ?? .init()}
+            return nil
         }
-        catch {
-            throw error
-        }
-        return events
+        return filteredEvents.sorted { $0.startDate ?? .init() < $1.startDate ?? .init() }
     }
     
     static func fetchVenuesForLocation(_ location: CLLocation) async throws -> [Account] {
-        var accounts: [Account] = .init()
-        do {
+        let greaterCoordinates = makeGreaterQueryCoordinates(center: location.coordinate, maxDistanceKm: maxDistanceKm)
+        let lesserCoordinates = makeLesserQueryCoordinates(center: location.coordinate, maxDistanceKm: maxDistanceKm)
         
-            let greaterCoordinates = makeGreaterQueryCoordinates(center: location.coordinate, maxDistanceKm: maxDistanceKm)
-            let lesserCoordinates = makeLesserQueryCoordinates(center: location.coordinate, maxDistanceKm: maxDistanceKm)
-            
-            let queryRef = FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value)
-                .whereField("lng", isGreaterThanOrEqualTo: greaterCoordinates.longitude)
-                .whereField("lng", isLessThanOrEqualTo: lesserCoordinates.longitude)
-                .whereField("lat", isGreaterThanOrEqualTo: greaterCoordinates.latitude)
-                .whereField("lat", isLessThanOrEqualTo: lesserCoordinates.latitude)
-                .whereField("account_type", isEqualTo: AccountType.venue.rawValue)
-            let snapshot = try await queryRef.getDocuments()
-            accounts = try snapshot.documents.map({ document in
-                return try document.data(as: Account.self)
-            })
-            return accounts
-        }
-        catch {
-            throw error
+        let queryRef = FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value)
+            .whereField("lng", isGreaterThanOrEqualTo: greaterCoordinates.longitude)
+            .whereField("lng", isLessThanOrEqualTo: lesserCoordinates.longitude)
+            .whereField("lat", isGreaterThanOrEqualTo: greaterCoordinates.latitude)
+            .whereField("lat", isLessThanOrEqualTo: lesserCoordinates.latitude)
+            .whereField("account_type", isEqualTo: AccountType.venue.rawValue)
+        let snapshot = try await queryRef.getDocuments()
+        return try snapshot.documents.map { document in
+            try document.data(as: Account.self)
         }
     }
     

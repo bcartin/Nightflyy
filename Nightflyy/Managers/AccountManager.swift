@@ -43,15 +43,12 @@ class AccountManager {
     }
     
     func fetchAccount(uid: String) async {
-            let result = await AccountClient.fetchAccount(uid: uid) 
-            switch result {
-                
-            case .success(let account):
-                self.account = account
-                Logger.network.info("User account successfully loaded")
-            case .failure(let error):
-                Logger.network.error("Error fetching user account. \(error.localizedDescription)")
-            }
+        if let account = await AccountClient.fetchAccount(accountId: uid) {
+            self.account = account
+            Logger.network.info("User account successfully loaded")
+        } else {
+            Logger.network.error("Error fetching user account.")
+        }
     }
     
     func followAccount(accountToFollow: inout Account) throws {

@@ -22,11 +22,6 @@ class FirebaseManager {
     
     func getDocument<T>(collection: String, documentId: String, _ type: T.Type) async throws -> T? where T: Decodable {
         let docRef = self.db.collection(collection).document(documentId)
-        do {
-            return try await docRef.getDocument(as: type.self)
-        }
-        catch {
-            throw error
-        }
+        return try await docRef.getDocument(as: type.self)
     }
 }

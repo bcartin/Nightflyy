@@ -36,11 +36,6 @@ struct Chat: Codable, Identifiable, Savable {
 extension Chat {
     
     func save() throws {
-        do {
-            try FirebaseManager.shared.db.collection(Chat.collection).document(id!).setData(from: self, merge: true)
-        }
-        catch {
-            throw error
-        }
+        try FirebaseManager.shared.db.collection(Chat.collection).document(id!).setData(from: self, merge: true)
     }
 }

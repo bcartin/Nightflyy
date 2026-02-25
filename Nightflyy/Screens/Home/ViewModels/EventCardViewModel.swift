@@ -58,19 +58,7 @@ class EventCardViewModel: NSObject {
     func fetchOwner() async {
         guard let ownerId = event.createdBy else { return }
         if !event.isUnclaimed {
-            let fetchOwnerTask = Task { @MainActor () -> Account? in
-                let result = await AccountClient.fetchAccount(uid: ownerId)
-                switch result {
-                    
-                case .success(let account):
-                    return account
-                case .failure(_):
-                    return nil
-                }
-            }
-            
-            let result = await fetchOwnerTask.result
-            self.eventOwner = result.get()
+            self.eventOwner = await AccountClient.fetchAccount(accountId: ownerId)
         }
     }
     

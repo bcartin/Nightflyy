@@ -157,57 +157,41 @@ class EventClient {
     }
     
     static func addUserToAttending(eventId: String, uid: String) async throws {
-        try await FirebaseManager.shared.db
-            .collection(FirestoreCollections.Events.value)
-            .document(eventId)
-            .updateData([
-                FirestoreCollections.Events.attending: FieldValue.arrayUnion([uid])
-            ])
+        try await addToArrayField(eventId: eventId, field: FirestoreCollections.Events.attending, uid: uid)
     }
     
     static func addUserToInterested(eventId: String, uid: String) async throws {
-        try await FirebaseManager.shared.db
-            .collection(FirestoreCollections.Events.value)
-            .document(eventId)
-            .updateData([
-                FirestoreCollections.Events.interested: FieldValue.arrayUnion([uid])
-            ])
+        try await addToArrayField(eventId: eventId, field: FirestoreCollections.Events.interested, uid: uid)
     }
     
     static func addUserToInvited(eventId: String, uid: String) async throws {
-        try await FirebaseManager.shared.db
-            .collection(FirestoreCollections.Events.value)
-            .document(eventId)
-            .updateData([
-                FirestoreCollections.Events.invited: FieldValue.arrayUnion([uid])
-            ])
+        try await addToArrayField(eventId: eventId, field: FirestoreCollections.Events.invited, uid: uid)
     }
     
     static func removeUserFromAttending(eventId: String, uid: String) async throws {
-        try await FirebaseManager.shared.db
-            .collection(FirestoreCollections.Events.value)
-            .document(eventId)
-            .updateData([
-                FirestoreCollections.Events.attending: FieldValue.arrayRemove([uid])
-            ])
+        try await removeFromArrayField(eventId: eventId, field: FirestoreCollections.Events.attending, uid: uid)
     }
     
     static func removeUserFromInterested(eventId: String, uid: String) async throws {
-        try await FirebaseManager.shared.db
-            .collection(FirestoreCollections.Events.value)
-            .document(eventId)
-            .updateData([
-                FirestoreCollections.Events.interested: FieldValue.arrayRemove([uid])
-            ])
+        try await removeFromArrayField(eventId: eventId, field: FirestoreCollections.Events.interested, uid: uid)
     }
     
     static func removeUserFromInvited(eventId: String, uid: String) async throws {
+        try await removeFromArrayField(eventId: eventId, field: FirestoreCollections.Events.invited, uid: uid)
+    }
+    
+    private static func addToArrayField(eventId: String, field: String, uid: String) async throws {
         try await FirebaseManager.shared.db
             .collection(FirestoreCollections.Events.value)
             .document(eventId)
-            .updateData([
-                FirestoreCollections.Events.invited: FieldValue.arrayRemove([uid])
-            ])
+            .updateData([field: FieldValue.arrayUnion([uid])])
+    }
+    
+    private static func removeFromArrayField(eventId: String, field: String, uid: String) async throws {
+        try await FirebaseManager.shared.db
+            .collection(FirestoreCollections.Events.value)
+            .document(eventId)
+            .updateData([field: FieldValue.arrayRemove([uid])])
     }
     
     static func setEventOwner(eventId: String, uid: String) async throws {

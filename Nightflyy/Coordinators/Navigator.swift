@@ -63,7 +63,7 @@ class Navigator {
             case .chat:
                 await navigateToChat(chatId: id)
             case .other:
-                navigateToTab(.Home)
+                navigateToTab(.home)
             case .none:
                 print("none")
             }

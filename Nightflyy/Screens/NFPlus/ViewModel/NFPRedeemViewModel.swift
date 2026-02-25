@@ -34,7 +34,7 @@ class NFPRedeemViewModel {
     var minute: Int = 0
     var second: Int = 0
     
-    var helpOptions: [NFPHelpOption] = [.FAQ, .Support, .Report, .Issue, .Feedback, .Locations]
+    var helpOptions: [NFPHelpOption] = [.faq, .support, .report, .issue, .feedback, .locations]
     
     init() {
         displayView = mainDisplayView

@@ -33,11 +33,6 @@ struct NFPRedemption: Codable, Savable {
 extension NFPRedemption {
     
     func save() throws {
-        do {
-            try FirebaseManager.shared.db.collection(NFPRedemption.collection).document(id!).setData(from: self, merge: true)
-        }
-        catch {
-            throw error
-        }
+        try FirebaseManager.shared.db.collection(NFPRedemption.collection).document(id!).setData(from: self, merge: true)
     }
 }

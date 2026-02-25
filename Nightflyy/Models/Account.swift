@@ -137,13 +137,8 @@ struct Account: Identifiable, Codable, Savable {
 extension Account {
     
     func save() throws {
-        do {
-            try FirebaseManager.shared.db.collection(Account.collection).document(id!).setData(from: self, merge: true)
-            firebaseCache[uid] = .account(self)
-        }
-        catch {
-            throw error
-        }
+        try FirebaseManager.shared.db.collection(Account.collection).document(id!).setData(from: self, merge: true)
+        firebaseCache[uid] = .account(self)
     }
     
     func updateCache() {
