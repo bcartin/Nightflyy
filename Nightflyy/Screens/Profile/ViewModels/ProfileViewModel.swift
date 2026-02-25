@@ -46,11 +46,11 @@ class ProfileViewModel: NSObject {
     }
     
     var isPlusProvider: Bool {
-        account.plusProvider ?? false
+        account.isProvider
     }
     
     var isPlusAccount: Bool {
-        account.plusMember ?? false
+        account.hasActiveSubscription
     }
     
     var hasPhoneNumber: Bool {

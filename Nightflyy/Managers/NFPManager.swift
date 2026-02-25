@@ -17,7 +17,7 @@ class NFPManager {
     private init() { }
     
     var isPlusMember: Bool {
-        AccountManager.shared.account?.plusMember ?? false 
+        AccountManager.shared.account?.hasActiveSubscription ?? false
     }
     
     var hasCredits: Bool {

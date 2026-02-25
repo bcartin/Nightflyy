@@ -13,7 +13,7 @@ class VenueListItemViewModel: NSObject {
     var venue: Account
     
     var isPlusVenue: Bool {
-        venue.plusProvider ?? false
+        venue.isProvider
     }
     
     init(venue: Account) {

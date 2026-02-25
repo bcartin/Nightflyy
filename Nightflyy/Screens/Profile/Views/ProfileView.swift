@@ -52,7 +52,7 @@ struct ProfileView: View {
                     if viewModel.canInteract {
                         VStack(alignment: .center) {
                             Text("Followers")
-                            Text("\(viewModel.account.followers?.count ?? 0)")
+                            Text("\(viewModel.account.followerCount)")
                         }
                         .font(.system(size: 14))
                         .onTapGesture {
@@ -62,7 +62,7 @@ struct ProfileView: View {
                         
                         VStack(alignment: .center) {
                             Text("Following")
-                            Text("\(viewModel.account.following?.count ?? 0)")
+                            Text("\(viewModel.account.followingCount)")
                         }
                         .font(.system(size: 14))
                         .onTapGesture {

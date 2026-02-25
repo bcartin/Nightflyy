@@ -41,6 +41,6 @@ struct AccountRowWithAction: View {
 }
 
 #Preview {
-    AccountRowWithAction(accountId: "", account: Account(profileImageUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dXNlcnxlbnwwfHwwfHx8MA%3D%3D", username: "Panchita"), actionName: "Invite", buttonStyle: .actionPrimary, isDisabled: false, action: {})
+    AccountRowWithAction(accountId: "", account: Account(username: "Panchita", profileImageUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"), actionName: "Invite", buttonStyle: .actionPrimary, isDisabled: false, action: {})
         .preferredColorScheme(.dark)
 }

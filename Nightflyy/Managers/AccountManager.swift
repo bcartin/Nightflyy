@@ -22,11 +22,11 @@ class AccountManager {
     }
     
     var isPlusMember: Bool {
-       account?.plusMember ?? false 
+        account?.hasActiveSubscription ?? false
     }
     
     var isPlusProvider: Bool {
-        account?.plusProvider ?? false
+        account?.isProvider ?? false
     }
     
     var isAdmin: Bool {

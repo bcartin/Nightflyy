@@ -125,16 +125,16 @@ class SignupViewModel {
     
     func createAccount(uid: String) async throws {
         account = Account(id: uid,
-                          accountIsPrivate: false,
                           accountType: .personal,
-                          badgeCount: 0,
-                          bonusCreditDate: nil,
-                          dob: dob,
-                          email: email,
-                          gender: Gender(rawValue: gender)?.intValue,
+                          accountIsPrivate: false,
                           name: name,
-                          notificationSettings: NotificationSettings(),
-                          username: username)
+                          username: username,
+                          email: email,
+                          dob: dob,
+                          gender: Gender(rawValue: gender)?.intValue,
+                          bonusCreditDate: nil,
+                          badgeCount: 0,
+                          notificationSettings: NotificationSettings())
         try await updateProfileImage()
         try account?.save()
         await UsernamesClient.saveUsername(username: username)

@@ -12,125 +12,144 @@ struct Account: Identifiable, Codable, Savable {
     static var collection: String = FirestoreCollections.Accounts.value
     
     @DocumentID var id = UUID().uuidString
-    var accountIsPrivate: Bool?
+    
+    // MARK: - Identity
     var accountType: AccountType?
-    var address: String?
-    var appVersion: String?
-    var attending: [String]?
-    var badgeCount: Int?
-    var bio: String?
-    var blocked: [String]?
-    var blockedBy: [String]?
-    @ExplicitNull var bonusCreditDate: Date? = nil
-    var businessEmail: String?
-    var chats: [String]?
-    var city: String?
-    var clientele: [String]?
-    var dob: String?
-    var email: String?
-    var followers: [String]?
-    var following: [String]?
-    var gender: Int?
-    var geohash: String?
-    var hidden: [String]?
-    var invited: [String]?
-    var interested: [String]?
-    var isAdmin: Bool? = false
-    var isTester: Bool? = false
-    var lastOnline: Date?
-    var location: GeoPoint?
-    var messageCount: Int?
-    var music: [String]?
+    var accountIsPrivate: Bool?
     var name: String?
-    var nextCreditDate: Date?
-    var notificationSettings: NotificationSettings?
+    var username: String?
+    var email: String?
+    var dob: String?
+    var gender: Int?
+    var bio: String?
+    var phoneNumber: String?
+    var profileImageUrl: String?
+    var photoFileName: String?
+    
+    // MARK: - Venue Profile
+    var address: String?
+    var businessEmail: String?
+    var clientele: [String]?
+    var music: [String]?
     var numberOfReviews: Int?
     var perkDetails: String?
     var perkName: String?
-    var phoneNumber: String?
-    var photoFileName: String?
+    var rating: Float?
+    var redemptionCode: String?
+    var reviews: [Review]?
+    var venues: [String]?
+    var venueType: String?
+    var website: String?
+    
+    // MARK: - Plus Subscription
+    @ExplicitNull var bonusCreditDate: Date? = nil
+    var nextCreditDate: Date?
     var plusCredits: Int?
     var plusMember: Bool?
     var plusProvider: Bool?
-    var profileImageUrl: String?
-    var rating: Float?
-    var redemptionCode: String?
+    
+    // MARK: - Social
+    var attending: [String]?
+    var blocked: [String]?
+    var blockedBy: [String]?
+    var chats: [String]?
+    var followers: [String]?
+    var following: [String]?
+    var hidden: [String]?
+    var interested: [String]?
+    var invited: [String]?
     var requested: [String]?
-    var reviews: [Review]?
+    
+    // MARK: - Location
+    var city: String?
     var state: String?
+    var geohash: String?
+    var location: GeoPoint?
+    
+    // MARK: - App Metadata
+    var appVersion: String?
+    var badgeCount: Int?
+    var isAdmin: Bool? = false
+    var isTester: Bool? = false
+    var lastOnline: Date?
+    var messageCount: Int?
+    var notificationSettings: NotificationSettings?
     var token: String?
-    var username: String?
-    var venues:[String]?
-    var venueType: String?
-    var website: String?
+    
+    // MARK: - Computed Properties
 
     var uid: String {
         return self.id ?? ""
     }
     
-    func getFollowingStatus(uid: String) -> FollowingStatus {
-        if let following = self.following, following.contains(uid) {
-            return .following
-        }
-        if let requested = self.requested, requested.contains(uid) {
-            return .requested
-        }
-        return .notFollowing
-    }
+    // MARK: - Codable
+    
     
     enum CodingKeys: String, CodingKey {
         case id
-        case accountIsPrivate = "account_is_private"
+        
+        // Identity
         case accountType = "account_type"
-        case address
-        case appVersion = "app_version"
-        case attending
-        case badgeCount = "badge_count"
-        case bio
-        case blocked
-        case blockedBy = "blocked_by"
-        case bonusCreditDate = "bonus_credit_date"
-        case businessEmail = "business_email"
-        case chats
-        case city
-        case clientele
-        case dob
-        case email
-        case followers
-        case following
-        case gender
-        case geohash = "g"
-        case hidden
-        case invited
-        case interested
-        case isAdmin = "is_admin"
-        case isTester = "is_tester"
-        case lastOnline = "last_online"
-        case location = "l"
-        case messageCount = "messages_count"
-        case music
+        case accountIsPrivate = "account_is_private"
         case name
-        case nextCreditDate = "next_credit_date"
-        case notificationSettings = "notification_settings"
+        case username
+        case email
+        case dob
+        case gender
+        case bio
+        case phoneNumber = "phone_number"
+        case profileImageUrl = "profile_image_url"
+        case photoFileName = "photo_file_name"
+        
+        // Venue Profile
+        case address
+        case businessEmail = "business_email"
+        case clientele
+        case music
         case numberOfReviews = "number_of_reviews"
         case perkDetails = "perk_details"
         case perkName = "perk_name"
-        case phoneNumber = "phone_number"
-        case photoFileName = "photo_file_name"
-        case plusCredits = "plus_credits"
-        case plusMember = "plus_member"
-        case plusProvider = "plus_provider"
-        case profileImageUrl = "profile_image_url"
         case rating
         case redemptionCode = "redemption_code"
-        case requested
         case reviews
-        case state
-        case token
-        case username
         case venues
         case venueType = "venue_type"
         case website
+        
+        // Plus Subscription
+        case bonusCreditDate = "bonus_credit_date"
+        case nextCreditDate = "next_credit_date"
+        case plusCredits = "plus_credits"
+        case plusMember = "plus_member"
+        case plusProvider = "plus_provider"
+        
+        // Social
+        case attending
+        case blocked
+        case blockedBy = "blocked_by"
+        case chats
+        case followers
+        case following
+        case hidden
+        case interested
+        case invited
+        case requested
+        
+        // Location
+        case city
+        case state
+        case geohash = "g"
+        case location = "l"
+        
+        // App Metadata
+        case appVersion = "app_version"
+        case badgeCount = "badge_count"
+        case isAdmin = "is_admin"
+        case isTester = "is_tester"
+        case lastOnline = "last_online"
+        case messageCount = "messages_count"
+        case notificationSettings = "notification_settings"
+        case token
     }
 }
 

@@ -79,7 +79,7 @@ class NFPRedeemViewModel {
     }
     
     func fetchNFPVenues() async {
-        nfpVenues = await AccountClient.fetchNightflyyPlusProviders().filter{$0.accountType == .venue}
+        nfpVenues = await AccountClient.fetchNightflyyPlusProviders().filter { $0.isVenue }
     }
     
     func navigateToProfile(account: Account) {
