@@ -8,15 +8,25 @@
 import Foundation
 
 @Observable @MainActor
-class EventListItemViewModel: NSObject {
+class EventListItemViewModel: Hashable {
+    
+    nonisolated let id: String
+    
+    nonisolated static func == (lhs: EventListItemViewModel, rhs: EventListItemViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var event: Event
     var eventOwner: Account?
     var isSelected: Bool = false
     
     init(event: Event, autoFetchOwner: Bool = false) {
+        self.id = event.uid
         self.event = event
-        super.init()
         if autoFetchOwner {
             Task {
                 await fetchOwner()

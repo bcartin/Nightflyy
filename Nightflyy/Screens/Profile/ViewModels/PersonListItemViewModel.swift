@@ -8,7 +8,17 @@
 import Foundation
 
 @Observable @MainActor
-class PersonListItemViewModel: NSObject {
+class PersonListItemViewModel: Hashable {
+    
+    nonisolated let id: String
+    
+    nonisolated static func == (lhs: PersonListItemViewModel, rhs: PersonListItemViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var account: Account
     
@@ -21,8 +31,8 @@ class PersonListItemViewModel: NSObject {
     }
     
     init(account: Account) {
+        self.id = account.uid
         self.account = account
-        super.init()
     }
 
     func navigateToProfile() {

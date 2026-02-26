@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 @Observable @MainActor
-class NetworkUserViewModel: NSObject {
+class NetworkUserViewModel {
     
     var account: Account?
     var selectedSegment: Int

@@ -10,7 +10,17 @@ import SwiftUI
 import Combine
 
 @Observable @MainActor
-class EventGuestListViewModel: NSObject {
+class EventGuestListViewModel: Hashable {
+    
+    nonisolated let id: String
+    
+    nonisolated static func == (lhs: EventGuestListViewModel, rhs: EventGuestListViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var event: Event
     var selectedSegment: Int
@@ -23,11 +33,11 @@ class EventGuestListViewModel: NSObject {
     private var searchCancellable: AnyCancellable?
     
     init(event: Event, selectedSegment: Int) {
+        self.id = event.uid
         self.event = event
         self.selectedSegment = selectedSegment
         self.attending = event.attending ?? []
         self.interested = event.interested ?? []
-        super.init()
         
         searchCancellable = $searchText
             .receive(on: DispatchQueue.main)

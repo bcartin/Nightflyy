@@ -9,7 +9,17 @@ import Foundation
 import SwiftUI
 
 @Observable @MainActor
-class InviteToEventViewModel: NSObject {
+class InviteToEventViewModel: Hashable {
+    
+    nonisolated let id: String
+    
+    nonisolated static func == (lhs: InviteToEventViewModel, rhs: InviteToEventViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var attendingEvents: [EventListItemViewModel] = .init()
     var futureHostingEvents: [EventListItemViewModel] = .init()
@@ -17,6 +27,7 @@ class InviteToEventViewModel: NSObject {
     var selectedEvents: [String] = .init()
     
     init(accountToInvite: Account) {
+        self.id = accountToInvite.uid
         self.accountToInvite = accountToInvite
     }
 

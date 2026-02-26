@@ -8,13 +8,24 @@
 import SwiftUI
 
 @Observable @MainActor
-class EventCommentViewModel: NSObject {
+class EventCommentViewModel: Hashable {
+    
+    nonisolated let id: String
+    
+    nonisolated static func == (lhs: EventCommentViewModel, rhs: EventCommentViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var comment: Comment
     var event: Event
     var account: Account?
     
     init(comment: Comment, event: Event) {
+        self.id = comment.uid
         self.comment = comment
         self.event = event
     }

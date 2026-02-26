@@ -9,7 +9,17 @@ import Foundation
 import SwiftUI
 
 @Observable @MainActor
-class ProfileViewModel: NSObject {
+class ProfileViewModel: Hashable {
+    
+    nonisolated let id: String
+    
+    nonisolated static func == (lhs: ProfileViewModel, rhs: ProfileViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var account: Account
     
@@ -27,8 +37,8 @@ class ProfileViewModel: NSObject {
     var selectedPresentView: PresentSheetView?
     
     init(account: Account) {
+        self.id = account.uid
         self.account = account
-        super.init()
         self.setFollowingStatus()
         print(account.uid)
     }

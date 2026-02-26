@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 @Observable @MainActor
-class NotificationViewModel: NSObject {
+class NotificationViewModel {
     
     var notification: AppNotification
     var error: Error?

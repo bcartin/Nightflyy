@@ -8,7 +8,17 @@
 import Foundation
 
 @Observable @MainActor
-class ReviewVenueViewModel: NSObject {
+class ReviewVenueViewModel: Hashable {
+    
+    nonisolated let id: String
+    
+    nonisolated static func == (lhs: ReviewVenueViewModel, rhs: ReviewVenueViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var rating: Int = 0
     var likes: [String] = []
@@ -17,6 +27,7 @@ class ReviewVenueViewModel: NSObject {
     var error: Error?
     
     init(account: Account) {
+        self.id = account.uid
         self.account = account
     }
     

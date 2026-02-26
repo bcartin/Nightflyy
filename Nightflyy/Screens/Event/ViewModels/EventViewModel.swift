@@ -9,7 +9,17 @@ import Foundation
 import SwiftUI
 
 @Observable @MainActor
-class EventViewModel: NSObject {
+class EventViewModel: Hashable {
+    
+    nonisolated let id: String
+    
+    nonisolated static func == (lhs: EventViewModel, rhs: EventViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var event: Event
     var eventOwner: Account?
@@ -27,9 +37,9 @@ class EventViewModel: NSObject {
     var commentText: String = ""
     
     init(event: Event, eventOwner: Account? = nil) {
+        self.id = event.uid
         self.event = event
         self.eventOwner = eventOwner
-        super.init()
         
         Task {
             await fetchEventOwner()

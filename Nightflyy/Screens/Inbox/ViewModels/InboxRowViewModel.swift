@@ -9,7 +9,17 @@ import Foundation
 import SwiftUI
 
 @Observable @MainActor
-class InboxRowViewModel: NSObject, Identifiable {
+class InboxRowViewModel: Hashable, Identifiable {
+    
+    nonisolated let id: String
+    
+    nonisolated static func == (lhs: InboxRowViewModel, rhs: InboxRowViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var chat: Chat
     var account: Account?
@@ -21,8 +31,8 @@ class InboxRowViewModel: NSObject, Identifiable {
     var shouldScrollToBottom: Bool = false
     
     init(chat: Chat) {
+        self.id = chat.id ?? UUID().uuidString
         self.chat = chat
-        super.init()
         self.fetchAccount()
         print(chat.id!)
     }

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 @Observable @MainActor
-class InviteFromEventViewModel: NSObject {
+class InviteFromEventViewModel {
     
     var event: Event
     var followers = AccountManager.shared.account?.followers ?? []

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 @Observable @MainActor
-class EventCardViewModel: NSObject {
+class EventCardViewModel {
     
     var event: Event
     var eventOwner: Account?
@@ -19,7 +19,6 @@ class EventCardViewModel: NSObject {
 
     init(event: Event) {
         self.event = event
-        super.init()
         self.setAttendanceStatus()
         Task {
             await fetchOwner()

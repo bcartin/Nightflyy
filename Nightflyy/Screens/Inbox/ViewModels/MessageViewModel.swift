@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 @Observable
-class MessageViewModel: NSObject, Identifiable {
+class MessageViewModel: Identifiable {
     
     var message: Message
     
