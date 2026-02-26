@@ -18,7 +18,7 @@ enum RedeemView {
     case help
 }
 
-@Observable
+@Observable @MainActor
 class NFPRedeemViewModel {
     
     var displayView: RedeemView = .hasCredits

@@ -10,7 +10,7 @@ import OSLog
 import AuthenticationServices
 import FirebaseAuth
 
-@Observable
+@Observable @MainActor
 class LoginViewModel {
     
     var email: String = ""
@@ -22,7 +22,7 @@ class LoginViewModel {
     var error: Error?
     
     func logInWithEmail() {
-        Task { @MainActor in
+        Task {
             AuthenticationManager.shared.isSigningUp = false
             AppState.shared.isLoading = true
             do {

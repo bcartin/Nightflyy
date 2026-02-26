@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-@Observable
+@Observable @MainActor
 class ProfileViewModel: NSObject {
     
     var account: Account
@@ -253,7 +253,7 @@ extension ProfileViewModel { // VENUE SPECIFIC FIELDS & FUNCTIONS
     }
     
     func openMapsWithAddress() {
-        Task { @MainActor in
+        Task {
             guard let address = account.address else { return }
             await MapsManager.openMapsWithAddress(address)
         }

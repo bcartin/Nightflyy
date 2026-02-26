@@ -168,7 +168,7 @@ class CreateEventViewModel: NSObject {
                 try? await Task.sleep(for: .seconds(2))
                 isLoading = false
                 updatedEvent?(event)
-                Router.shared.navigateBack()
+                await Router.shared.navigateBack()
             }
             catch {
                 self.error = error

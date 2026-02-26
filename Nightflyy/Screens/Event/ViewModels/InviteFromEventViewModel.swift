@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-@Observable
+@Observable @MainActor
 class InviteFromEventViewModel: NSObject {
     
     var event: Event

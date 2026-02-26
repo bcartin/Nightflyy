@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@Observable
+@Observable @MainActor
 class UpcomingViewModel: NSObject {
 
     var eventsAttending: [EventListItemViewModel] = []

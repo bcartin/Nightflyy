@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseFirestore
 import OSLog
 
-@Observable
+@Observable @MainActor
 class ChatsManager {
     
     static let shared = ChatsManager()
@@ -17,9 +17,9 @@ class ChatsManager {
     private let accountManager: any AccountManaging
     
     private init(
-        accountManager: any AccountManaging = AccountManager.shared
+        accountManager: (any AccountManaging)? = nil
     ) {
-        self.accountManager = accountManager
+        self.accountManager = accountManager ?? AccountManager.shared
     }
     
     var chats: [Chat] = []

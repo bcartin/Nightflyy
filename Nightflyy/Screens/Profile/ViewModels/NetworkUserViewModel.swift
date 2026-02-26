@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-@Observable
+@Observable @MainActor
 class NetworkUserViewModel: NSObject {
     
     var account: Account?

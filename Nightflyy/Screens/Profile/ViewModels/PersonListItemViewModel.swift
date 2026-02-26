@@ -7,7 +7,7 @@
 
 import Foundation
 
-@Observable
+@Observable @MainActor
 class PersonListItemViewModel: NSObject {
     
     var account: Account

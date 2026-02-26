@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class MainCoordinator {
     
     func initialAppSetup() {
@@ -15,7 +16,7 @@ class MainCoordinator {
             guard let uid = AuthenticationManager.shared.currentUser?.uid else { return } //MARK: if it should do something when not logged in do it before this line
             AnalyticsManager.setUserID(value: uid)
             await AccountManager.shared.fetchAccount(uid: uid)
-            await PushNotificationsManager.shared.configure()
+            PushNotificationsManager.shared.configure()
             await EventsManager.shared.fetchNearbyEvents()
             await EventsManager.shared.fetchNearbyVenues()
             await NFPManager.shared.checkSubscriptionStatus()

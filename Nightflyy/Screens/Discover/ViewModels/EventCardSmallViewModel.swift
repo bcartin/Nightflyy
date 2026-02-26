@@ -7,7 +7,7 @@
 
 import Foundation
 
-@Observable
+@Observable @MainActor
 class EventCardSmallViewModel {
     
     var event: Event

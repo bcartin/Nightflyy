@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-@Observable
+@Observable @MainActor
 class HubViewModel: NSObject {
     
     var selectedSegment: Int = 1

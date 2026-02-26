@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-@Observable
+@Observable @MainActor
 class SearchResultsListViewModel: NSObject {
     
     var selectedSegment: Int = 0

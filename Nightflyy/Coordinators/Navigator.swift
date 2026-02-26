@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class Navigator {
     
     var router: Router

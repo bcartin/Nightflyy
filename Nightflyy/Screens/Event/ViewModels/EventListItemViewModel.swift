@@ -7,7 +7,7 @@
 
 import Foundation
 
-@Observable
+@Observable @MainActor
 class EventListItemViewModel: NSObject {
     
     var event: Event
@@ -73,10 +73,11 @@ class EventListItemViewModel: NSObject {
     
 }
 
+@MainActor
 extension [EventListItemViewModel] {
-    
+
     func sortedByDate() -> [EventListItemViewModel] {
         return self.sorted { $0.eventDate < $1.eventDate }
     }
-    
+
 }

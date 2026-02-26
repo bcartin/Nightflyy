@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-@Observable
+@Observable @MainActor
 class NetworkViewModel: NSObject {
     
     var account: Account

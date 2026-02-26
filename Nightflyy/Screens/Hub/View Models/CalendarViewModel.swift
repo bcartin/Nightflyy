@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@Observable
+@Observable @MainActor
 class CalendarViewModel {
     
     var events: [Event] = .init()

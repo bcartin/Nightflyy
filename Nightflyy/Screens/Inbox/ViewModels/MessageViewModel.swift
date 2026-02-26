@@ -75,8 +75,8 @@ class MessageViewModel: NSObject, Identifiable {
         Task {
             guard let uid = message.messageData.uid else { return }
             if let account = await AccountClient.fetchAccount(accountId: uid) {
-                let viewModel = ProfileViewModel(account: account)
-                Router.shared.navigateTo(.Profile(viewModel))
+                let viewModel = await ProfileViewModel(account: account)
+                await Router.shared.navigateTo(.Profile(viewModel))
             }
         }
     }
@@ -85,8 +85,8 @@ class MessageViewModel: NSObject, Identifiable {
         Task {
             guard let eventId = message.messageData.event_id else { return }
             if let event = await EventClient.fetchEvent(eventId: eventId) {
-                let viewModel = EventViewModel(event: event)
-                Router.shared.navigateTo(.Event(viewModel))
+                let viewModel = await EventViewModel(event: event)
+                await Router.shared.navigateTo(.Event(viewModel))
             }
         }
     }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@Observable
+@Observable @MainActor
 class ReportViewModel {
     
     var reportReasons: [String] = ["Offensive Language",

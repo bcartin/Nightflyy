@@ -7,7 +7,6 @@
 
 import Foundation
 import FirebaseFirestore
-//import FirebaseFirestoreSwift
 import OSLog
 
 class AppNotificationClient {
@@ -30,7 +29,7 @@ class AppNotificationClient {
     
     static func deleteNotification(_ notificationId: String) async throws {
         guard let uid = AccountManager.shared.account?.uid else {
-            return 
+            return
         }
         let dbRef = FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value).document(uid).collection(FirestoreCollections.Accounts.notifications).document(notificationId)
         try await dbRef.delete()

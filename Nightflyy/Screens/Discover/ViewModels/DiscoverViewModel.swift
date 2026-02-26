@@ -8,7 +8,7 @@
 import SwiftUI
 //import Combine
 
-@Observable
+@Observable @MainActor
 class DiscoverViewModel {
     
     var selectedVenues: [String] = .init()

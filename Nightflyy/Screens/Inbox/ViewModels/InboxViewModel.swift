@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@Observable
+@Observable @MainActor
 class InboxViewModel {
     
     var shouldPresentNewChatView: Bool = false

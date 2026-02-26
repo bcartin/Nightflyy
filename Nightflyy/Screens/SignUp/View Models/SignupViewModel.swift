@@ -150,7 +150,7 @@ class SignupViewModel {
         // Create contact in sendgrid
         await SendgridManager.createContactInSendgrid(account: account!, lists: [.ALL])
         
-        MainCoordinator().initialAppSetup()
+        await MainCoordinator().initialAppSetup()
         
         AppState.shared.isLoading = false
         self.goToScreen(.location)

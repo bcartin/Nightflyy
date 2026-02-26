@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreLocation
 
-@Observable
+@Observable @MainActor
 class EventsFilterViewModel {
     
     var selectedFiler: EventsViewFilter = .nearby

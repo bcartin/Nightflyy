@@ -8,7 +8,7 @@
 import SwiftUI
 import OSLog
 
-@Observable
+@Observable @MainActor
 class AppNotificationsManager {
     
     static let shared = AppNotificationsManager()

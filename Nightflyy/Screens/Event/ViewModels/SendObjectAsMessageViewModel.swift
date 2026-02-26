@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-@Observable
+@Observable @MainActor
 class SendObjectAsMessageViewModel: NSObject {
     
     var event: Event?

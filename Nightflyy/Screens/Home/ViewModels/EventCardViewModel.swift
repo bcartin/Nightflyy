@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-@Observable
+@Observable @MainActor
 class EventCardViewModel: NSObject {
     
     var event: Event
@@ -92,7 +92,9 @@ class EventCardViewModel: NSObject {
     func markAsAttenging() {
         Task {
             do {
-                try await EventAttendanceManager.shared.markAsAttending(event: &event)
+                var eventCopy = event
+                try await EventAttendanceManager.shared.markAsAttending(event: &eventCopy)
+                event = eventCopy
                 EventsManager.shared.updateEventLists(with: event)
                 setAttendanceStatus()
             }
@@ -101,11 +103,13 @@ class EventCardViewModel: NSObject {
             }
         }
     }
-    
+
     func markAsInterested() {
         Task {
             do {
-                try await EventAttendanceManager.shared.markAsInterested(event: &event)
+                var eventCopy = event
+                try await EventAttendanceManager.shared.markAsInterested(event: &eventCopy)
+                event = eventCopy
                 EventsManager.shared.updateEventLists(with: event)
                 setAttendanceStatus()
             }
@@ -114,11 +118,13 @@ class EventCardViewModel: NSObject {
             }
         }
     }
-    
+
     func markAsNotAttending() {
         Task {
             do {
-                try await EventAttendanceManager.shared.markAsNotAttending(event: &event)
+                var eventCopy = event
+                try await EventAttendanceManager.shared.markAsNotAttending(event: &eventCopy)
+                event = eventCopy
                 EventsManager.shared.updateEventLists(with: event)
                 setAttendanceStatus()
             }

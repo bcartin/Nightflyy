@@ -7,7 +7,7 @@
 
 import Foundation
 
-@Observable
+@Observable @MainActor
 class ReviewVenueViewModel: NSObject {
     
     var rating: Int = 0
