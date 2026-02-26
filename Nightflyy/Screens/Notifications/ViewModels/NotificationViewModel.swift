@@ -178,8 +178,8 @@ class NotificationViewModel {
     func acceptFollowRequest() {
         Task {
             do {
-                guard var newFollower = await AccountClient.fetchAccount(accountId: notification.sender) else { return }
-                try await AccountManager.shared.acceptFollowRequest(from: &newFollower)
+                guard let newFollower = await AccountClient.fetchAccount(accountId: notification.sender) else { return }
+                try await AccountManager.shared.acceptFollowRequest(from: newFollower)
             }
             catch {
                 self.error = error

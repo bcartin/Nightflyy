@@ -22,6 +22,8 @@ enum FirestoreCollections {
         static let blockedBy = "blocked_by"
         static let requested = "requested"
         static let token = "token"
+        static let followers = "followers"
+        static let following = "following"
     }
     
     enum Events {

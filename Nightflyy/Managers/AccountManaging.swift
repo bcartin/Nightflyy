@@ -13,9 +13,9 @@ protocol AccountManaging: AnyObject {
     var isAdmin: Bool { get }
     func saveAccount()
     func fetchAccount(uid: String) async
-    func followAccount(accountToFollow: inout Account) throws
-    func unfollowAccount(accountToFollow: inout Account) throws
-    func requestToFollowAccount(accountId: String) throws
-    func acceptFollowRequest(from newFollower: inout Account) async throws
+    @discardableResult func followAccount(accountToFollow: Account) async throws -> Account
+    @discardableResult func unfollowAccount(accountToFollow: Account) async throws -> Account
+    func requestToFollowAccount(accountId: String) async throws
+    @discardableResult func acceptFollowRequest(from newFollower: Account) async throws -> Account
     func updateTrackInfo()
 }

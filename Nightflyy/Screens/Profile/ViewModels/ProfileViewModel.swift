@@ -148,35 +148,39 @@ class ProfileViewModel: Hashable {
     }
     
     func followButtonAction() {
-        do {
-            switch followingStatus {
-            case .notFollowing:
-                if account.accountIsPrivate ?? true {
-                    try AccountManager.shared.requestToFollowAccount(accountId: account.uid)
+        Task {
+            do {
+                switch followingStatus {
+                case .notFollowing:
+                    if account.accountIsPrivate ?? true {
+                        try await AccountManager.shared.requestToFollowAccount(accountId: account.uid)
+                    }
+                    else {
+                        account = try await AccountManager.shared.followAccount(accountToFollow: account)
+                    }
+                case .following:
+                    self.presentUnfollowAlert = true
+                case .requested:
+                    print("Already Requested")
                 }
-                else {
-                    try AccountManager.shared.followAccount(accountToFollow: &account)
-                }
-            case .following:
-                self.presentUnfollowAlert = true
-            case .requested:
-                print("Already Requested")
+                setFollowingStatus()
             }
-            setFollowingStatus()
-        }
-        catch {
-            self.error = error
+            catch {
+                self.error = error
+            }
         }
     }
     
     func unfollowAccount() {
-        do {
-            try AccountManager.shared.unfollowAccount(accountToFollow: &account)
-            setFollowingStatus()
-            self.presentUnfollowAlert = false
-        }
-        catch {
-            self.error = error
+        Task {
+            do {
+                account = try await AccountManager.shared.unfollowAccount(accountToFollow: account)
+                setFollowingStatus()
+                self.presentUnfollowAlert = false
+            }
+            catch {
+                self.error = error
+            }
         }
     }
     
