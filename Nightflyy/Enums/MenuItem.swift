@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 enum MenuItem {
     case accountInfo(type: AccountType)
     case eventPreferences

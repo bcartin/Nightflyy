@@ -7,9 +7,9 @@
 
 enum AppTab: Int {
     
-    case Home = 0
-    case Discover = 1
-    case Hub = 2
-    case Notifications = 3
-    case Inbox = 4
+    case home = 0
+    case discover = 1
+    case hub = 2
+    case notifications = 3
+    case inbox = 4
 }

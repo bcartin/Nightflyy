@@ -8,8 +8,18 @@
 import Foundation
 import SwiftUI
 
-@Observable
-class ProfileViewModel: NSObject {
+@Observable @MainActor
+class ProfileViewModel: Hashable {
+    
+    nonisolated let id: String
+    
+    nonisolated static func == (lhs: ProfileViewModel, rhs: ProfileViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var account: Account
     
@@ -27,8 +37,8 @@ class ProfileViewModel: NSObject {
     var selectedPresentView: PresentSheetView?
     
     init(account: Account) {
+        self.id = account.uid
         self.account = account
-        super.init()
         self.setFollowingStatus()
         print(account.uid)
     }
@@ -46,11 +56,11 @@ class ProfileViewModel: NSObject {
     }
     
     var isPlusProvider: Bool {
-        account.plusProvider ?? false
+        account.isProvider
     }
     
     var isPlusAccount: Bool {
-        account.plusMember ?? false
+        account.hasActiveSubscription
     }
     
     var hasPhoneNumber: Bool {
@@ -253,7 +263,7 @@ extension ProfileViewModel { // VENUE SPECIFIC FIELDS & FUNCTIONS
     }
     
     func openMapsWithAddress() {
-        Task { @MainActor in
+        Task {
             guard let address = account.address else { return }
             await MapsManager.openMapsWithAddress(address)
         }

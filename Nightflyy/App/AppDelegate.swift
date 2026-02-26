@@ -14,14 +14,21 @@ import Airbridge
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
-        let fileName: String = try! AppConfiguration.value(for: "FB_FILEPATH_NAME")
-        let filePath = Bundle.main.path(forResource: fileName, ofType: "plist")
-        
-        guard let fileopts = FirebaseOptions(contentsOfFile: filePath!) else {
-            assert(false, "Couldn't load config file")
-            return true
+        do {
+            let fileName: String = try AppConfiguration.value(for: "FB_FILEPATH_NAME")
+            guard let filePath = Bundle.main.path(forResource: fileName, ofType: "plist") else {
+                fatalError("Failed to load AppConfiguration")
+            }
+            
+            guard let fileopts = FirebaseOptions(contentsOfFile: filePath) else {
+                assert(false, "Couldn't load config file")
+                return true
+            }
+            FirebaseApp.configure(options: fileopts)
         }
-        FirebaseApp.configure(options: fileopts)
+        catch {
+            fatalError("Failed to load AppConfiguration")
+        }
         
         #if RELEASE
         
@@ -73,9 +80,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
         UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .normal)
         
-        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = UIColor(named: "MainPurple")
-//        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).backgroundColor = UIColor(named: "BackgroundBlackLight")
-        
+        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = UIColor(named: "MainPurple")        
     }
 }
 

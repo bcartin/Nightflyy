@@ -8,7 +8,7 @@
 import Foundation
 import UserNotifications
 
-class LocalNotificationsManager {
+class LocalNotificationsManager: LocalNotificationsManaging {
     
     static let shared = LocalNotificationsManager()
     let unCenter = UNUserNotificationCenter.current()

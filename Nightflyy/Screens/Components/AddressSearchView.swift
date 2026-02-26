@@ -12,7 +12,7 @@ struct AddressSearchView: View {
     @Environment(\.dismiss) var dismiss
     @State var isTyping: Bool = false
     @Binding var selectedAddress: String
-    @ObservedObject var viewModel: AddressSearchViewModel
+    @State var viewModel: AddressSearchViewModel
     @FocusState private var isFieldFocused: Bool
     
     var body: some View {

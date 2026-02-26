@@ -9,8 +9,18 @@ import Foundation
 import SwiftUI
 import Combine
 
-@Observable
-class SendObjectAsMessageViewModel: NSObject {
+@Observable @MainActor
+class SendObjectAsMessageViewModel: Hashable {
+    
+    nonisolated let id = UUID()
+    
+    nonisolated static func == (lhs: SendObjectAsMessageViewModel, rhs: SendObjectAsMessageViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var event: Event?
     var account: Account?
@@ -28,7 +38,6 @@ class SendObjectAsMessageViewModel: NSObject {
         self.event = event
         self.account = account
         self.isEvent = event != nil
-        super.init()
         createMessage()
         
         searchCancellable = $searchText

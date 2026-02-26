@@ -7,20 +7,45 @@
 
 import SwiftUI
 import FirebaseFirestore
+import OSLog
 
 @Observable
 class NFPManager {
     
     static let shared = NFPManager()
     
-    private init() { }
+    private let accountClient: any AccountClientProtocol
+    private let invitesClient: any NFPInvitesClientProtocol
+    private let promoCodesClient: any PromoCodesClientProtocol
+    private let accountManager: any AccountManaging
+    private let iapManager: any IAPManaging
+    private let pushNotifications: any PushNotificationsManaging
+    private let localNotifications: any LocalNotificationsManaging
+    
+    private init(
+        accountClient: any AccountClientProtocol = AccountClient.shared,
+        invitesClient: any NFPInvitesClientProtocol = NFPInvitesClient.shared,
+        promoCodesClient: any PromoCodesClientProtocol = PromoCodesClient.shared,
+        accountManager: any AccountManaging = AccountManager.shared,
+        iapManager: any IAPManaging = IAPManager.shared,
+        pushNotifications: any PushNotificationsManaging = PushNotificationsManager.shared,
+        localNotifications: any LocalNotificationsManaging = LocalNotificationsManager.shared
+    ) {
+        self.accountClient = accountClient
+        self.invitesClient = invitesClient
+        self.promoCodesClient = promoCodesClient
+        self.accountManager = accountManager
+        self.iapManager = iapManager
+        self.pushNotifications = pushNotifications
+        self.localNotifications = localNotifications
+    }
     
     var isPlusMember: Bool {
-        AccountManager.shared.account?.plusMember ?? false 
+        accountManager.account?.hasActiveSubscription ?? false
     }
     
     var hasCredits: Bool {
-        AccountManager.shared.account?.plusCredits ?? 0 > 0 + (UserDefaultsKeys.bonusCredit.getValue() ?? 0)
+        accountManager.account?.plusCredits ?? 0 > 0 + (UserDefaultsKeys.bonusCredit.getValue() ?? 0)
     }
     
     var showNFPView: Bool = false
@@ -53,108 +78,101 @@ class NFPManager {
     
     func checkForCredits() {
         if isPlusMember {
-            let nextCreditDate = AccountManager.shared.account?.nextCreditDate ?? nextCreditDate
+            let nextCreditDate = accountManager.account?.nextCreditDate ?? nextCreditDate
             if Date() >= nextCreditDate {
                 addCredits()
                 addReminderNotification()
             }
-            guard let bonusCreditDate = AccountManager.shared.account?.bonusCreditDate else { return }
+            guard let bonusCreditDate = accountManager.account?.bonusCreditDate else { return }
             if Date() > bonusCreditDate {
                 UserDefaultsKeys.bonusCredit.setValue(1)
-                AccountManager.shared.account?.bonusCreditDate = nil
+                accountManager.account?.bonusCreditDate = nil
             }
         }
     }
     
     func checkSubscriptionStatus() async {
         do {
-            let status = try await IAPManager.shared.checkPermissions()
+            let status = try await iapManager.checkPermissions()
             updatePlusMemberStatus(status: status)
             if status {
                 self.checkForCredits()
             }
             else {
                 self.cancelPlusMember()
-                try await NFPInvitesClient.deleteInvites()
+                try await invitesClient.deleteInvites()
             }
-            AccountManager.shared.saveAccount()
+            accountManager.saveAccount()
         }
         catch {
-            print(error.localizedDescription)
+            Logger.iap.error("Error checking subscription status: \(error.localizedDescription)")
         }
     }
     
     func makePlusMember(promoCode: String?) async throws {
-        if AccountManager.shared.account != nil {
-            AccountManager.shared.account?.plusMember = true
-            AccountManager.shared.account?.plusCredits = 1
-            AccountManager.shared.account?.nextCreditDate = nextCreditDate
+        if accountManager.account != nil {
+            accountManager.account?.plusMember = true
+            accountManager.account?.plusCredits = 1
+            accountManager.account?.nextCreditDate = nextCreditDate
             if let promoCode = promoCode, promoCode != "" {
-                AccountManager.shared.account?.bonusCreditDate = bonusCreditDate
-                PromoCodesClient.addRedemption(code: promoCode)
+                accountManager.account?.bonusCreditDate = bonusCreditDate
+                promoCodesClient.addRedemption(code: promoCode)
             }
-            if let account = AccountManager.shared.account {
+            if let account = accountManager.account {
                 await SendgridManager.createContactInSendgrid(account: account, lists: [.NFPLUS])
             }
-            do {
-                try AccountManager.shared.account?.save()
-                await PushNotificationsManager.shared.subscribeToNotifications(target: .nfplus)
-            }
-            catch {
-                throw error
-            }
+            try accountManager.account?.save()
+            pushNotifications.subscribeToNotifications(target: .nfplus)
         }
     }
     
     func cancelPlusMember() {
-        AccountManager.shared.account?.plusMember = false
-        AccountManager.shared.account?.plusCredits = 0
-        AccountManager.shared.account?.nextCreditDate = nil
-        AccountManager.shared.account?.bonusCreditDate = nil
+        accountManager.account?.plusMember = false
+        accountManager.account?.plusCredits = 0
+        accountManager.account?.nextCreditDate = nil
+        accountManager.account?.bonusCreditDate = nil
     }
     
     func updatePlusMemberStatus(status: Bool) {
-        AccountManager.shared.account?.plusMember = status
+        accountManager.account?.plusMember = status
     }
     
     func addCredits() {
-        AccountManager.shared.account?.plusCredits = 1
-        AccountManager.shared.account?.nextCreditDate = nextCreditDate
-        try? AccountManager.shared.account?.save()
+        accountManager.account?.plusCredits = 1
+        accountManager.account?.nextCreditDate = nextCreditDate
+        do {
+            try accountManager.account?.save()
+        } catch {
+            Logger.iap.error("Error saving credits: \(error.localizedDescription)")
+        }
     }
     
     func addReminderNotification() {
         if perkReminderDate > Date() {
             let data = ["type": "nfplus"]
-            LocalNotificationsManager.shared.scheduleLocalNotification(type: .perkReminder, date: perkReminderDate, data: data)
+            localNotifications.scheduleLocalNotification(type: .perkReminder, date: perkReminderDate, data: data)
         }
     }
     
-    func redeemCredit(code: String) async -> Result<Bool, Error> {
-        do {
-            let venue = try await AccountClient.fetchVenueByRedemptionCode(code: code)
-            
-            guard let uid = AccountManager.shared.account?.uid,
-                  let venueID = venue?.id,
-                  let venueName = venue?.name
-            else {
-                return .failure(AccountError.invalidCode)
-            }
-            
-            let redemption = NFPRedemption(venueID: venueID, venueName: venueName, city: venue?.city, state: venue?.state, date: Date(), clientID: uid)
-            try redemption.save()
-            if UserDefaultsKeys.bonusCredit.getValue() ?? 0 > 0 {
-                UserDefaultsKeys.bonusCredit.removeValue()
-            }
-            else {
-                AccountManager.shared.account?.plusCredits = 0
-                try AccountManager.shared.account?.save()
-            }
-            LocalNotificationsManager.shared.removeScheduledNotification(type: .perkReminder)
-            return .success(true)
+    func redeemCredit(code: String) async throws {
+        let venue = try await accountClient.fetchVenueByRedemptionCode(code: code)
+        
+        guard let uid = accountManager.account?.uid,
+              let venueID = venue?.id,
+              let venueName = venue?.name
+        else {
+            throw AccountError.invalidCode
         }
-        catch {
-            return .failure(AccountError.invalidCode)
+        
+        let redemption = NFPRedemption(venueID: venueID, venueName: venueName, city: venue?.city, state: venue?.state, date: Date(), clientID: uid)
+        try redemption.save()
+        if UserDefaultsKeys.bonusCredit.getValue() ?? 0 > 0 {
+            UserDefaultsKeys.bonusCredit.removeValue()
         }
+        else {
+            accountManager.account?.plusCredits = 0
+            try accountManager.account?.save()
+        }
+        localNotifications.removeScheduledNotification(type: .perkReminder)
     }
 }

@@ -11,6 +11,8 @@ import OSLog
 
 class ReportsClient {
     
+    static let shared = ReportsClient()
+    
     static func submitReport(report: Report) throws {
         let db = FirebaseManager.shared.db
         try db.collection(FirestoreCollections.Reports.value).addDocument(from: report)
@@ -32,4 +34,16 @@ class ReportsClient {
             ])
     }
     
+}
+
+// MARK: - ReportsClientProtocol
+
+extension ReportsClient: ReportsClientProtocol {
+    func submitReport(report: Report) throws {
+        try Self.submitReport(report: report)
+    }
+    
+    func blockAccount(accountId: String) async throws {
+        try await Self.blockAccount(accountId: accountId)
+    }
 }

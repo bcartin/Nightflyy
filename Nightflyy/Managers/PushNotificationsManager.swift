@@ -10,7 +10,7 @@ import Firebase
 import FirebaseAuth
 
 @Observable
-class PushNotificationsManager: NSObject, UIApplicationDelegate {
+class PushNotificationsManager: NSObject, UIApplicationDelegate, PushNotificationsManaging {
     
     static let shared = PushNotificationsManager()
     
@@ -23,7 +23,12 @@ class PushNotificationsManager: NSObject, UIApplicationDelegate {
         }
     }
     
-    private override init() {
+    private let accountManager: any AccountManaging
+    
+    private init(
+        accountManager: any AccountManaging = AccountManager.shared
+    ) {
+        self.accountManager = accountManager
         super.init()
         setPermission()
     }
@@ -54,13 +59,15 @@ class PushNotificationsManager: NSObject, UIApplicationDelegate {
     
     func didRegisterForNotifications(_ deviceToken: Data) {
         let apnsToken = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
+        #if DEBUG
         print("APNs token: \(apnsToken)")
+        #endif
         Messaging.messaging().apnsToken = deviceToken
         subscribeToNotifications(target: .everyone)
     }
     
     func subscribeToTester() {
-        if AccountManager.shared.account?.isTester ?? false {
+        if accountManager.account?.isTester ?? false {
             subscribeToNotifications(target: .test)
         }
     }
@@ -91,10 +98,12 @@ extension PushNotificationsManager: UNUserNotificationCenterDelegate {
 extension PushNotificationsManager: MessagingDelegate {
     
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        #if DEBUG
         print("Token Received: ", fcmToken ?? "")
         if let apnsToken = messaging.apnsToken {
             print("APNs Token: ", apnsToken)
         }
+        #endif
         saveToken(token: fcmToken)
     }
     

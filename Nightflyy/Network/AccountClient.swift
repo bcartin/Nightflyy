@@ -11,30 +11,10 @@ import OSLog
 
 class AccountClient {
     
+    static let shared = AccountClient()
+    
     static func saveCustomData(uid: String, data: [String: Any]) {
         FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value).document(uid).setData(data, merge: true)
-    }
-    
-    static func fetchAccount(uid: String) async -> Result<Account, Error> {
-        if let cached = firebaseCache[uid] {
-            switch cached {
-            case .account(let account):
-                Logger.network.info("\(Logger.Category.Network.rawValue): Fetched account \(uid) from cache.")
-                return .success(account)
-            default:
-                return .failure(NetworkError.noRecordFound)
-            }
-        }
-        do {
-            guard let account =  try await FirebaseManager.shared.getDocument(collection: FirestoreCollections.Accounts.value, documentId: uid, Account.self) else { return .failure(NetworkError.noRecordFound) }
-            firebaseCache[uid] = .account(account)
-            Logger.network.info("\(Logger.Category.Network.rawValue): Fetched account \(uid) from firebase.")
-            return .success(account)
-        }
-        catch {
-            Logger.network.error("\(Logger.Category.Network.rawValue): Error fetching account \(uid) from firebase.")
-            return .failure(error)
-        }
     }
     
     static func fetchAccount(accountId: String) async -> Account? {
@@ -92,7 +72,7 @@ class AccountClient {
             return accounts
         }
         catch {
-            print(error.localizedDescription)
+            Logger.network.error("Error fetching venues for city: \(error.localizedDescription)")
             return accounts
         }
         
@@ -110,7 +90,7 @@ class AccountClient {
             return accounts.sorted { $0.name ?? "" < $1.name ?? "" }
         }
         catch {
-            print(error.localizedDescription)
+            Logger.network.error("Error fetching Nightflyy Plus providers: \(error.localizedDescription)")
             return accounts
         }
     }
@@ -126,6 +106,7 @@ class AccountClient {
             return reviews
         }
         catch {
+            Logger.network.error("Error fetching account reviews for \(uid): \(error.localizedDescription)")
             return []
         }
     }
@@ -138,22 +119,17 @@ class AccountClient {
             return snapshot.count as? Int ?? 0
         }
         catch {
+            Logger.network.error("Error fetching review count for \(uid): \(error.localizedDescription)")
             return 0
         }
     }
     
     static func fetchVenueByRedemptionCode(code: String) async throws -> Account? {
-        do {
-            let query = FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value)
-                .whereField(FirestoreCollections.Accounts.redemptionCode, isEqualTo: code)
-            let snapshot = try await query.getDocuments()
-            let document = snapshot.documents.first
-            let account = try document?.data(as: Account.self)
-            return account
-        }
-        catch {
-           throw error
-        }
+        let query = FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value)
+            .whereField(FirestoreCollections.Accounts.redemptionCode, isEqualTo: code)
+        let snapshot = try await query.getDocuments()
+        let document = snapshot.documents.first
+        return try document?.data(as: Account.self)
     }
     
     static func removeFromRequested(accountId: String) async throws {
@@ -182,9 +158,57 @@ class AccountClient {
             return accounts.sorted { $0.name ?? "" < $1.name ?? "" }
         }
         catch {
-            print(error.localizedDescription)
+            Logger.network.error("Error fetching Nightflyy Plus members: \(error.localizedDescription)")
             return accounts
         }
     }
     
 }
+// MARK: - AccountClientProtocol
+
+extension AccountClient: AccountClientProtocol {
+    func saveCustomData(uid: String, data: [String: Any]) {
+        Self.saveCustomData(uid: uid, data: data)
+    }
+    
+    func fetchAccount(accountId: String) async -> Account? {
+        await Self.fetchAccount(accountId: accountId)
+    }
+    
+    func fetchAccountGroup(accountIds: [String]) async -> [Account] {
+        await Self.fetchAccountGroup(accountIds: accountIds)
+    }
+    
+    func fetchVenuesFrom(city: City) async -> [Account] {
+        await Self.fetchVenuesFrom(city: city)
+    }
+    
+    func fetchNightflyyPlusProviders() async -> [Account] {
+        await Self.fetchNightflyyPlusProviders()
+    }
+    
+    func fetchAccountReviews(for uid: String) async -> [Review] {
+        await Self.fetchAccountReviews(for: uid)
+    }
+    
+    func getAccountReviewCount(for uid: String) async -> Int {
+        await Self.getAccountReviewCount(for: uid)
+    }
+    
+    func fetchVenueByRedemptionCode(code: String) async throws -> Account? {
+        try await Self.fetchVenueByRedemptionCode(code: code)
+    }
+    
+    func removeFromRequested(accountId: String) async throws {
+        try await Self.removeFromRequested(accountId: accountId)
+    }
+    
+    func submitReview(accountId: String, review: Review) throws {
+        try Self.submitReview(accountId: accountId, review: review)
+    }
+    
+    func fetchNightflyyPlusMember() async -> [Account] {
+        await Self.fetchNightflyyPlusMember()
+    }
+}
+

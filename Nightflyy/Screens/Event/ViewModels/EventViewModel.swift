@@ -8,8 +8,18 @@
 import Foundation
 import SwiftUI
 
-@Observable
-class EventViewModel: NSObject {
+@Observable @MainActor
+class EventViewModel: Hashable {
+    
+    nonisolated let id: String
+    
+    nonisolated static func == (lhs: EventViewModel, rhs: EventViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var event: Event
     var eventOwner: Account?
@@ -27,9 +37,9 @@ class EventViewModel: NSObject {
     var commentText: String = ""
     
     init(event: Event, eventOwner: Account? = nil) {
+        self.id = event.uid
         self.event = event
         self.eventOwner = eventOwner
-        super.init()
         
         Task {
             await fetchEventOwner()
@@ -131,7 +141,9 @@ class EventViewModel: NSObject {
     func markAsAttenging() {
         Task {
             do {
-                try await EventAttendanceManager.shared.markAsAttenging(event: &event)
+                var eventCopy = event
+                try await EventAttendanceManager.shared.markAsAttending(event: &eventCopy)
+                event = eventCopy
                 EventsManager.shared.updateEventLists(with: event)
                 setAttendanceStatus()
             }
@@ -140,11 +152,13 @@ class EventViewModel: NSObject {
             }
         }
     }
-    
+
     func markAsInterested() {
         Task {
             do {
-                try await EventAttendanceManager.shared.markAsInterested(event: &event)
+                var eventCopy = event
+                try await EventAttendanceManager.shared.markAsInterested(event: &eventCopy)
+                event = eventCopy
                 EventsManager.shared.updateEventLists(with: event)
                 setAttendanceStatus()
             }
@@ -153,11 +167,13 @@ class EventViewModel: NSObject {
             }
         }
     }
-    
+
     func markAsNotAttending() {
         Task {
             do {
-                try await EventAttendanceManager.shared.markAsNotAttending(event: &event)
+                var eventCopy = event
+                try await EventAttendanceManager.shared.markAsNotAttending(event: &eventCopy)
+                event = eventCopy
                 EventsManager.shared.updateEventLists(with: event)
                 setAttendanceStatus()
             }

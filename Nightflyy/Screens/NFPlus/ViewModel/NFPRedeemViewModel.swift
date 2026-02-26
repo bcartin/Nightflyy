@@ -18,7 +18,7 @@ enum RedeemView {
     case help
 }
 
-@Observable
+@Observable @MainActor
 class NFPRedeemViewModel {
     
     var displayView: RedeemView = .hasCredits
@@ -34,7 +34,7 @@ class NFPRedeemViewModel {
     var minute: Int = 0
     var second: Int = 0
     
-    var helpOptions: [NFPHelpOption] = [.FAQ, .Support, .Report, .Issue, .Feedback, .Locations]
+    var helpOptions: [NFPHelpOption] = [.faq, .support, .report, .issue, .feedback, .locations]
     
     init() {
         displayView = mainDisplayView
@@ -59,15 +59,12 @@ class NFPRedeemViewModel {
     
     func redeemCredit() {
         Task {
-            let redemptionResult = await NFPManager.shared.redeemCredit(code: venueCode)
-            switch redemptionResult {
-                
-            case .success(_):
+            do {
+                try await NFPManager.shared.redeemCredit(code: venueCode)
                 changeView(to: .redeemSuccess)
-            case .failure(let error):
+            } catch {
                 self.error = error
             }
-            
         }
     }
     
@@ -82,7 +79,7 @@ class NFPRedeemViewModel {
     }
     
     func fetchNFPVenues() async {
-        nfpVenues = await AccountClient.fetchNightflyyPlusProviders().filter{$0.accountType == .venue}
+        nfpVenues = await AccountClient.fetchNightflyyPlusProviders().filter { $0.isVenue }
     }
     
     func navigateToProfile(account: Account) {

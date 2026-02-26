@@ -18,9 +18,12 @@ class AppState {
     
     var showSplashScreen = true
     
-    var selectedTab = 0
+    var selectedTab: AppTab = .home
 
     var showUpdateScreen: Bool {
-        return (RemoteConfigManager.shared.string(forKey: .latest_app_version) > UIApplication.appVersion) && RemoteConfigManager.shared.bool(forKey: .force_update)
+        let appVersion = UIApplication.appVersion
+        let remoteConfigAppVersion = RemoteConfigManager.shared.string(forKey: .latest_app_version)
+        let result = remoteConfigAppVersion.compare(appVersion, options: .numeric)
+        return result == .orderedDescending && RemoteConfigManager.shared.bool(forKey: .force_update)
     }
 }

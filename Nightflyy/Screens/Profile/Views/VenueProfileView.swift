@@ -50,7 +50,7 @@ struct VenueProfileView: View {
                     
                     VStack(alignment: .center) {
                         Text("Followers")
-                        Text("\(viewModel.account.followers?.count ?? 0)")
+                        Text("\(viewModel.account.followerCount)")
                     }
                     .onTapGesture {
                         let viewModel = NetworkViewModel(account: viewModel.account, selectedSegment: 1)
@@ -59,7 +59,7 @@ struct VenueProfileView: View {
                     
                     VStack(alignment: .center) {
                         Text("Following")
-                        Text("\(viewModel.account.following?.count ?? 0)")
+                        Text("\(viewModel.account.followingCount)")
                     }
                     .onTapGesture {
                         let viewModel = NetworkViewModel(account: viewModel.account, selectedSegment: 2)

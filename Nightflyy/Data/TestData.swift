@@ -37,10 +37,10 @@ class TestData {
 
     
     static var account: Account = Account(id: "1",
-                                          bio: "This is a test bio that should be a few lines long so that it can be properly tested.",
                                           name: "Test Account",
-                                          profileImageUrl: "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg",
-                                          username: "Username")
+                                          username: "Username",
+                                          bio: "This is a test bio that should be a few lines long so that it can be properly tested.",
+                                          profileImageUrl: "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg")
     
     static var chat: Chat = Chat(id: "1",
                                  lastMessage: "Yay!!!",

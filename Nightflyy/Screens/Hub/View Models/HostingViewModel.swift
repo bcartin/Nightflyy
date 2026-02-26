@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-@Observable
-class HostingViewModel: NSObject {
+@Observable @MainActor
+class HostingViewModel {
 
     var eventsHosting: [EventListItemViewModel] = []
     var headerEvent: EventListItemViewModel?

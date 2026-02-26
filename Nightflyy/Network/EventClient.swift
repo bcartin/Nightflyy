@@ -11,26 +11,7 @@ import OSLog
 
 class EventClient {
     
-    static func fetchEvent(uid: String) async -> Result<Event, Error> {
-        if let cached = firebaseCache[uid] {
-            switch cached {
-            case .event(let event):
-                Logger.network.info("\(Logger.Category.Network.rawValue): Fetched event \(uid) from cache.")
-                return .success(event)
-            default:
-                return .failure(NetworkError.noRecordFound)
-            }
-        }
-        do {
-            guard let event =  try await FirebaseManager.shared.getDocument(collection: FirestoreCollections.Events.value, documentId: uid, Event.self) else { return .failure(NetworkError.noRecordFound) }
-            firebaseCache[uid] = .event(event)
-            Logger.network.info("\(Logger.Category.Network.rawValue): Fetched event \(uid) from firebase.")
-            return .success(event)
-        }
-        catch {
-            return .failure(error)
-        }
-    }
+    static let shared = EventClient()
     
     static func fetchEvent(eventId: String) async -> Event? {
         if let cached = firebaseCache[eventId] {
@@ -51,6 +32,7 @@ class EventClient {
             return event
         }
         catch {
+            Logger.network.error("Error fetching event \(eventId): \(error.localizedDescription)")
             return nil
         }
     }
@@ -83,6 +65,7 @@ class EventClient {
             })
         }
         catch {
+            Logger.network.error("Error fetching events hosted by \(uid): \(error.localizedDescription)")
             return events
         }
         return events
@@ -100,6 +83,7 @@ class EventClient {
             })
         }
         catch {
+            Logger.network.error("Error fetching future events hosted by \(uid): \(error.localizedDescription)")
             return events
         }
         return events
@@ -117,6 +101,7 @@ class EventClient {
             })
         }
         catch {
+            Logger.network.error("Error fetching events attending for \(uid): \(error.localizedDescription)")
             return events
         }
         return events
@@ -134,6 +119,7 @@ class EventClient {
             })
         }
         catch {
+            Logger.network.error("Error fetching events invited for \(uid): \(error.localizedDescription)")
             return events
         }
         return events
@@ -151,63 +137,48 @@ class EventClient {
             })
         }
         catch {
+            Logger.network.error("Error fetching events interested for \(uid): \(error.localizedDescription)")
             return events
         }
         return events
     }
     
     static func addUserToAttending(eventId: String, uid: String) async throws {
-        try await FirebaseManager.shared.db
-            .collection(FirestoreCollections.Events.value)
-            .document(eventId)
-            .updateData([
-                FirestoreCollections.Events.attending: FieldValue.arrayUnion([uid])
-            ])
+        try await addToArrayField(eventId: eventId, field: FirestoreCollections.Events.attending, uid: uid)
     }
     
     static func addUserToInterested(eventId: String, uid: String) async throws {
-        try await FirebaseManager.shared.db
-            .collection(FirestoreCollections.Events.value)
-            .document(eventId)
-            .updateData([
-                FirestoreCollections.Events.interested: FieldValue.arrayUnion([uid])
-            ])
+        try await addToArrayField(eventId: eventId, field: FirestoreCollections.Events.interested, uid: uid)
     }
     
     static func addUserToInvited(eventId: String, uid: String) async throws {
-        try await FirebaseManager.shared.db
-            .collection(FirestoreCollections.Events.value)
-            .document(eventId)
-            .updateData([
-                FirestoreCollections.Events.invited: FieldValue.arrayUnion([uid])
-            ])
+        try await addToArrayField(eventId: eventId, field: FirestoreCollections.Events.invited, uid: uid)
     }
     
     static func removeUserFromAttending(eventId: String, uid: String) async throws {
-        try await FirebaseManager.shared.db
-            .collection(FirestoreCollections.Events.value)
-            .document(eventId)
-            .updateData([
-                FirestoreCollections.Events.attending: FieldValue.arrayRemove([uid])
-            ])
+        try await removeFromArrayField(eventId: eventId, field: FirestoreCollections.Events.attending, uid: uid)
     }
     
     static func removeUserFromInterested(eventId: String, uid: String) async throws {
-        try await FirebaseManager.shared.db
-            .collection(FirestoreCollections.Events.value)
-            .document(eventId)
-            .updateData([
-                FirestoreCollections.Events.interested: FieldValue.arrayRemove([uid])
-            ])
+        try await removeFromArrayField(eventId: eventId, field: FirestoreCollections.Events.interested, uid: uid)
     }
     
     static func removeUserFromInvited(eventId: String, uid: String) async throws {
+        try await removeFromArrayField(eventId: eventId, field: FirestoreCollections.Events.invited, uid: uid)
+    }
+    
+    private static func addToArrayField(eventId: String, field: String, uid: String) async throws {
         try await FirebaseManager.shared.db
             .collection(FirestoreCollections.Events.value)
             .document(eventId)
-            .updateData([
-                FirestoreCollections.Events.invited: FieldValue.arrayRemove([uid])
-            ])
+            .updateData([field: FieldValue.arrayUnion([uid])])
+    }
+    
+    private static func removeFromArrayField(eventId: String, field: String, uid: String) async throws {
+        try await FirebaseManager.shared.db
+            .collection(FirestoreCollections.Events.value)
+            .document(eventId)
+            .updateData([field: FieldValue.arrayRemove([uid])])
     }
     
     static func setEventOwner(eventId: String, uid: String) async throws {
@@ -226,3 +197,71 @@ class EventClient {
     }
     
 }
+// MARK: - EventClientProtocol
+
+extension EventClient: EventClientProtocol {
+    func fetchEvent(eventId: String) async -> Event? {
+        await Self.fetchEvent(eventId: eventId)
+    }
+    
+    func fetchEventGroup(eventIds: [String]) async -> [Event] {
+        await Self.fetchEventGroup(eventIds: eventIds)
+    }
+    
+    func fetchEventsHostedBy(uid: String) async -> [Event] {
+        await Self.fetchEventsHostedBy(uid: uid)
+    }
+    
+    func fetchFutureEventsHostedBy(uid: String) async -> [Event] {
+        await Self.fetchFutureEventsHostedBy(uid: uid)
+    }
+    
+    func fetchEventsAttending(uid: String) async -> [Event] {
+        await Self.fetchEventsAttending(uid: uid)
+    }
+    
+    func fetchEventsInvited(uid: String) async -> [Event] {
+        await Self.fetchEventsInvited(uid: uid)
+    }
+    
+    func fetchEventsInterested(uid: String) async -> [Event] {
+        await Self.fetchEventsInterested(uid: uid)
+    }
+    
+    func addUserToAttending(eventId: String, uid: String) async throws {
+        try await Self.addUserToAttending(eventId: eventId, uid: uid)
+    }
+    
+    func addUserToInterested(eventId: String, uid: String) async throws {
+        try await Self.addUserToInterested(eventId: eventId, uid: uid)
+    }
+    
+    func addUserToInvited(eventId: String, uid: String) async throws {
+        try await Self.addUserToInvited(eventId: eventId, uid: uid)
+    }
+    
+    func removeUserFromAttending(eventId: String, uid: String) async throws {
+        try await Self.removeUserFromAttending(eventId: eventId, uid: uid)
+    }
+    
+    func removeUserFromInterested(eventId: String, uid: String) async throws {
+        try await Self.removeUserFromInterested(eventId: eventId, uid: uid)
+    }
+    
+    func removeUserFromInvited(eventId: String, uid: String) async throws {
+        try await Self.removeUserFromInvited(eventId: eventId, uid: uid)
+    }
+    
+    func setEventOwner(eventId: String, uid: String) async throws {
+        try await Self.setEventOwner(eventId: eventId, uid: uid)
+    }
+    
+    func deleteEvent(eventId: String) async throws {
+        try await Self.deleteEvent(eventId: eventId)
+    }
+    
+    func declineClaim(eventId: String) async throws {
+        try await Self.declineClaim(eventId: eventId)
+    }
+}
+

@@ -7,16 +7,26 @@
 
 import Foundation
 
-@Observable
-class EventListItemViewModel: NSObject {
+@Observable @MainActor
+class EventListItemViewModel: Hashable {
+    
+    nonisolated let id: String
+    
+    nonisolated static func == (lhs: EventListItemViewModel, rhs: EventListItemViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var event: Event
     var eventOwner: Account?
     var isSelected: Bool = false
     
     init(event: Event, autoFetchOwner: Bool = false) {
+        self.id = event.uid
         self.event = event
-        super.init()
         if autoFetchOwner {
             Task {
                 await fetchOwner()
@@ -53,19 +63,7 @@ class EventListItemViewModel: NSObject {
     func fetchOwner() async {
         guard let ownerId = event.createdBy else { return }
         if !event.isUnclaimed {
-            let fetchOwnerTask = Task { @MainActor () -> Account? in
-                let result = await AccountClient.fetchAccount(uid: ownerId)
-                switch result {
-                    
-                case .success(let account):
-                    return account
-                case .failure(_):
-                    return nil
-                }
-            }
-            
-            let result = await fetchOwnerTask.result
-            self.eventOwner = result.get()
+            self.eventOwner = await AccountClient.fetchAccount(accountId: ownerId)
         }
     }
     
@@ -85,10 +83,11 @@ class EventListItemViewModel: NSObject {
     
 }
 
+@MainActor
 extension [EventListItemViewModel] {
-    
+
     func sortedByDate() -> [EventListItemViewModel] {
         return self.sorted { $0.eventDate < $1.eventDate }
     }
-    
+
 }

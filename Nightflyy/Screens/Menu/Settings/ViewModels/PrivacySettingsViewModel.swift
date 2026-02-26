@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@Observable
+@Observable @MainActor
 class PrivacySettingsViewModel {
     
     var error: Error?

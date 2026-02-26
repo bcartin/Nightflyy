@@ -6,19 +6,18 @@
 //
 
 import SwiftUI
-import MapKit
 import Combine
 
-class VenueSearchViewModel: NSObject, ObservableObject {
+@Observable
+class VenueSearchViewModel {
     
-    
+    @ObservationIgnored
     @Published var searchText: String = ""
-    @Published private(set) var venueSearchResults: [Account] = .init()
+    private(set) var venueSearchResults: [Account] = .init()
     
     private var venueSearchCancellable: AnyCancellable?
     
-    override init() {
-        super.init()
+    init() {
         SearchManager.shared.reloadClient()
         
         venueSearchCancellable = $searchText

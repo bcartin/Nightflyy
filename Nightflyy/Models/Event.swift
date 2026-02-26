@@ -49,7 +49,7 @@ struct Event: Identifiable, Codable {
     var ticketingUrl: String?
     
     var uid: String {
-        return self.id!
+        return self.id ?? ""
     }
     
     var isFutureEvent: Bool {
@@ -110,12 +110,7 @@ struct Event: Identifiable, Codable {
 extension Event {
     
     func save() throws {
-        do {
-            _ = try FirebaseManager.shared.db.collection(Event.collection).document(id!).setData(from: self, merge: true)
-        }
-        catch {
-            throw error
-        }
+        _ = try FirebaseManager.shared.db.collection(Event.collection).document(id!).setData(from: self, merge: true)
     }
     
     func updateCache() {

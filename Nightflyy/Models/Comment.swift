@@ -17,7 +17,7 @@ struct Comment: Identifiable, Codable {
     var likes: [String] = .init()
     
     var uid: String {
-        return self.id!
+        return self.id ?? ""
     }
     
     enum CodingKeys: String, CodingKey {
