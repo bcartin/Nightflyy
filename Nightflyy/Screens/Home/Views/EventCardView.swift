@@ -148,6 +148,25 @@ struct EventCardView: View {
             }
             .frame(maxWidth: .infinity)
             
+            if viewModel.event.hasPerk ?? false {
+                Label {
+                    Text(viewModel.event.perkName ?? "")
+                        .font(.footnote)
+                        .foregroundStyle(.onlineBlue)
+                } icon: {
+                    Image("plus_badge")
+                        .resizable()
+                        .frame(width: 12, height: 12)
+                }
+                .padding(.horizontal,8)
+                .padding(.vertical, 2)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(.onlineBlue.opacity(0.3))
+                )
+                .padding(.top, 4)
+
+            }
             
         }
         .frame(width: size.width - 86)

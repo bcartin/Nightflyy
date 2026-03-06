@@ -48,6 +48,13 @@ struct Event: Identifiable, Codable {
     var status: String?
     var ticketingUrl: String?
     
+    //MARK: NFPLUS
+    
+    var hasPerk: Bool?
+    var perkDetails: String?
+    var perkName: String?
+    var perkRedemptionCode: String?
+    
     var uid: String {
         return self.id ?? ""
     }
@@ -104,6 +111,13 @@ struct Event: Identifiable, Codable {
         case status
         case recurringID = "recurring_id"
         case hasNewPosts = "has_new_posts"
+        
+        //MARK: NFPLUS
+        
+        case hasPerk = "has_perk"
+        case perkDetails = "perk_details"
+        case perkName = "perk_name"
+        case perkRedemptionCode = "perk_redemption_code"
     }
 }
 

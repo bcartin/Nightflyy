@@ -70,6 +70,6 @@ class HomeViewModel {
     }
     
     func showNFPView() {
-        NFPManager.shared.showNFPView = true
+        isShowingNFPView.toggle()
     }
 }

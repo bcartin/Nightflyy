@@ -154,37 +154,38 @@ struct VenueProfileView: View {
                     Button {
                         viewModel.selectPresentView(for: .paywall)
                     } label: {
-                        HStack(spacing: 16) {
-                            Image("plus_button")
+                        HStack {
+                            Image("plus_badge")
                                 .resizable()
-                                .frame(width: 44, height: 44)
+                                .frame(width: 30, height: 30)
                             
-                            VStack(alignment: .leading, spacing: 4) {
+                            VStack(alignment: .leading) {
                                 Text("Nightflyy+ Perk")
-                                    .foregroundStyle(.gray)
-                                    .font(.system(size: 11))
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.onlineBlue)
                                 
                                 Text(viewModel.account.perkName ?? "")
-                                    .font(.system(size: 14))
-                                    .fontWeight(.medium)
+                                    .font(.system(size: 15, weight: .bold))
+                                    .foregroundStyle(.white)
                                 
-                                if let details = viewModel.account.perkDetails {
-                                    Text(details)
-                                        .font(.system(size: 11))
-                                }
+                                Text(viewModel.account.perkDetails ?? "")
+                                    .font(.system(size: 10))
+                                    .foregroundStyle(.white)
                             }
                             
                             Spacer()
                             
                             Image(systemName: "chevron.right")
-                                .foregroundStyle(.gray)
+                                .foregroundStyle(.onlineBlue)
                         }
+                        .padding(8)
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(.onlineBlue, lineWidth: 1)
+                        }
+                        .padding(12)
                     }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    
-                    Divider()
-                        .background(.white)
+
                 }
                 
                 PillListView(header: "MUSIC", items: viewModel.account.music ?? [])
