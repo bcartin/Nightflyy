@@ -22,10 +22,15 @@ class NewChatViewModel {
     }
     
     func navigateToChat(with accountId: String) {
-        let chat = ChatsManager.shared.getChat(with: accountId)
-        let viewModel = InboxRowViewModel(chat: chat)
-        shouldDismiss = true
-        Router.shared.navigateTo(.ChatView(viewModel))
+        do {
+            let chat = try ChatsManager.shared.getChat(with: accountId)
+            let viewModel = InboxRowViewModel(chat: chat)
+            shouldDismiss = true
+            Router.shared.navigateTo(.ChatView(viewModel))
+        }
+        catch {
+            print(error.localizedDescription)
+        }
         
     }
 }

@@ -191,9 +191,14 @@ class ProfileViewModel: Hashable {
     }
     
     func messageButtonAction() {
-        let chat =  ChatsManager.shared.getChat(with: account.uid)
-        let viewModel = InboxRowViewModel(chat: chat)
-        Router.shared.navigateTo(.ChatView(viewModel))
+        do {
+            let chat = try ChatsManager.shared.getChat(with: account.uid)
+            let viewModel = InboxRowViewModel(chat: chat)
+            Router.shared.navigateTo(.ChatView(viewModel))
+        }
+        catch {
+            print(error.localizedDescription)
+        }
     }
     
     func handleOptionsTapped() {

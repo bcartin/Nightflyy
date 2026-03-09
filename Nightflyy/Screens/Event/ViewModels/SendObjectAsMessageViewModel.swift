@@ -69,9 +69,9 @@ class SendObjectAsMessageViewModel: Hashable {
     func sendMessages() {
         guard var message = message else {return}
         selectedAccounts.forEach { accountId in
-            let chat = ChatsManager.shared.getChat(with: accountId)
             message.recipient = accountId
             do {
+                let chat = try ChatsManager.shared.getChat(with: accountId)
                 try ChatsManager.sendMessage(chatId: chat.uid, message: message)
                 General.showSuccessMessage(message: "Message Sent", imageName: "checkmark.circle.fill")
                 Router.shared.popLast(numberOfViews: 1)
