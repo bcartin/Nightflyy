@@ -210,20 +210,18 @@ struct VenueProfileView: View {
             await viewModel.loadAccountEvents()
             viewModel.updateAccount()
         }
-        .sheet(isPresented: $viewModel.presentSheetScreen, content: {
-            switch viewModel.selectedPresentView {
+        .sheet(item: $viewModel.selectedPresentView) { screen in
+            switch screen {
             case .editScreen:
                 EditVenueProfileView(viewModel: EditVenueProfileViewModel())
             case .report:
                 ReportView(viewModel: ReportViewModel(objectId: viewModel.account.uid))
-            case.paywall:
+            case .paywall:
                 NFPContainerView()
             case .review:
                 ReviewsDetailView(viewModel: ReviewsDetailViewModel(account: viewModel.account))
-            case .none:
-                EmptyView()
             }
-        })
+        }
         .alert(isPresented: $viewModel.presentUnfollowAlert) {
             CustomDialog(title: "Unfollow \(viewModel.account.username ?? "")",
                          button1: .init(content: "Unfollow", tint: .mainPurple, foreground: .white, action: { folder in

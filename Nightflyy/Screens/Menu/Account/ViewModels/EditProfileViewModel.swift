@@ -13,7 +13,6 @@ class EditProfileViewModel {
     
     var account: Account
     var isLoading: Bool = false
-    var goToScreen: Bool = false
     var selectedGoToScreen: NavigateTo?
     var selectedImage: Image?
     var uiImage: UIImage?
@@ -205,15 +204,16 @@ class EditProfileViewModel {
 
 extension EditProfileViewModel {
     
-    enum NavigateTo {
+    enum NavigateTo: Hashable, Identifiable {
         case gender
         case dob
         case bio
         case changePassword
+        
+        var id: Self { self }
     }
     
     func goToScreen(_ navigateTo: NavigateTo) {
-        goToScreen = true
         selectedGoToScreen = navigateTo
     }
 }

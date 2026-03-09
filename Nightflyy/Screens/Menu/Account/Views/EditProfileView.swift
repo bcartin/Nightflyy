@@ -149,8 +149,8 @@ struct EditProfileView: View {
                     }
                 }
             }
-            .navigationDestination(isPresented: $viewModel.goToScreen) {
-                switch viewModel.selectedGoToScreen {
+            .navigationDestination(item: $viewModel.selectedGoToScreen) { screen in
+                switch screen {
                 case .gender:
                     ListSelectView(title: "Gender", listItems: Gender.allCases.map(\.rawValue), selectedItem: $viewModel.gender)
                 case .dob:
@@ -159,12 +159,7 @@ struct EditProfileView: View {
                     LongTextInputView(title: "Bio", prompt: "Type your bio", text: $viewModel.bio)
                 case .changePassword:
                     ChangePasswordView(viewModel: ChangePasswordViewModel())
-                case .none:
-                    Text("None")
                 }
-                
-                
-                
             }
             .errorAlert(error: $viewModel.error, buttonTitle: "OK")
         }

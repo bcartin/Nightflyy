@@ -31,10 +31,10 @@ class ProfileViewModel: Hashable {
     
     var presentUnfollowAlert: Bool = false
     var presentBlockAlert: Bool = false
-    var presentSheetScreen: Bool = false
     var presentOptionsDialog: Bool = false
     var presentContactDialog: Bool = false
     var selectedPresentView: PresentSheetView?
+    var editProfileViewModel: EditProfileViewModel?
     
     init(account: Account) {
         self.id = account.uid
@@ -226,16 +226,20 @@ class ProfileViewModel: Hashable {
 
 extension ProfileViewModel {
     
-    enum PresentSheetView {
+    enum PresentSheetView: Identifiable {
         case editScreen
         case report
         case paywall
         case review
+        
+        var id: Self { self }
     }
     
     func selectPresentView(for value: PresentSheetView) {
+        if value == .editScreen {
+            editProfileViewModel = EditProfileViewModel()
+        }
         selectedPresentView = value
-        presentSheetScreen = true
         presentOptionsDialog = false
     }
 }

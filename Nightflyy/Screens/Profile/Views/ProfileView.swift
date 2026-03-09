@@ -180,20 +180,20 @@ struct ProfileView: View {
             await viewModel.loadAccountEvents()
             viewModel.updateAccount()
         }
-        .sheet(isPresented: $viewModel.presentSheetScreen, content: {
-            switch viewModel.selectedPresentView {
+        .sheet(item: $viewModel.selectedPresentView) { screen in
+            switch screen {
             case .editScreen:
-                EditProfileView(viewModel: EditProfileViewModel())
+                if let editVM = viewModel.editProfileViewModel {
+                    EditProfileView(viewModel: editVM)
+                }
             case .report:
                 ReportView(viewModel: ReportViewModel(objectId: viewModel.account.uid))
             case .paywall:
                 NFPContainerView()
             case .review:
                 EmptyView()
-            case .none:
-                EmptyView()
             }
-        })
+        }
         .alert(isPresented: $viewModel.presentUnfollowAlert) {
             CustomDialog(title: "Unfollow \(viewModel.account.username ?? "")?",
                          button1: .init(content: "Unfollow", tint: .mainPurple, foreground: .white, action: { folder in
