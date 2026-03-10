@@ -15,6 +15,7 @@ class NFPManager {
     static let shared = NFPManager()
     
     private let accountClient: any AccountClientProtocol
+    private let eventClient: any EventClientProtocol
     private let invitesClient: any NFPInvitesClientProtocol
     private let promoCodesClient: any PromoCodesClientProtocol
     private let accountManager: any AccountManaging
@@ -24,6 +25,7 @@ class NFPManager {
     
     private init(
         accountClient: any AccountClientProtocol = AccountClient.shared,
+        eventClient: any EventClientProtocol = EventClient.shared,
         invitesClient: any NFPInvitesClientProtocol = NFPInvitesClient.shared,
         promoCodesClient: any PromoCodesClientProtocol = PromoCodesClient.shared,
         accountManager: any AccountManaging = AccountManager.shared,
@@ -32,6 +34,7 @@ class NFPManager {
         localNotifications: any LocalNotificationsManaging = LocalNotificationsManager.shared
     ) {
         self.accountClient = accountClient
+        self.eventClient = eventClient
         self.invitesClient = invitesClient
         self.promoCodesClient = promoCodesClient
         self.accountManager = accountManager
@@ -155,17 +158,31 @@ class NFPManager {
     }
     
     func redeemCredit(code: String) async throws {
-        let venue = try await accountClient.fetchVenueByRedemptionCode(code: code)
+        var redemptionID: String?
+        var redemptionName: String?
+        var redemptionType: RedemptionType?
+        
+        if let venue = try await accountClient.fetchVenueByRedemptionCode(code: code) {
+            redemptionID = venue.id
+            redemptionName = venue.name
+            redemptionType = .venue
+        }
+        else if let event = try await eventClient.fetchEventByRedemptionCode(code: code) {
+            redemptionID = event.id
+            redemptionName = event.eventName
+            redemptionType = .event
+        }
         
         guard let uid = accountManager.account?.uid,
-              let venueID = venue?.id,
-              let venueName = venue?.name
+              let redemptionID,
+              let redemptionName
         else {
             throw AccountError.invalidCode
         }
         
-        let redemption = NFPRedemption(venueID: venueID, venueName: venueName, city: venue?.city, state: venue?.state, date: Date(), clientID: uid)
+        let redemption = NFPRedemption(venueID: redemptionID, venueName: redemptionName, redemptionType: redemptionType, date: Date(), clientID: uid)
         try redemption.save()
+        
         if UserDefaultsKeys.bonusCredit.getValue() ?? 0 > 0 {
             UserDefaultsKeys.bonusCredit.removeValue()
         }

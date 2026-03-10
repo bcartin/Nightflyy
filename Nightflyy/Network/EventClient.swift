@@ -196,6 +196,14 @@ class EventClient {
         try await FirebaseManager.shared.db.collection(FirestoreCollections.Events.value).document(eventId).updateData([FirestoreCollections.Events.assigned_to: ""])
     }
     
+    static func fetchEventByRedemptionCode(code: String) async throws -> Event? {
+        let query = FirebaseManager.shared.db.collection(FirestoreCollections.Events.value)
+            .whereField(FirestoreCollections.Events.perkRedemptionCode, isEqualTo: code)
+        let snapshot = try await query.getDocuments()
+        let document = snapshot.documents.first
+        return try document?.data(as: Event.self)
+    }
+    
 }
 // MARK: - EventClientProtocol
 
@@ -262,6 +270,10 @@ extension EventClient: EventClientProtocol {
     
     func declineClaim(eventId: String) async throws {
         try await Self.declineClaim(eventId: eventId)
+    }
+    
+    func fetchEventByRedemptionCode(code: String) async throws -> Event? {
+        try await Self.fetchEventByRedemptionCode(code: code)
     }
 }
 
