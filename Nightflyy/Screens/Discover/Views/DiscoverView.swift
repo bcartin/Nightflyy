@@ -124,6 +124,23 @@ struct DiscoverView: View {
                         }
                         .padding(.horizontal, 12)
                         
+                        Toggle(isOn: $viewModel.filterPlusOnly) {
+                            HStack {
+                                Image("plus_badge")
+                                    .resizable()
+                                    .frame(width: 18, height: 18)
+                                
+                                Text("Nightflyy+ Only")
+                                    .foregroundStyle(.white)
+                                    .font(.system(size: 14, weight: .semibold))
+                            }
+                        }
+                        .tint(.onlineBlue)
+                        .frame(width: 200)
+                        .padding(.horizontal)
+                        .padding(.top, 4)
+                        
+                        
                         Text("Venue")
                             .font(.system(size: 20, weight: .bold))
                             .padding(.horizontal)

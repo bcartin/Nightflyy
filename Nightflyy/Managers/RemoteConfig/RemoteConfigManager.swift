@@ -6,6 +6,7 @@
 //
 
 import Firebase
+import OSLog
 
 enum RemoteConfigParameter: String {
     
@@ -30,11 +31,11 @@ class RemoteConfigManager {
         remoteConfig.addOnConfigUpdateListener { configUpdate, error in
             
             guard let configUpdate, error == nil else {
-                print("RemoteConfigManager: Error listening for config updates: \(error?.localizedDescription ?? "N/A")")
+                Logger.config.error("Error listening for config updates: \(error?.localizedDescription ?? "N/A")")
                 return
             }
             
-            print("RemoteConfigManager: Updated Keys: \(configUpdate.updatedKeys)")
+            Logger.config.info("Updated keys: \(configUpdate.updatedKeys)")
             
             Task {
                 try? await remoteConfig.activate()
@@ -53,15 +54,15 @@ class RemoteConfigManager {
             switch status {
             case .success:
                 try await RemoteConfig.remoteConfig().activate()
-                print("RemoteConfigManager: Varibles Synced")
+                Logger.config.info("Remote config variables synced")
             case .failure:
-                print("RemoteConfigManager: Varible Syncing Failed")
+                Logger.config.error("Remote config variable syncing failed")
             default:
-                print("RemoteConfigManager: Varible Syncing Failed")
+                Logger.config.error("Remote config variable syncing failed")
             }
         }
         catch {
-            print("RemoteConfigManager: Error syncing variables: \(error.localizedDescription)")
+            Logger.config.error("Error syncing variables: \(error.localizedDescription)")
         }
     }
 }

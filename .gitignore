@@ -3,3 +3,5 @@ Nightflyy/Config/Development.xcconfig
 Nightflyy/GoogleService-Info-Debug.plist
 Nightflyy/GoogleService-Info-Release.plist
 Release/
+CLAUDE.md
+refactoring-plan.md

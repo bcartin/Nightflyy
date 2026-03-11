@@ -125,19 +125,24 @@ class SignupViewModel {
     
     func createAccount(uid: String) async throws {
         account = Account(id: uid,
-                          accountIsPrivate: false,
                           accountType: .personal,
-                          badgeCount: 0,
-                          bonusCreditDate: nil,
-                          dob: dob,
-                          email: email,
-                          gender: Gender(rawValue: gender)?.intValue,
+                          accountIsPrivate: false,
                           name: name,
-                          notificationSettings: NotificationSettings(),
-                          username: username)
+                          username: username,
+                          email: email,
+                          dob: dob,
+                          gender: Gender(rawValue: gender)?.intValue,
+                          bonusCreditDate: nil,
+                          badgeCount: 0,
+                          notificationSettings: NotificationSettings())
         try await updateProfileImage()
         try account?.save()
         await UsernamesClient.saveUsername(username: username)
+        
+        // Follow Jameel
+        if let jameelAccount = await AccountClient.fetchAccount(accountId: "Ya2VB47Ei2QlfN4XB25BOUgoM6S2") {
+            try await AccountManager.shared.followAccount(accountToFollow: jameelAccount)
+        }
         
         // Update search Index
         try SearchManager.shared.updateSearchIndex(objectID: uid, objectType: .person, name: name, username: username, venue: nil)
@@ -145,9 +150,8 @@ class SignupViewModel {
         // Create contact in sendgrid
         await SendgridManager.createContactInSendgrid(account: account!, lists: [.ALL])
         
-        MainCoordinator().initialAppSetup()
+        await MainCoordinator().initialAppSetup()
         
-        //TODO: Add follow to NF and Jameel
         AppState.shared.isLoading = false
         self.goToScreen(.location)
     }

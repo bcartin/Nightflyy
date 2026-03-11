@@ -8,7 +8,7 @@
 import UIKit
 import CoreLocation
 
-@Observable
+@Observable @MainActor
 class HomeViewModel {
     
     var isShowingNFPView: Bool {
@@ -70,6 +70,6 @@ class HomeViewModel {
     }
     
     func showNFPView() {
-        NFPManager.shared.showNFPView = true
+        isShowingNFPView.toggle()
     }
 }

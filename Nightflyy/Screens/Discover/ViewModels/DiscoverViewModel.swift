@@ -8,7 +8,7 @@
 import SwiftUI
 //import Combine
 
-@Observable
+@Observable @MainActor
 class DiscoverViewModel {
     
     var selectedVenues: [String] = .init()
@@ -19,6 +19,7 @@ class DiscoverViewModel {
     var selectedRating: Int?
     var presentFilterView: Bool = false
     var selectedFilterView: FilterView?
+    var filterPlusOnly: Bool = false
         
     var filterViewModel = EventsFilterViewModel(searchForVenues: true)
     
@@ -118,6 +119,9 @@ class DiscoverViewModel {
                 guard let venueCrowds = $0.clientele else { return selectedCrowds.isEmpty }
                 return selectedCrowds.contains(where: venueCrowds.contains) || selectedCrowds.isEmpty
             }
+            .filter {
+                !filterPlusOnly || ($0.plusProvider ?? false)
+            }
     }
     
     var hasResults: Bool {
@@ -175,6 +179,11 @@ class DiscoverViewModel {
         //Filter By Cover
         if let selectedMaxCover = selectedMaxCover {
             events = events.filter{$0.maxPrice ?? 0 <= selectedMaxCover}
+        }
+        
+        //Filter By Plus Only
+        if filterPlusOnly {
+            events = events.filter({$0.hasPerk ?? false == true})
         }
         
         return events

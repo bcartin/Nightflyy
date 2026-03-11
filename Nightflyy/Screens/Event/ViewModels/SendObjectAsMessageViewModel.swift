@@ -7,9 +7,20 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
-@Observable
-class SendObjectAsMessageViewModel {
+@Observable @MainActor
+class SendObjectAsMessageViewModel: Hashable {
+    
+    nonisolated let id = UUID()
+    
+    nonisolated static func == (lhs: SendObjectAsMessageViewModel, rhs: SendObjectAsMessageViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var event: Event?
     var account: Account?
@@ -17,14 +28,24 @@ class SendObjectAsMessageViewModel {
     var error: Error?
     var selectedAccounts: [String] = .init()
     var message: Message?
-    var shouldDismiss: Bool = false
     var isEvent: Bool
+    
+    @ObservationIgnored
+    @Published var searchText: String = ""
+    private var searchCancellable: AnyCancellable?
     
     init(event: Event? = nil, account: Account? = nil) {
         self.event = event
         self.account = account
         self.isEvent = event != nil
         createMessage()
+        
+        searchCancellable = $searchText
+            .receive(on: DispatchQueue.main)
+            .debounce(for: .seconds(1), scheduler: RunLoop.main)
+            .sink(receiveValue: { [weak self] fragment in
+                self?.performSearch(searchText: fragment)
+            })
     }
     
     func createMessage() {
@@ -48,15 +69,28 @@ class SendObjectAsMessageViewModel {
     func sendMessages() {
         guard var message = message else {return}
         selectedAccounts.forEach { accountId in
-            let chat = ChatsManager.shared.getChat(with: accountId)
             message.recipient = accountId
             do {
+                let chat = try ChatsManager.shared.getChat(with: accountId)
                 try ChatsManager.sendMessage(chatId: chat.uid, message: message)
-                shouldDismiss = true
                 General.showSuccessMessage(message: "Message Sent", imageName: "checkmark.circle.fill")
+                Router.shared.popLast(numberOfViews: 1)
             }
             catch {
                 print(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func performSearch(searchText: String) {
+        if searchText.isEmpty {
+            self.followers = AccountManager.shared.account?.followers ?? []
+        }
+        else {
+            let algoliaSearchResults = SearchManager.shared.performSearch(searchText: searchText).compactMap(\.objectID)
+            let searchfollowers = AccountManager.shared.account?.followers ?? []
+            self.followers = searchfollowers.filter {
+                algoliaSearchResults.contains($0)
             }
         }
     }

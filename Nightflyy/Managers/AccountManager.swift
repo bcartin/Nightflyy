@@ -9,24 +9,33 @@ import SwiftUI
 import OSLog
 
 @Observable
-class AccountManager {
+class AccountManager: AccountManaging {
     
     static let shared = AccountManager()
     
     var account: Account?
     
-    private init() { }
+    private let accountClient: any AccountClientProtocol
+    private let notificationClient: any AppNotificationClientProtocol
+    
+    private init(
+        accountClient: any AccountClientProtocol = AccountClient.shared,
+        notificationClient: any AppNotificationClientProtocol = AppNotificationClient.shared
+    ) {
+        self.accountClient = accountClient
+        self.notificationClient = notificationClient
+    }
     
     var isPersonalAccount: Bool {
         self.account?.accountType == .personal
     }
     
     var isPlusMember: Bool {
-       account?.plusMember ?? false 
+        account?.hasActiveSubscription ?? false
     }
     
     var isPlusProvider: Bool {
-        account?.plusProvider ?? false
+        account?.isProvider ?? false
     }
     
     var isAdmin: Bool {
@@ -38,79 +47,80 @@ class AccountManager {
             try account?.save()
         }
         catch {
-            print(error.localizedDescription)
+            Logger.general.error("Error saving account: \(error.localizedDescription)")
         }
     }
     
     func fetchAccount(uid: String) async {
-            let result = await AccountClient.fetchAccount(uid: uid) 
-            switch result {
-                
-            case .success(let account):
-                self.account = account
-                Logger.network.info("User account successfully loaded")
-            case .failure(let error):
-                Logger.network.error("Error fetching user account. \(error.localizedDescription)")
-            }
+        if let account = await accountClient.fetchAccount(accountId: uid) {
+            self.account = account
+            Logger.network.info("User account successfully loaded")
+        } else {
+            Logger.network.error("Error fetching user account.")
+        }
     }
     
-    func followAccount(accountToFollow: inout Account) throws {
+    @discardableResult func followAccount(accountToFollow: Account) async throws -> Account {
         
-        guard let uid = self.account?.uid else { return }
+        guard let uid = self.account?.uid else { return accountToFollow }
         
-        // Add account into my following
-        var following = self.account?.following ?? []
-        following.append(accountToFollow.uid)
-        self.account?.following = following
-        try self.account?.save()
-        
-        //Add my account to users followers
-        var followers = accountToFollow.followers ?? []
-        followers.append(uid)
-        accountToFollow.followers = followers
-        try accountToFollow.save()
+        var updatedAccount = accountToFollow
+        try await accountClient.followAccount(accountToFollow: updatedAccount.uid, followingAccount: uid)
+        self.account?.following?.append(updatedAccount.uid)
+        updatedAccount.followers?.append(uid)
         
         let notification = AppNotification(sender: uid, date: Date(), type: .follow_start, notificationData: NotificationData(profile_image_url: account?.profileImageUrl, username: account?.username))
-        try AppNotificationClient.saveNotification(for: accountToFollow.uid, notification: notification)
+        try notificationClient.saveNotification(for: updatedAccount.uid, notification: notification)
+        return updatedAccount
     }
     
-    func unfollowAccount(accountToFollow: inout Account) throws {
-        if let index1 = account?.following?.firstIndex(of: accountToFollow.uid) {
+    @discardableResult func unfollowAccount(accountToFollow: Account) async throws -> Account {
+        
+        guard let uid = self.account?.uid else { return accountToFollow }
+        
+        var updatedAccount = accountToFollow
+        try await accountClient.unfollowAccount(accountToUnfollow: updatedAccount.uid, followingAccount: uid)
+        
+        if let index1 = account?.following?.firstIndex(of: updatedAccount.uid) {
             self.account?.following?.remove(at: index1)
-            try self.account?.save()
         }
-        if let index2 = accountToFollow.followers?.firstIndex(of: account?.uid ?? "") {
-            accountToFollow.followers?.remove(at: index2)
-            try accountToFollow.save()
+        if let index2 = updatedAccount.followers?.firstIndex(of: uid) {
+            updatedAccount.followers?.remove(at: index2)
         }
+        return updatedAccount
     }
     
-    func requestToFollowAccount(accountId: String) throws {
-        var requested = self.account?.requested ?? []
-        requested.append(accountId)
-        self.account?.requested = requested
+    func requestToFollowAccount(accountId: String) async throws {
+        guard let uid = self.account?.uid else { return }
+        try await accountClient.requestToFollowAccount(accountToRequest: accountId, requestingAccount: uid)
+        self.account?.requested?.append(accountId)
         try self.account?.save()
         
-        guard let uid = self.account?.uid else { return }
         let notification = AppNotification(sender: uid, date: Date(), type: .follow_request, notificationData: NotificationData(profile_image_url: account?.profileImageUrl, username: account?.username))
-        try AppNotificationClient.saveNotification(for: accountId, notification: notification)
+        try notificationClient.saveNotification(for: accountId, notification: notification)
     }
     
-    func acceptFollowRequest(from newFollower: inout Account) async throws {
-        guard let uid = self.account?.uid else { return }
-        self.account?.followers?.append(newFollower.uid)
-        try self.account?.save()
-        newFollower.following?.append(uid)
-        try newFollower.save()
+    @discardableResult func acceptFollowRequest(from newFollower: Account) async throws -> Account {
+        guard let uid = self.account?.uid else { return newFollower }
+        try await accountClient.followAccount(accountToFollow: uid, followingAccount: newFollower.uid)
+        
+        var updatedFollower = newFollower
+        self.account?.followers?.append(updatedFollower.uid)
+        updatedFollower.following?.append(uid)
         
         let notification = AppNotification(sender: uid, date: Date(), type: .follow_accepted, notificationData: NotificationData(profile_image_url: account?.profileImageUrl, username: account?.username))
-        try AppNotificationClient.saveNotification(for: newFollower.uid, notification: notification)
-        try await AccountClient.removeFromRequested(accountId: newFollower.uid)
+        try notificationClient.saveNotification(for: updatedFollower.uid, notification: notification)
+        try await accountClient.removeFromRequested(accountId: updatedFollower.uid)
+        return updatedFollower
     }
     
     func updateTrackInfo() {
         account?.appVersion = UIApplication.appVersion
         account?.lastOnline = Date()
-        try? account?.save()
+        do {
+            try account?.save()
+        } catch {
+            Logger.general.error("Error updating track info: \(error.localizedDescription)")
+        }
     }
 }

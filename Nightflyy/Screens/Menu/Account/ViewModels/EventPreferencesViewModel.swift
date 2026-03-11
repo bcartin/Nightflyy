@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@Observable
+@Observable @MainActor
 class EventPreferencesViewModel {
     
     var selectedSegment: Int = 1

@@ -8,8 +8,8 @@
 import Foundation
 import SwiftUI
 
-@Observable
-class NotificationViewModel: NSObject {
+@Observable @MainActor
+class NotificationViewModel {
     
     var notification: AppNotification
     var error: Error?
@@ -167,7 +167,7 @@ class NotificationViewModel: NSObject {
         Task {
             do {
                 guard var event = await EventClient.fetchEvent(eventId: eventId) else { return }
-                try await EventAttendanceManager.shared.markAsAttenging(event: &event)
+                try await EventAttendanceManager.shared.markAsAttending(event: &event)
             }
             catch {
                 self.error = error
@@ -178,8 +178,8 @@ class NotificationViewModel: NSObject {
     func acceptFollowRequest() {
         Task {
             do {
-                guard var newFollower = await AccountClient.fetchAccount(accountId: notification.sender) else { return }
-                try await AccountManager.shared.acceptFollowRequest(from: &newFollower)
+                guard let newFollower = await AccountClient.fetchAccount(accountId: notification.sender) else { return }
+                try await AccountManager.shared.acceptFollowRequest(from: newFollower)
             }
             catch {
                 self.error = error

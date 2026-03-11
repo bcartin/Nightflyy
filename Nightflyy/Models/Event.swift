@@ -48,8 +48,15 @@ struct Event: Identifiable, Codable {
     var status: String?
     var ticketingUrl: String?
     
+    //MARK: NFPLUS
+    
+    var hasPerk: Bool?
+    var perkDetails: String?
+    var perkName: String?
+    var perkRedemptionCode: String?
+    
     var uid: String {
-        return self.id!
+        return self.id ?? ""
     }
     
     var isFutureEvent: Bool {
@@ -104,18 +111,20 @@ struct Event: Identifiable, Codable {
         case status
         case recurringID = "recurring_id"
         case hasNewPosts = "has_new_posts"
+        
+        //MARK: NFPLUS
+        
+        case hasPerk = "has_perk"
+        case perkDetails = "perk_details"
+        case perkName = "perk_name"
+        case perkRedemptionCode = "perk_redemption_code"
     }
 }
 
 extension Event {
     
     func save() throws {
-        do {
-            _ = try FirebaseManager.shared.db.collection(Event.collection).document(id!).setData(from: self, merge: true)
-        }
-        catch {
-            throw error
-        }
+        _ = try FirebaseManager.shared.db.collection(Event.collection).document(id!).setData(from: self, merge: true)
     }
     
     func updateCache() {

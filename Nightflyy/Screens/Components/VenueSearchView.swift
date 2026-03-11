@@ -15,7 +15,7 @@ struct VenueSearchView: View {
     @Environment(\.dismiss) var dismiss
     @FocusState private var isFieldFocused: Bool
     
-    @ObservedObject var viewModel: VenueSearchViewModel
+    @State var viewModel: VenueSearchViewModel
     
     var body: some View {
             VStack(spacing: 20) {

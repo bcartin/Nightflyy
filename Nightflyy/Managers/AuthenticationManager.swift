@@ -23,14 +23,9 @@ class AuthenticationManager {
         Auth.auth().currentUser
     }
             
-    func signIn(email: String, password: String) async -> Result<String, Error> {
-        do {
-            let result = try await Auth.auth().signIn(withEmail: email, password: password)
-            return .success(result.user.uid)
-        }
-        catch {
-            return .failure(error)
-        }
+    func signIn(email: String, password: String) async throws -> String {
+        let result = try await Auth.auth().signIn(withEmail: email, password: password)
+        return result.user.uid
     }
     
     func signIn(with credential: OAuthCredential) async throws -> String {

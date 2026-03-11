@@ -17,7 +17,7 @@ enum NFPSignUpScreen {
     case completed
 }
 
-@Observable
+@Observable @MainActor
 class NFPSignUpViewModel {
  
     var displayView: NFPSignUpScreen = .paywall

@@ -9,22 +9,20 @@ import SwiftUI
 import MapKit
 import Combine
 
-class AddressSearchViewModel: NSObject, ObservableObject {
+@Observable
+class AddressSearchViewModel: NSObject {
     
-    
+    private(set) var searchResults: [MKLocalSearchCompletion] = .init()
+    var selectedAddress: String = ""
+    @ObservationIgnored
     @Published var searchText: String = ""
-    @Published private(set) var searchResults: [MKLocalSearchCompletion] = .init()
-    @Published var selectedAddress: String = ""
     private var searchCancellable: AnyCancellable?
     
-    private lazy var localSearchCompleter: MKLocalSearchCompleter = {
-        let completer = MKLocalSearchCompleter()
-        completer.delegate = self
-        return completer
-    }()
+    private var localSearchCompleter = MKLocalSearchCompleter()
     
     override init() {
         super.init()
+        localSearchCompleter.delegate = self
                 
         searchCancellable = $searchText
             .receive(on: DispatchQueue.main)

@@ -8,8 +8,18 @@
 import SwiftUI
 import Combine
 
-@Observable
-class SearchResultsListViewModel: NSObject {
+@Observable @MainActor
+class SearchResultsListViewModel: Hashable {
+    
+    nonisolated let id = UUID()
+    
+    nonisolated static func == (lhs: SearchResultsListViewModel, rhs: SearchResultsListViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var selectedSegment: Int = 0
     var segments = [SegmentedViewOption(id: 0, title: "All"),
@@ -28,16 +38,14 @@ class SearchResultsListViewModel: NSObject {
     
     init(searchResults: [SearchResult]) {
         self.searchResults = searchResults.sorted{$0.id < $1.id}
-        super.init()
         self.updateSegmentsTitles()
         self.makeEventResultsViewModels()
         self.makeVenueResultsViewModels()
         self.makePersonResultsViewModels()
     }
     
-    override init() {
+    init() {
         SearchManager.shared.reloadClient()
-        super.init()
         searchCancellable = $searchText
             .receive(on: DispatchQueue.main)
             .debounce(for: .seconds(1), scheduler: RunLoop.main)

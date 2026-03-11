@@ -52,7 +52,7 @@ struct ProfileView: View {
                     if viewModel.canInteract {
                         VStack(alignment: .center) {
                             Text("Followers")
-                            Text("\(viewModel.account.followers?.count ?? 0)")
+                            Text("\(viewModel.account.followerCount)")
                         }
                         .font(.system(size: 14))
                         .onTapGesture {
@@ -62,7 +62,7 @@ struct ProfileView: View {
                         
                         VStack(alignment: .center) {
                             Text("Following")
-                            Text("\(viewModel.account.following?.count ?? 0)")
+                            Text("\(viewModel.account.followingCount)")
                         }
                         .font(.system(size: 14))
                         .onTapGesture {
@@ -180,22 +180,20 @@ struct ProfileView: View {
             await viewModel.loadAccountEvents()
             viewModel.updateAccount()
         }
-        .sheet(isPresented: $viewModel.presentSheetScreen, content: {
-            switch viewModel.selectedPresentView {
+        .sheet(item: $viewModel.selectedPresentView) { screen in
+            switch screen {
             case .editScreen:
-                EditProfileView(viewModel: EditProfileViewModel())
-            case .sendAsMessage:
-                SendObjectAsMessageView(viewModel: SendObjectAsMessageViewModel(account: viewModel.account))
+                if let editVM = viewModel.editProfileViewModel {
+                    EditProfileView(viewModel: editVM)
+                }
             case .report:
                 ReportView(viewModel: ReportViewModel(objectId: viewModel.account.uid))
             case .paywall:
                 NFPContainerView()
             case .review:
                 EmptyView()
-            case .none:
-                EmptyView()
             }
-        })
+        }
         .alert(isPresented: $viewModel.presentUnfollowAlert) {
             CustomDialog(title: "Unfollow \(viewModel.account.username ?? "")?",
                          button1: .init(content: "Unfollow", tint: .mainPurple, foreground: .white, action: { folder in
@@ -228,7 +226,7 @@ struct ProfileView: View {
             buttonBackground: .backgroundBlackLight
         ) {
             Button("Send Profile as Message") {
-                viewModel.selectPresentView(for: .sendAsMessage)
+                viewModel.navigateToSendAsMessage()
             }
             Button("Report") {
                 viewModel.selectPresentView(for: .report)

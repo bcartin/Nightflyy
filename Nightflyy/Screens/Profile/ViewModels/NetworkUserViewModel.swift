@@ -8,8 +8,8 @@
 import Foundation
 import SwiftUI
 
-@Observable
-class NetworkUserViewModel: NSObject {
+@Observable @MainActor
+class NetworkUserViewModel {
     
     var account: Account?
     var selectedSegment: Int

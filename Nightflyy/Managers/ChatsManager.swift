@@ -7,13 +7,20 @@
 
 import SwiftUI
 import FirebaseFirestore
+import OSLog
 
-@Observable
+@Observable @MainActor
 class ChatsManager {
     
     static let shared = ChatsManager()
     
-    private init() { }
+    private let accountManager: any AccountManaging
+    
+    private init(
+        accountManager: (any AccountManaging)? = nil
+    ) {
+        self.accountManager = accountManager ?? AccountManager.shared
+    }
     
     var chats: [Chat] = []
     var viewModels: [InboxRowViewModel] = []
@@ -43,27 +50,6 @@ class ChatsManager {
         }
     }
     
-//    func createChatsListenerChats(uid: String, completion: @escaping ([Chat]) -> Void) {
-//        var chats = [Chat]()
-//        listener?.remove()
-//        let db = FirebaseManager.shared.db
-//        let query = db.collection(FirestoreCollections.Chats.value).whereField(FirestoreCollections.Chats.members, arrayContainsAny: [uid])
-//        listener = query.addSnapshotListener { snapshot, error in
-//            guard let documents = snapshot?.documents else { return }
-//            chats = documents.compactMap({ documentSnapshot in
-//                let result = Result<Chat, Error> { try documentSnapshot.data(as: Chat.self) }
-//                switch result {
-//                case .success(let chat):
-//                    return chat
-//                case .failure(let error):
-//                    print(error.localizedDescription)
-//                    return nil
-//                }
-//            })
-//            completion(chats)
-//        }
-//    }
-    
     func removeChat(chatId: String) {
         if let index = self.viewModels.firstIndex(where: { oldViewModel in
             return oldViewModel.chatID == chatId
@@ -77,17 +63,17 @@ class ChatsManager {
         listener?.remove()
         let db = FirebaseManager.shared.db
         let query = db.collection(FirestoreCollections.Chats.value).whereField(FirestoreCollections.Chats.members, arrayContainsAny: [uid])
-        listener = query.addSnapshotListener { snapshot, error in
+        listener = query.addSnapshotListener { [weak self] snapshot, error in
             snapshot?.documentChanges.forEach { change in
-                let chat = try! change.document.data(as: Chat.self)
+                guard let chat = try? change.document.data(as: Chat.self) else { return }
                 switch change.type {
                 case .added, .modified:
                     chats.append(chat)
                 case .removed:
-                    if let index = self.viewModels.firstIndex(where: { oldViewModel in
+                    if let index = self?.viewModels.firstIndex(where: { oldViewModel in
                         return oldViewModel.chatID == chat.id
                     }) {
-                        self.viewModels.remove(at: index)
+                        self?.viewModels.remove(at: index)
                     }
                 }
             }
@@ -102,10 +88,10 @@ class ChatsManager {
         let query = db.collection(FirestoreCollections.Chats.value).document(uid).collection(FirestoreCollections.Messages.value)
 //            .whereField("date", isGreaterThan: Date().addingTimeInterval(-3600))
             .order(by: FirestoreCollections.Messages.date, descending: false)
-        listener = query.addSnapshotListener { snapshot, error in
+        messagesListener = query.addSnapshotListener { snapshot, error in
             snapshot?.documentChanges.forEach { change in
                 if change.type == .added {
-                    let message = try! change.document.data(as: Message.self)
+                    guard let message = try? change.document.data(as: Message.self) else { return }
                     messages.append(message)
                 }
             }
@@ -113,14 +99,15 @@ class ChatsManager {
         }
     }
     
-    func getChat(with accountId: String) -> Chat {
+    func getChat(with accountId: String) throws -> Chat {
         let chat = viewModels.first { $0.chat.members.contains(accountId) }?.chat
         if let chat {
             return chat
         }
         else {
-            let uid = AccountManager.shared.account?.uid ?? ""
+            let uid = accountManager.account?.uid ?? ""
             let newChat = Chat(id: UUID().uuidString, members: [accountId, uid])
+            try newChat.save()
             return newChat
         }
     }
@@ -137,6 +124,7 @@ class ChatsManager {
             return chats.first
         }
         catch {
+            Logger.network.error("Error fetching chat: \(error.localizedDescription)")
             return nil
         }
     }

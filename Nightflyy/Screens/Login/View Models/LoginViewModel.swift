@@ -10,7 +10,7 @@ import OSLog
 import AuthenticationServices
 import FirebaseAuth
 
-@Observable
+@Observable @MainActor
 class LoginViewModel {
     
     var email: String = ""
@@ -22,21 +22,20 @@ class LoginViewModel {
     var error: Error?
     
     func logInWithEmail() {
-        Task { @MainActor in
+        Task {
             AuthenticationManager.shared.isSigningUp = false
             AppState.shared.isLoading = true
-            let result = await AuthenticationManager.shared.signIn(email: email, password: password)
-            AppState.shared.isLoading = false
-            switch result {
-            case .success(let uid):
+            do {
+                let uid = try await AuthenticationManager.shared.signIn(email: email, password: password)
+                AppState.shared.isLoading = false
                 Logger.auth.info("Successfully logged in for user \(uid)")
                 MainCoordinator().initialAppSetup()
                 try await PushNotificationsManager.shared.requestPermission()
-            case .failure(let error):
+            } catch {
+                AppState.shared.isLoading = false
                 self.error = error
-                Logger.auth.error("Error login in.")
+                Logger.auth.error("Error logging in: \(error.localizedDescription)")
             }
-
         }
     }
     
@@ -60,7 +59,7 @@ class LoginViewModel {
             try await PushNotificationsManager.shared.requestPermission()
         }
         catch {
-            print(error.localizedDescription)
+            Logger.auth.error("Error signing in with Apple: \(error.localizedDescription)")
             self.error = error
         }
     }

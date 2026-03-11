@@ -7,9 +7,10 @@
 
 import Foundation
 import CoreLocation
+import OSLog
 
 @Observable
-class EventsManager {
+class EventsManager: EventsManaging {
     
     static let shared = EventsManager()
     var nearbyEvents: [Event] = []
@@ -21,15 +22,27 @@ class EventsManager {
     var hostingEvents: [Event] = []
     var locationVenues: [Account] = []
     
-    private init() {  }
+    private let eventClient: any EventClientProtocol
+    private let geoClient: any GeoqueriesClientProtocol
+    private let accountManager: any AccountManaging
+    
+    private init(
+        eventClient: any EventClientProtocol = EventClient.shared,
+        geoClient: any GeoqueriesClientProtocol = GeoqueriesClient.shared,
+        accountManager: any AccountManaging = AccountManager.shared
+    ) {
+        self.eventClient = eventClient
+        self.geoClient = geoClient
+        self.accountManager = accountManager
+    }
     
     func fetchNearbyEvents() async {
         do {
             guard let location = LocationManager.shared.currentLocation else { return }
-            nearbyEvents = try await GeoqueriesClient.fetchEventsForLocation(location)
+            nearbyEvents = try await geoClient.fetchEventsForLocation(location)
         }
         catch {
-            print(error.localizedDescription)
+            Logger.general.error("Error fetching nearby events: \(error.localizedDescription)")
         }
     }
     
@@ -37,10 +50,10 @@ class EventsManager {
         do {
             locationVenues.removeAll()
             guard let location = LocationManager.shared.currentLocation else { return }
-            locationVenues = try await GeoqueriesClient.fetchVenuesForLocation(location)
+            locationVenues = try await geoClient.fetchVenuesForLocation(location)
         }
         catch {
-            print(error.localizedDescription)
+            Logger.general.error("Error fetching nearby venues: \(error.localizedDescription)")
         }
     }
     
@@ -62,10 +75,10 @@ class EventsManager {
     func setLocationEvents(_ location: CLLocation) {
         Task {
             do {
-                self.locationEvents = try await GeoqueriesClient.fetchEventsForLocation(location)
+                self.locationEvents = try await geoClient.fetchEventsForLocation(location)
             }
             catch {
-                print(error.localizedDescription)
+                Logger.general.error("Error setting location events: \(error.localizedDescription)")
             }
         }
     }
@@ -74,10 +87,10 @@ class EventsManager {
         Task {
             do {
                 locationVenues.removeAll()
-                self.locationVenues = try await GeoqueriesClient.fetchVenuesForLocation(location)
+                self.locationVenues = try await geoClient.fetchVenuesForLocation(location)
             }
             catch {
-                print(error.localizedDescription)
+                Logger.general.error("Error setting location venues: \(error.localizedDescription)")
             }
         }
     }
@@ -85,10 +98,10 @@ class EventsManager {
     func fetchFollowingEvents(account: Account) async {
         guard let followingIDs = account.following else { return }
         var events: [Event] = []
-        await withTaskGroup(of: [Event]?.self) { group in
+        await withTaskGroup(of: [Event]?.self) { [weak self] group in
             for uid in followingIDs {
                 group.addTask {
-                    return await EventClient.fetchFutureEventsHostedBy(uid: uid)
+                    return await self?.eventClient.fetchFutureEventsHostedBy(uid: uid)
                 }
             }
             for await eventGroup in group {
@@ -108,30 +121,30 @@ class EventsManager {
     }
     
     func fetchHostingEvents(refetch: Bool = false) async {
-        guard let account = AccountManager.shared.account else { return }
+        guard let account = accountManager.account else { return }
         if hostingEvents.isEmpty || refetch {
-            hostingEvents = await EventClient.fetchEventsHostedBy(uid: account.uid)
+            hostingEvents = await eventClient.fetchEventsHostedBy(uid: account.uid)
         }
     }
     
     func fetchAttendingEvents(refetch: Bool = false) async {
-        guard let account = AccountManager.shared.account else { return }
+        guard let account = accountManager.account else { return }
         if attendingEvents.isEmpty || refetch {
-            attendingEvents = await EventClient.fetchEventsAttending(uid: account.uid)
+            attendingEvents = await eventClient.fetchEventsAttending(uid: account.uid)
         }
     }
     
     func fetchInvitedEvents(refetch: Bool = false) async {
-        guard let account = AccountManager.shared.account else { return }
+        guard let account = accountManager.account else { return }
         if invitedEvents.isEmpty || refetch {
-            invitedEvents = await EventClient.fetchEventsInvited(uid: account.uid)
+            invitedEvents = await eventClient.fetchEventsInvited(uid: account.uid)
         }
     }
     
     func fetchInterestedEvents(refetch: Bool = false) async {
-        guard let account = AccountManager.shared.account else { return }
+        guard let account = accountManager.account else { return }
         if interestedEvents.isEmpty || refetch {
-            interestedEvents = await EventClient.fetchEventsInterested(uid: account.uid)
+            interestedEvents = await eventClient.fetchEventsInterested(uid: account.uid)
         }
     }
     

@@ -9,8 +9,18 @@ import Foundation
 import SwiftUI
 import Combine
 
-@Observable
-class NetworkViewModel: NSObject {
+@Observable @MainActor
+class NetworkViewModel: Hashable {
+    
+    nonisolated let id: String
+    
+    nonisolated static func == (lhs: NetworkViewModel, rhs: NetworkViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var account: Account
     var displayFollowers: [String] = []
@@ -23,11 +33,11 @@ class NetworkViewModel: NSObject {
     private var searchCancellable: AnyCancellable?
     
     init(account: Account, selectedSegment: Int) {
+        self.id = account.uid
         self.account = account
         self.displayFollowers = account.followers ?? []
         self.displayFollowing = account.following ?? []
         self.selectedSegment = selectedSegment
-        super.init()
         
         searchCancellable = $searchText
             .receive(on: DispatchQueue.main)

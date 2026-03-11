@@ -8,8 +8,9 @@
 import Foundation
 import Firebase
 import AlgoliaSearchClient
+import OSLog
 
-class SearchManager {
+class SearchManager: SearchManaging {
     
     private init() {
         getSearchKeys()
@@ -35,7 +36,7 @@ class SearchManager {
             self.searchClient = SearchClient(appID: ApplicationID(rawValue: appID), apiKey: APIKey(rawValue: apiKey))
         }
         catch {
-            print("Error getting Algolia API Key")
+            Logger.search.error("Error getting Algolia API key: \(error.localizedDescription)")
         }
     }
     
@@ -49,7 +50,7 @@ class SearchManager {
                 return results
             }
             catch {
-                print(error)
+                Logger.search.error("Error performing search: \(error.localizedDescription)")
             }
         }
         #endif

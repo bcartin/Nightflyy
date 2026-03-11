@@ -26,23 +26,23 @@ struct ContentView: View {
             AnimatedSideBar(showMenu: $showMenu)
             { safeArea in
                 TabView(selection: $appState.selectedTab) {
-                    Tab("", image: "ic_home", value: 0) {
+                    Tab("", image: "ic_home", value: AppTab.home) {
                         HomeView(showMenu: $showMenu, viewModel: HomeViewModel())
                             .toolbarVisibility(Router.shared.path.isEmpty ? .visible : .hidden, for: .tabBar)
                     }
-                    Tab("", image: "ic_search", value: 1) {
+                    Tab("", image: "ic_search", value: AppTab.discover) {
                         DiscoverView(showMenu: $showMenu, viewModel: DiscoverViewModel())
                             .toolbarVisibility(Router.shared.path.isEmpty ? .visible : .hidden, for: .tabBar)
                     }
-                    Tab("", image: "ic_hub", value: 2) {
+                    Tab("", image: "ic_hub", value: AppTab.hub) {
                         HubView(showMenu: $showMenu, viewModel: HubViewModel())
                             .toolbarVisibility(Router.shared.path.isEmpty ? .visible : .hidden, for: .tabBar)
                     }
-                    Tab("", image: "ic_bell", value: 3) {
+                    Tab("", image: "ic_bell", value: AppTab.notifications) {
                         NotificationsView(showMenu: $showMenu, viewModel: NotificationsViewModel())
                             .toolbarVisibility(Router.shared.path.isEmpty ? .visible : .hidden, for: .tabBar)
                     }
-                    Tab("", image: "ic_message", value: 4) {
+                    Tab("", image: "ic_message", value: AppTab.inbox) {
                         InboxView(showMenu: $showMenu, viewModel: InboxViewModel())
                             .toolbarVisibility(Router.shared.path.isEmpty ? .visible : .hidden, for: .tabBar)
                     }

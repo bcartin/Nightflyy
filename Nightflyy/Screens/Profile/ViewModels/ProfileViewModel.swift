@@ -8,8 +8,18 @@
 import Foundation
 import SwiftUI
 
-@Observable
-class ProfileViewModel: NSObject {
+@Observable @MainActor
+class ProfileViewModel: Hashable {
+    
+    nonisolated let id: String
+    
+    nonisolated static func == (lhs: ProfileViewModel, rhs: ProfileViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var account: Account
     
@@ -21,14 +31,14 @@ class ProfileViewModel: NSObject {
     
     var presentUnfollowAlert: Bool = false
     var presentBlockAlert: Bool = false
-    var presentSheetScreen: Bool = false
     var presentOptionsDialog: Bool = false
     var presentContactDialog: Bool = false
     var selectedPresentView: PresentSheetView?
+    var editProfileViewModel: EditProfileViewModel?
     
     init(account: Account) {
+        self.id = account.uid
         self.account = account
-        super.init()
         self.setFollowingStatus()
         print(account.uid)
     }
@@ -46,11 +56,11 @@ class ProfileViewModel: NSObject {
     }
     
     var isPlusProvider: Bool {
-        account.plusProvider ?? false
+        account.isProvider
     }
     
     var isPlusAccount: Bool {
-        account.plusMember ?? false
+        account.hasActiveSubscription
     }
     
     var hasPhoneNumber: Bool {
@@ -138,35 +148,39 @@ class ProfileViewModel: NSObject {
     }
     
     func followButtonAction() {
-        do {
-            switch followingStatus {
-            case .notFollowing:
-                if account.accountIsPrivate ?? true {
-                    try AccountManager.shared.requestToFollowAccount(accountId: account.uid)
+        Task {
+            do {
+                switch followingStatus {
+                case .notFollowing:
+                    if account.accountIsPrivate ?? true {
+                        try await AccountManager.shared.requestToFollowAccount(accountId: account.uid)
+                    }
+                    else {
+                        account = try await AccountManager.shared.followAccount(accountToFollow: account)
+                    }
+                case .following:
+                    self.presentUnfollowAlert = true
+                case .requested:
+                    print("Already Requested")
                 }
-                else {
-                    try AccountManager.shared.followAccount(accountToFollow: &account)
-                }
-            case .following:
-                self.presentUnfollowAlert = true
-            case .requested:
-                print("Already Requested")
+                setFollowingStatus()
             }
-            setFollowingStatus()
-        }
-        catch {
-            self.error = error
+            catch {
+                self.error = error
+            }
         }
     }
     
     func unfollowAccount() {
-        do {
-            try AccountManager.shared.unfollowAccount(accountToFollow: &account)
-            setFollowingStatus()
-            self.presentUnfollowAlert = false
-        }
-        catch {
-            self.error = error
+        Task {
+            do {
+                account = try await AccountManager.shared.unfollowAccount(accountToFollow: account)
+                setFollowingStatus()
+                self.presentUnfollowAlert = false
+            }
+            catch {
+                self.error = error
+            }
         }
     }
     
@@ -177,9 +191,14 @@ class ProfileViewModel: NSObject {
     }
     
     func messageButtonAction() {
-        let chat =  ChatsManager.shared.getChat(with: account.uid)
-        let viewModel = InboxRowViewModel(chat: chat)
-        Router.shared.navigateTo(.ChatView(viewModel))
+        do {
+            let chat = try ChatsManager.shared.getChat(with: account.uid)
+            let viewModel = InboxRowViewModel(chat: chat)
+            Router.shared.navigateTo(.ChatView(viewModel))
+        }
+        catch {
+            print(error.localizedDescription)
+        }
     }
     
     func handleOptionsTapped() {
@@ -203,21 +222,29 @@ class ProfileViewModel: NSObject {
         }
     }
     
+    func navigateToSendAsMessage() {
+        let viewModel = SendObjectAsMessageViewModel(account: self.account)
+        Router.shared.navigateTo(.SendObjectAsMessage(viewModel))
+    }
+    
 }
 
 extension ProfileViewModel {
     
-    enum PresentSheetView {
+    enum PresentSheetView: Identifiable {
         case editScreen
-        case sendAsMessage
         case report
         case paywall
         case review
+        
+        var id: Self { self }
     }
     
     func selectPresentView(for value: PresentSheetView) {
+        if value == .editScreen {
+            editProfileViewModel = EditProfileViewModel()
+        }
         selectedPresentView = value
-        presentSheetScreen = true
         presentOptionsDialog = false
     }
 }
@@ -249,7 +276,7 @@ extension ProfileViewModel { // VENUE SPECIFIC FIELDS & FUNCTIONS
     }
     
     func openMapsWithAddress() {
-        Task { @MainActor in
+        Task {
             guard let address = account.address else { return }
             await MapsManager.openMapsWithAddress(address)
         }

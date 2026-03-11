@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-@Observable
-class HubViewModel: NSObject {
+@Observable @MainActor
+class HubViewModel {
     
     var selectedSegment: Int = 1
     let segments = [SegmentedViewOption(id: 1, title: "Upcoming"), SegmentedViewOption(id: 2, title: "Hosting"), SegmentedViewOption(id: 3, title: "Calendar")]

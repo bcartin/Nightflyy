@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class Navigator {
     
     var router: Router
@@ -63,7 +64,7 @@ class Navigator {
             case .chat:
                 await navigateToChat(chatId: id)
             case .other:
-                navigateToTab(.Home)
+                navigateToTab(.home)
             case .none:
                 print("none")
             }
@@ -95,7 +96,7 @@ class Navigator {
     }
     
     private func navigateToChat(chatId: String?) async {
-        AppState.shared.selectedTab = 4
+        AppState.shared.selectedTab = .inbox
         guard let chatId else {return}
         if let viewModel = ChatsManager.shared.viewModels.first(where: {$0.chatID == chatId}) {
             router.navigateTo(.ChatView(viewModel))
@@ -103,7 +104,7 @@ class Navigator {
     }
     
     private func navigateToTab(_ tab: AppTab) {
-        AppState.shared.selectedTab = tab.rawValue
+        AppState.shared.selectedTab = tab
     }
     
 }

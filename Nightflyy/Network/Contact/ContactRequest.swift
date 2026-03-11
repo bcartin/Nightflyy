@@ -14,7 +14,7 @@ class ContactRequest {
     
     init?(body: ContactRequestBody) {
         self.body = body
-        guard let url = NetworkHelper.BuildApiUrl(base: "SENDGRID_BASEURL", endPoint: "/v3/marketing/contacts") else {
+        guard let url = NetworkHelper.buildApiUrl(base: "SENDGRID_BASEURL", endPoint: "/v3/marketing/contacts") else {
             return nil
         }
         self.httpRequest = URLRequest(url: url)

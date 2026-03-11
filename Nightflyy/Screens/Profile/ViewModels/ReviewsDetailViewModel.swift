@@ -7,7 +7,7 @@
 
 import Foundation
 
-@Observable
+@Observable @MainActor
 class ReviewsDetailViewModel {
     
     var account: Account

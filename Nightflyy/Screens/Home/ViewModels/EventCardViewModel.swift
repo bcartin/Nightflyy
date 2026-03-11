@@ -8,19 +8,17 @@
 import Foundation
 import SwiftUI
 
-@Observable
-class EventCardViewModel: NSObject {
+@Observable @MainActor
+class EventCardViewModel {
     
     var event: Event
     var eventOwner: Account?
     var attendanceStatus: AttendanceStatus = .notAttending
     var presentInviteScreen: Bool = false
-    var presentSendAsMessageScreen: Bool = false
     var error: Error?
 
     init(event: Event) {
         self.event = event
-        super.init()
         self.setAttendanceStatus()
         Task {
             await fetchOwner()
@@ -59,19 +57,7 @@ class EventCardViewModel: NSObject {
     func fetchOwner() async {
         guard let ownerId = event.createdBy else { return }
         if !event.isUnclaimed {
-            let fetchOwnerTask = Task { @MainActor () -> Account? in
-                let result = await AccountClient.fetchAccount(uid: ownerId)
-                switch result {
-                    
-                case .success(let account):
-                    return account
-                case .failure(_):
-                    return nil
-                }
-            }
-            
-            let result = await fetchOwnerTask.result
-            self.eventOwner = result.get()
+            self.eventOwner = await AccountClient.fetchAccount(accountId: ownerId)
         }
     }
     
@@ -97,10 +83,17 @@ class EventCardViewModel: NSObject {
         Router.shared.navigateTo(.EventGuestList(viewModel))
     }
     
+    func navigateToSendAsMessage() {
+        let viewModel = SendObjectAsMessageViewModel(event: self.event)
+        Router.shared.navigateTo(.SendObjectAsMessage(viewModel))
+    }
+    
     func markAsAttenging() {
         Task {
             do {
-                try await EventAttendanceManager.shared.markAsAttenging(event: &event)
+                var eventCopy = event
+                try await EventAttendanceManager.shared.markAsAttending(event: &eventCopy)
+                event = eventCopy
                 EventsManager.shared.updateEventLists(with: event)
                 setAttendanceStatus()
             }
@@ -109,11 +102,13 @@ class EventCardViewModel: NSObject {
             }
         }
     }
-    
+
     func markAsInterested() {
         Task {
             do {
-                try await EventAttendanceManager.shared.markAsInterested(event: &event)
+                var eventCopy = event
+                try await EventAttendanceManager.shared.markAsInterested(event: &eventCopy)
+                event = eventCopy
                 EventsManager.shared.updateEventLists(with: event)
                 setAttendanceStatus()
             }
@@ -122,11 +117,13 @@ class EventCardViewModel: NSObject {
             }
         }
     }
-    
+
     func markAsNotAttending() {
         Task {
             do {
-                try await EventAttendanceManager.shared.markAsNotAttending(event: &event)
+                var eventCopy = event
+                try await EventAttendanceManager.shared.markAsNotAttending(event: &eventCopy)
+                event = eventCopy
                 EventsManager.shared.updateEventLists(with: event)
                 setAttendanceStatus()
             }
@@ -143,10 +140,6 @@ class EventCardViewModel: NSObject {
         else {
             error = EventError.cannotInvite
         }
-    }
-    
-    func handleSendAsMessageTapped() {
-        presentSendAsMessageScreen = true
     }
     
 }

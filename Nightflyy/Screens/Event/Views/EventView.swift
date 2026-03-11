@@ -107,6 +107,43 @@ struct EventView: View {
                     Divider()
                         .background(.white)
                     
+                    if viewModel.event.hasPerk ?? false {
+                        Button {
+                            viewModel.presentPaywall.toggle()
+                        } label: {
+                            HStack {
+                                Image("plus_badge")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                
+                                VStack(alignment: .leading) {
+                                    Text("Nightflyy+ Perk")
+                                        .font(.system(size: 12))
+                                        .foregroundColor(.onlineBlue)
+                                    
+                                    Text(viewModel.event.perkName ?? "")
+                                        .font(.system(size: 15, weight: .bold))
+                                        .foregroundStyle(.white)
+                                    
+                                    Text(viewModel.event.perkDetails ?? "")
+                                        .font(.system(size: 10))
+                                        .foregroundStyle(.white)
+                                }
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .foregroundStyle(.onlineBlue)
+                            }
+                            .padding(8)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(.onlineBlue, lineWidth: 1)
+                            }
+                            .padding(12)
+                        }
+                    }
+                    
                     HStack {
                         EventItemView(header: "Event Type", value: viewModel.event.eventIsPrivate ?? false ? "Private" : "Public")
                         
@@ -238,12 +275,12 @@ struct EventView: View {
         .sheet(isPresented: $viewModel.presentInviteScreen, onDismiss: nil) {
             InviteFromEventView(viewModel: InviteFromEventViewModel(event: viewModel.event))
         }
-        .sheet(isPresented: $viewModel.presentSendAsMessageScreen, onDismiss: nil) {
-            SendObjectAsMessageView(viewModel: SendObjectAsMessageViewModel(event: viewModel.event))
-        }
         .sheet(isPresented: $viewModel.preseentCommentsScreen) {
             EventCommentsListView(viewModel: viewModel)
                 .presentationDetents([.medium, .large])
+        }
+        .sheet(isPresented: $viewModel.presentPaywall) {
+            NFPContainerView()
         }
         
     }

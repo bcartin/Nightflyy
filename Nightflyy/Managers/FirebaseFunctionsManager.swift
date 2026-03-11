@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseFunctions
+import OSLog
 
 class FirebaseFunctionsManager {
     
@@ -21,12 +22,11 @@ class FirebaseFunctionsManager {
         self.functions.httpsCallable("updateUser").call(["uid":account.uid, "info":info]) { result, error in
             if let error = error as NSError? {
                 if error.domain == FunctionsErrorDomain {
-                    let message = error.localizedDescription
-                    print(message)
+                    Logger.general.error("Error updating user display name/photo: \(error.localizedDescription)")
                 }
             }
             else {
-                print("User Updated")
+                Logger.general.info("User display name and photo updated successfully")
             }
         }
     }
@@ -35,12 +35,11 @@ class FirebaseFunctionsManager {
         self.functions.httpsCallable("deleteUser").call(["uid":uid]) { result, error in
             if let error = error as NSError? {
               if error.domain == FunctionsErrorDomain {
-                let message = error.localizedDescription
-                print(message)
+                  Logger.general.error("Error deleting user \(uid): \(error.localizedDescription)")
               }
             }
             else {
-                print("User \(uid) Deleted")
+                Logger.general.info("User \(uid) deleted successfully")
             }
         }
     }

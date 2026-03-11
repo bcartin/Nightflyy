@@ -17,13 +17,13 @@ struct NetworkUserView: View {
             ZStack(alignment: .topTrailing) {
                 UserImageRound(imageUrl: viewModel.account?.profileImageUrl, size: 48)
                 
-                if viewModel.account?.plusProvider ?? false {
+                if viewModel.account?.isProvider ?? false {
                     Image("plus_badge")
                         .resizable()
                         .frame(width: 18, height: 18)
                         .padding(.trailing, -4)
                 }
-                else if viewModel.account?.plusMember ?? false {
+                else if viewModel.account?.hasActiveSubscription ?? false {
                     Image("plus_badge_user")
                         .resizable()
                         .frame(width: 18, height: 18)

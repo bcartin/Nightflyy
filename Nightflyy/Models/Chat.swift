@@ -20,7 +20,7 @@ struct Chat: Codable, Identifiable, Savable {
     var members: [String]
     
     var uid: String {
-        return self.id!
+        return self.id ?? ""
     }
         
     enum CodingKeys: String, CodingKey {
@@ -36,11 +36,6 @@ struct Chat: Codable, Identifiable, Savable {
 extension Chat {
     
     func save() throws {
-        do {
-            try FirebaseManager.shared.db.collection(Chat.collection).document(id!).setData(from: self, merge: true)
-        }
-        catch {
-            throw error
-        }
+        try FirebaseManager.shared.db.collection(Chat.collection).document(id!).setData(from: self, merge: true)
     }
 }

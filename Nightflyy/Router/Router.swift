@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-@Observable
+@Observable @MainActor
 class Router {
     
     static var shared = Router()
@@ -25,6 +25,7 @@ class Router {
         case SearchResultsListView(SearchResultsListViewModel)
         case ChatView(InboxRowViewModel)
         case ReviewVenueView(ReviewVenueViewModel)
+        case SendObjectAsMessage(SendObjectAsMessageViewModel)
     }
     
     var path: NavigationPath = NavigationPath()
@@ -68,6 +69,8 @@ class Router {
             ChatView(viewModel: viewModel)
         case .ReviewVenueView(let viewModel):
             ReviewVenueView(viewModel: viewModel)
+        case .SendObjectAsMessage(let viewModel):
+            SendObjectAsMessageView(viewModel: viewModel)
         }
     
     }
@@ -79,6 +82,7 @@ class Router {
     }
     
     func navigateBack() {
+        if path.count == 0 { return }
         withAnimation {
             path.removeLast()
         }
@@ -92,7 +96,7 @@ class Router {
     
     func popLast(numberOfViews: Int) {
         withAnimation {
-            for _ in 0...numberOfViews {
+            for _ in 1...numberOfViews {
                 navigateBack()
             }
         }

@@ -9,7 +9,17 @@ import Foundation
 import SwiftUI
 
 @Observable
-class CreateEventViewModel: NSObject {
+class CreateEventViewModel: Hashable {
+    
+    nonisolated let id: String
+    
+    nonisolated static func == (lhs: CreateEventViewModel, rhs: CreateEventViewModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    nonisolated func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     var flyerImage: Image?
     var isLoading: Bool = false
@@ -22,6 +32,7 @@ class CreateEventViewModel: NSObject {
     var updatedEvent: ((Event) -> Void)?
     
     init(event: Event) {
+        self.id = event.uid
         self.event = event
     }
     
@@ -168,7 +179,7 @@ class CreateEventViewModel: NSObject {
                 try? await Task.sleep(for: .seconds(2))
                 isLoading = false
                 updatedEvent?(event)
-                Router.shared.navigateBack()
+                await Router.shared.navigateBack()
             }
             catch {
                 self.error = error

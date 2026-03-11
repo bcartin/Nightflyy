@@ -7,7 +7,7 @@
 
 import Foundation
 
-@Observable
+@Observable @MainActor
 class SideBarMenuViewModel {
     
     var presentSheet: Bool = false
