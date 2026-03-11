@@ -163,6 +163,36 @@ class AccountClient {
         }
     }
     
+    private static func addToArrayField(accountId: String, field: String, value: String) async throws {
+        try await FirebaseManager.shared.db
+            .collection(FirestoreCollections.Accounts.value)
+            .document(accountId)
+            .updateData([field: FieldValue.arrayUnion([value])])
+    }
+    
+    private static func removeFromArrayField(accountId: String, field: String, value: String) async throws {
+        try await FirebaseManager.shared.db
+            .collection(FirestoreCollections.Accounts.value)
+            .document(accountId)
+            .updateData([field: FieldValue.arrayRemove([value])])
+    }
+    
+    static func requestToFollowAccount(accountToRequest: String, requestingAccount: String) async throws {
+        try await addToArrayField(accountId: requestingAccount, field: FirestoreCollections.Accounts.requested, value: accountToRequest)
+    }
+    
+    static func followAccount(accountToFollow: String, followingAccount: String) async throws {
+        try await addToArrayField(accountId: accountToFollow, field: FirestoreCollections.Accounts.followers, value: followingAccount)
+        try await addToArrayField(accountId: followingAccount, field: FirestoreCollections.Accounts.following, value: accountToFollow)
+    }
+    
+    static func unfollowAccount(accountToUnfollow: String, followingAccount: String) async throws {
+        try await removeFromArrayField(accountId: accountToUnfollow, field: FirestoreCollections.Accounts.followers, value: followingAccount)
+        try await removeFromArrayField(accountId: followingAccount, field: FirestoreCollections.Accounts.following, value: accountToUnfollow)
+    }
+
+
+    
 }
 // MARK: - AccountClientProtocol
 
@@ -209,6 +239,18 @@ extension AccountClient: AccountClientProtocol {
     
     func fetchNightflyyPlusMember() async -> [Account] {
         await Self.fetchNightflyyPlusMember()
+    }
+    
+    func followAccount(accountToFollow: String, followingAccount: String) async throws {
+        try await Self.followAccount(accountToFollow: accountToFollow, followingAccount: followingAccount)
+    }
+    
+    func unfollowAccount(accountToUnfollow: String, followingAccount: String) async throws {
+        try await Self.unfollowAccount(accountToUnfollow: accountToUnfollow, followingAccount: followingAccount)
+    }
+    
+    func requestToFollowAccount(accountToRequest: String, requestingAccount: String) async throws {
+        try await Self.requestToFollowAccount(accountToRequest: accountToRequest, requestingAccount: requestingAccount)
     }
 }
 

@@ -140,8 +140,8 @@ class SignupViewModel {
         await UsernamesClient.saveUsername(username: username)
         
         // Follow Jameel
-        if var jameelAccount = await AccountClient.fetchAccount(accountId: "Ya2VB47Ei2QlfN4XB25BOUgoM6S2") {
-            try AccountManager.shared.followAccount(accountToFollow: &jameelAccount)
+        if let jameelAccount = await AccountClient.fetchAccount(accountId: "Ya2VB47Ei2QlfN4XB25BOUgoM6S2") {
+            try await AccountManager.shared.followAccount(accountToFollow: jameelAccount)
         }
         
         // Update search Index

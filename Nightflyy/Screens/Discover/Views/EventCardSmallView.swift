@@ -35,6 +35,10 @@ struct EventCardSmallView: View {
             .background(Color.black.brightness(0.1))
             .cornerRadius(12, corners: [.bottomLeft, .bottomRight])
         }
+        .overlay(content: {
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(viewModel.event.hasPerk ?? false ? .onlineBlue : .clear, lineWidth: 3)
+        })
         .onTapGesture {
             viewModel.navigateToEvent()
         }

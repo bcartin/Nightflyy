@@ -8,14 +8,18 @@
 import Foundation
 import FirebaseFirestore
 
+enum RedemptionType: String, Codable {
+    case event
+    case venue
+}
+
 struct NFPRedemption: Codable, Savable {
     static var collection: String = FirestoreCollections.NFPRedemptions.value
     
     @DocumentID var id = UUID().uuidString
     var venueID: String
     var venueName: String
-    var city: String?
-    var state: String?
+    var redemptionType: RedemptionType?
     var date: Date
     var clientID: String
     
@@ -23,8 +27,7 @@ struct NFPRedemption: Codable, Savable {
         case id
         case venueID = "venue_id"
         case venueName = "venue_name"
-        case city
-        case state
+        case redemptionType = "redemption_type"
         case date
         case clientID = "client_id"
     }

@@ -17,4 +17,7 @@ protocol AccountClientProtocol {
     func removeFromRequested(accountId: String) async throws
     func submitReview(accountId: String, review: Review) throws
     func fetchNightflyyPlusMember() async -> [Account]
+    func requestToFollowAccount(accountToRequest: String, requestingAccount: String) async throws
+    func followAccount(accountToFollow: String, followingAccount: String) async throws
+    func unfollowAccount(accountToUnfollow: String, followingAccount: String) async throws
 }

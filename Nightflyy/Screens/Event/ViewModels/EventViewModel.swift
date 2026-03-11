@@ -29,9 +29,9 @@ class EventViewModel: Hashable {
     var presentCancelAlert: Bool = false
     var presentInviteScreen: Bool = false
     var preseentCommentsScreen: Bool = false
+    var presentPaywall: Bool = false
     var error: Error?
     var attendanceStatus: AttendanceStatus = .notAttending
-//    var numberOfComments: Int = 0
     var comments: [Comment] = .init()
     var commentsViewModels: [EventCommentViewModel] = .init()
     var commentText: String = ""

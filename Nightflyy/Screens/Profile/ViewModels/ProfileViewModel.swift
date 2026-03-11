@@ -31,10 +31,10 @@ class ProfileViewModel: Hashable {
     
     var presentUnfollowAlert: Bool = false
     var presentBlockAlert: Bool = false
-    var presentSheetScreen: Bool = false
     var presentOptionsDialog: Bool = false
     var presentContactDialog: Bool = false
     var selectedPresentView: PresentSheetView?
+    var editProfileViewModel: EditProfileViewModel?
     
     init(account: Account) {
         self.id = account.uid
@@ -148,35 +148,39 @@ class ProfileViewModel: Hashable {
     }
     
     func followButtonAction() {
-        do {
-            switch followingStatus {
-            case .notFollowing:
-                if account.accountIsPrivate ?? true {
-                    try AccountManager.shared.requestToFollowAccount(accountId: account.uid)
+        Task {
+            do {
+                switch followingStatus {
+                case .notFollowing:
+                    if account.accountIsPrivate ?? true {
+                        try await AccountManager.shared.requestToFollowAccount(accountId: account.uid)
+                    }
+                    else {
+                        account = try await AccountManager.shared.followAccount(accountToFollow: account)
+                    }
+                case .following:
+                    self.presentUnfollowAlert = true
+                case .requested:
+                    print("Already Requested")
                 }
-                else {
-                    try AccountManager.shared.followAccount(accountToFollow: &account)
-                }
-            case .following:
-                self.presentUnfollowAlert = true
-            case .requested:
-                print("Already Requested")
+                setFollowingStatus()
             }
-            setFollowingStatus()
-        }
-        catch {
-            self.error = error
+            catch {
+                self.error = error
+            }
         }
     }
     
     func unfollowAccount() {
-        do {
-            try AccountManager.shared.unfollowAccount(accountToFollow: &account)
-            setFollowingStatus()
-            self.presentUnfollowAlert = false
-        }
-        catch {
-            self.error = error
+        Task {
+            do {
+                account = try await AccountManager.shared.unfollowAccount(accountToFollow: account)
+                setFollowingStatus()
+                self.presentUnfollowAlert = false
+            }
+            catch {
+                self.error = error
+            }
         }
     }
     
@@ -187,9 +191,14 @@ class ProfileViewModel: Hashable {
     }
     
     func messageButtonAction() {
-        let chat =  ChatsManager.shared.getChat(with: account.uid)
-        let viewModel = InboxRowViewModel(chat: chat)
-        Router.shared.navigateTo(.ChatView(viewModel))
+        do {
+            let chat = try ChatsManager.shared.getChat(with: account.uid)
+            let viewModel = InboxRowViewModel(chat: chat)
+            Router.shared.navigateTo(.ChatView(viewModel))
+        }
+        catch {
+            print(error.localizedDescription)
+        }
     }
     
     func handleOptionsTapped() {
@@ -222,16 +231,20 @@ class ProfileViewModel: Hashable {
 
 extension ProfileViewModel {
     
-    enum PresentSheetView {
+    enum PresentSheetView: Identifiable {
         case editScreen
         case report
         case paywall
         case review
+        
+        var id: Self { self }
     }
     
     func selectPresentView(for value: PresentSheetView) {
+        if value == .editScreen {
+            editProfileViewModel = EditProfileViewModel()
+        }
         selectedPresentView = value
-        presentSheetScreen = true
         presentOptionsDialog = false
     }
 }

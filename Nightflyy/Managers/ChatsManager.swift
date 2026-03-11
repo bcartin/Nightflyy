@@ -99,7 +99,7 @@ class ChatsManager {
         }
     }
     
-    func getChat(with accountId: String) -> Chat {
+    func getChat(with accountId: String) throws -> Chat {
         let chat = viewModels.first { $0.chat.members.contains(accountId) }?.chat
         if let chat {
             return chat
@@ -107,6 +107,7 @@ class ChatsManager {
         else {
             let uid = accountManager.account?.uid ?? ""
             let newChat = Chat(id: UUID().uuidString, members: [accountId, uid])
+            try newChat.save()
             return newChat
         }
     }
