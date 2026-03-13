@@ -30,38 +30,40 @@ class PushNotificationsManager: NSObject, UIApplicationDelegate, PushNotificatio
     ) {
         self.accountManager = accountManager
         super.init()
-        setPermission()
+        unCenter.delegate = self
     }
     
     func requestPermission() async throws {
+        await refreshAuthorizationStatus()
+
         if authorizationStatus == .notDetermined {
             if try await unCenter.requestAuthorization(options: [.alert, .badge, .sound]) {
                 configure()
                 saveToken()
-                setPermission()
+                await refreshAuthorizationStatus()
             }
+        }
+        else if authorizationStatus == .authorized {
+            configure()
+            saveToken()
         }
     }
     
-    func setPermission() {
-        Task {
-            let settings = await unCenter.notificationSettings()
-            self.authorizationStatus = settings.authorizationStatus
-        }
+    /// Fetches the current notification authorization status from the system.
+    func refreshAuthorizationStatus() async {
+        let settings = await unCenter.notificationSettings()
+        self.authorizationStatus = settings.authorizationStatus
     }
     
     func configure() {
-        unCenter.delegate = self
-        UIApplication.shared.registerForRemoteNotifications()
-        Messaging.messaging().delegate = self
         subscribeToTester()
     }
     
     func didRegisterForNotifications(_ deviceToken: Data) {
         let apnsToken = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
-        #if DEBUG
+//        #if DEBUG
         print("APNs token: \(apnsToken)")
-        #endif
+//        #endif
         Messaging.messaging().apnsToken = deviceToken
         subscribeToNotifications(target: .everyone)
     }
@@ -98,12 +100,12 @@ extension PushNotificationsManager: UNUserNotificationCenterDelegate {
 extension PushNotificationsManager: MessagingDelegate {
     
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        #if DEBUG
+//        #if DEBUG
         print("Token Received: ", fcmToken ?? "")
         if let apnsToken = messaging.apnsToken {
             print("APNs Token: ", apnsToken)
         }
-        #endif
+//        #endif
         saveToken(token: fcmToken)
     }
     
@@ -123,5 +125,22 @@ extension PushNotificationsManager: MessagingDelegate {
     
     func unsubscribeFromNotifications(target: PushNotificationTarget) {
         Messaging.messaging().unsubscribe(fromTopic: target.rawValue)
+    }
+}
+
+
+//MARK: App Delegate Extension
+extension AppDelegate {
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        PushNotificationsManager.shared.didRegisterForNotifications(deviceToken)
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: any Error) {
+        print("Failed to register for notifications")
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+        PushNotificationsManager.shared.userInfo = response.notification.request.content.userInfo
     }
 }

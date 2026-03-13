@@ -86,7 +86,7 @@ class Navigator {
     }
     
     private func openNFPpaywall(accountId: String?) async {
-        if let accountId = accountId {
+        if let accountId = accountId, !accountId.isEmpty {
             if let account = await AccountClient.fetchAccount(accountId: accountId) {
                 NFPManager.shared.referralAccount = account
             }
