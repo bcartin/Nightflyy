@@ -41,16 +41,22 @@ class IAPManager: IAPManaging {
     }
     
     func purchase(venue: Account?) async throws -> Bool {
-        let purchaseResult = try await Qonversion.shared().purchase("basic_subscription_2026")
-        let entitlements = purchaseResult.0
-        if let subscription: Qonversion.Entitlement = entitlements["Basic"], subscription.isActive {
-            if let uid = accountManager.account?.uid {
-                Qonversion.shared().setUserProperty(.userID, value: uid)
+        let products = try await Qonversion.shared().products()
+        guard let main = products["basic_subscription_2026"] else {
+            throw IAPError.productNotFound
+        }
+        let purchaseResult = await Qonversion.shared().purchase(main)
+        if purchaseResult.isSuccessful {
+            if let account = AccountManager.shared.account {
+                Qonversion.shared().setUserProperty(.userID, value: account.uid)
+                Qonversion.shared().setUserProperty(.email, value: account.email ?? "N/A")
+                Qonversion.shared().setUserProperty(.name, value: venue?.name ?? "N/A")
             }
-            if let venueId = venue?.uid  {
-                Qonversion.shared().setUserProperty(.custom, value: venueId)
+            if let venue = venue {
+                Qonversion.shared().setCustomUserProperty("referralAccountId", value: venue.uid)
+                Qonversion.shared().setCustomUserProperty("referralAccountName", value: venue.name ?? "N?A")
             }
-            return subscription.isActive
+            return true
         }
         return false
     }
