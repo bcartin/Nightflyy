@@ -159,8 +159,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/qonversion/qonversion-ios-sdk",
       "state" : {
-        "revision" : "e1ddf3d962d11b76753d5e8f941ef613c9c4a645",
-        "version" : "6.7.0"
+        "revision" : "f610ca5d8d27c8010725d26e8d18283ae210be9d",
+        "version" : "6.0.0"
       }
     },
     {
