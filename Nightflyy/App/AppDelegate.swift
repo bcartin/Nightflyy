@@ -25,6 +25,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 return true
             }
             FirebaseApp.configure(options: fileopts)
+            UIApplication.shared.registerForRemoteNotifications()
+            Messaging.messaging().delegate = PushNotificationsManager.shared
         }
         catch {
             fatalError("Failed to load AppConfiguration")
@@ -50,9 +52,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             Airbridge.initializeSDK(option: option)
         }
         #endif
-
-        UNUserNotificationCenter.current().delegate = self
-        UIApplication.shared.registerForRemoteNotifications()
         
         let coordinator = MainCoordinator()
         coordinator.setUpInAppPurchases()
@@ -84,17 +83,3 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
 }
 
-extension AppDelegate: UNUserNotificationCenterDelegate {
-    
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        PushNotificationsManager.shared.didRegisterForNotifications(deviceToken)
-    }
-    
-    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: any Error) {
-        print("Failed to register for notifications")
-    }
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
-        PushNotificationsManager.shared.userInfo = response.notification.request.content.userInfo
-    }
-}

@@ -51,7 +51,7 @@ class ReviewsDetailViewModel {
     }
     
     var fiveStarMax: CGFloat {
-        return (Double(fiveStarReviews / numberOfReviews)) * fullWidth
+        return numberOfReviews > 0 ? (Double(fiveStarReviews / numberOfReviews)) * fullWidth : 0
     }
     
     var fourStarReviews: Int {
@@ -59,7 +59,7 @@ class ReviewsDetailViewModel {
     }
     
     var fourStarMax: CGFloat {
-        return (Double(fourStarReviews / numberOfReviews)) * fullWidth
+        return numberOfReviews > 0 ? (Double(fourStarReviews / numberOfReviews)) * fullWidth : 0
     }
     
     var threeStarReviews: Int {
@@ -67,7 +67,7 @@ class ReviewsDetailViewModel {
     }
     
     var thressStarMax: CGFloat {
-        return (Double(threeStarReviews / numberOfReviews)) * fullWidth
+        return numberOfReviews > 0 ? (Double(threeStarReviews / numberOfReviews)) * fullWidth : 0
     }
     
     var twoStarReviews: Int {
@@ -75,7 +75,7 @@ class ReviewsDetailViewModel {
     }
     
     var twoStarMax: CGFloat {
-        return (Double(twoStarReviews / numberOfReviews)) * fullWidth
+        return numberOfReviews > 0 ? (Double(twoStarReviews / numberOfReviews)) * fullWidth : 0
     }
     
     var oneStarReviews: Int {
@@ -83,7 +83,7 @@ class ReviewsDetailViewModel {
     }
     
     var oneStarMax: CGFloat {
-        return (Double(oneStarReviews / numberOfReviews)) * fullWidth
+        return numberOfReviews > 0 ? (Double(oneStarReviews / numberOfReviews)) * fullWidth : 0
     }
     
     var subTitleText: String {
