@@ -81,22 +81,33 @@ class ChatsManager {
         }
     }
     
-    func createMessagesListener(uid: String, completion: @escaping ([Message]) -> Void) {
-        var messages = [Message]()
+    func createMessagesListener(uid: String, sinceDate: Date?, completion: @escaping ([Message]) -> Void) {
         messagesListener?.remove()
         let db = FirebaseManager.shared.db
-        let query = db.collection(FirestoreCollections.Chats.value).document(uid).collection(FirestoreCollections.Messages.value)
-//            .whereField("date", isGreaterThan: Date().addingTimeInterval(-3600))
-            .order(by: FirestoreCollections.Messages.date, descending: false)
+        let collection = db.collection(FirestoreCollections.Chats.value).document(uid).collection(FirestoreCollections.Messages.value)
+        var query: Query = collection.order(by: FirestoreCollections.Messages.date, descending: false)
+        if let sinceDate {
+            query = collection
+                .whereField(FirestoreCollections.Messages.date, isGreaterThan: sinceDate)
+                .order(by: FirestoreCollections.Messages.date, descending: false)
+        }
         messagesListener = query.addSnapshotListener { snapshot, error in
+            var newMessages = [Message]()
             snapshot?.documentChanges.forEach { change in
                 if change.type == .added {
                     guard let message = try? change.document.data(as: Message.self) else { return }
-                    messages.append(message)
+                    newMessages.append(message)
                 }
             }
-            completion(messages)
+            if !newMessages.isEmpty {
+                completion(newMessages)
+            }
         }
+    }
+
+    func stopMessagesListener() {
+        messagesListener?.remove()
+        messagesListener = nil
     }
     
     func getChat(with accountId: String) throws -> Chat {
