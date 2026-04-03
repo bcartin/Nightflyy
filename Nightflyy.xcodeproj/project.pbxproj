@@ -372,6 +372,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nightflyy/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app uses your location to display nearby events.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This app uses your location to display nearby events.";
@@ -419,6 +420,7 @@
 				GCC_OPTIMIZATION_LEVEL = s;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nightflyy/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app uses your location to display nearby events.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This app uses your location to display nearby events.";
