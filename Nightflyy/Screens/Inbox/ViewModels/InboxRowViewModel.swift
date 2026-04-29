@@ -7,6 +7,8 @@
 
 import Foundation
 import SwiftUI
+import CoreData
+import OSLog
 
 @Observable @MainActor
 class InboxRowViewModel: Hashable, Identifiable {
@@ -29,7 +31,8 @@ class InboxRowViewModel: Hashable, Identifiable {
     var messageText: String = ""
     var error: Error?
     var shouldScrollToBottom: Bool = false
-    
+    private let viewContext: NSManagedObjectContext = PersistenceController.shared.container.viewContext
+
     init(chat: Chat) {
         self.id = chat.id ?? UUID().uuidString
         self.chat = chat
@@ -76,18 +79,66 @@ class InboxRowViewModel: Hashable, Identifiable {
     func fetchMessages() async {
         if !messagesFetched {
             messagesFetched = true
-            print("Fetching Messages")
-            messages.removeAll()
             guard let chatId = chat.id else { return }
-            ChatsManager.shared.createMessagesListener(uid: chatId) { [weak self] messages in
-                self?.messages = messages
-                self?.shouldScrollToBottom = true
+
+            // Load cached messages for instant display
+            messages = loadMessagesFromCache(chatId: chatId)
+            if !messages.isEmpty {
+                shouldScrollToBottom = true
+            }
+
+            // Start listener for new messages only
+            let latestDate = messages.last?.date
+            ChatsManager.shared.createMessagesListener(uid: chatId, sinceDate: latestDate) { [weak self] newMessages in
+                guard let self else { return }
+                self.saveMessagesToCache(newMessages, chatId: chatId)
+                self.messages.append(contentsOf: newMessages)
+                self.shouldScrollToBottom = true
             }
         }
     }
-    
+
     func stopListeners() {
-        print("Stop Listening!!!")
+        ChatsManager.shared.stopMessagesListener()
+    }
+
+    // MARK: - Core Data Helpers
+
+    private func loadMessagesFromCache(chatId: String) -> [Message] {
+        let request = NSFetchRequest<CachedMessage>(entityName: "CachedMessage")
+        request.predicate = NSPredicate(format: "chatId == %@", chatId)
+        request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        do {
+            let cached = try viewContext.fetch(request)
+            return cached.compactMap { Message.from($0) }
+        }
+        catch {
+            Logger.general.error("Error loading messages from cache: \(error.localizedDescription)")
+            return []
+        }
+    }
+
+    private func saveMessagesToCache(_ messages: [Message], chatId: String) {
+        for message in messages {
+            let request = NSFetchRequest<CachedMessage>(entityName: "CachedMessage")
+            request.predicate = NSPredicate(format: "id == %@", message.id ?? "")
+            request.fetchLimit = 1
+            do {
+                let existing = try viewContext.fetch(request).first
+                let entity = existing ?? CachedMessage(context: viewContext)
+                message.populate(entity)
+                entity.chatId = chatId
+            }
+            catch {
+                Logger.general.error("Error upserting message to cache: \(error.localizedDescription)")
+            }
+        }
+        do {
+            try viewContext.save()
+        }
+        catch {
+            Logger.general.error("Error saving message cache: \(error.localizedDescription)")
+        }
     }
     
     func sendMessage() {

@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ab180/airbridge-ios-sdk-deployment",
       "state" : {
-        "revision" : "d1fffd94d7bc22f46d0127faea2a7974f21bde17",
-        "version" : "4.9.1"
+        "revision" : "5c4fb28e913fcc52f694cd9ca555bf6c298da33b",
+        "version" : "4.9.3"
       }
     },
     {
@@ -133,7 +133,7 @@
       "location" : "https://github.com/mixpanel/mixpanel-swift",
       "state" : {
         "branch" : "master",
-        "revision" : "b4cb3f6e3e3084e1637c4dfe06c2dcda169ff523"
+        "revision" : "6e2a786b1e88b57b90f5a6d401337bc1bb2ba69c"
       }
     },
     {
@@ -159,8 +159,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/qonversion/qonversion-ios-sdk",
       "state" : {
-        "revision" : "f610ca5d8d27c8010725d26e8d18283ae210be9d",
-        "version" : "6.0.0"
+        "revision" : "aec38505b6441cdd2453da9d74a881f3eeab2c09",
+        "version" : "6.9.0"
       }
     },
     {
@@ -177,8 +177,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "bbd81b6725ae874c69e9b8c8804d462356b55523",
-        "version" : "1.10.1"
+        "revision" : "8c0f217f01000dd30f60d6e536569ad4e74291f9",
+        "version" : "1.11.0"
       }
     },
     {
