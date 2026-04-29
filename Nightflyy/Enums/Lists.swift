@@ -10,7 +10,7 @@ import Foundation
 enum VenuesType: String, CaseIterable {
     
     static var allValues: [String] {
-        return allCases.map { $0.rawValue.capitalized }
+        return allCases.map { $0.rawValue }
     }
     
     case Bar
@@ -25,7 +25,7 @@ enum VenuesType: String, CaseIterable {
 enum MusicGenre: String, CaseIterable {
     
     static var allValues: [String] {
-        return allCases.map { $0.rawValue.capitalized }
+        return allCases.map { $0.rawValue }
     }
     
     case Top40 = "Top 40"
@@ -53,7 +53,7 @@ enum MusicGenre: String, CaseIterable {
 enum ClienteleType: String, CaseIterable {
     
     static var allValues: [String] {
-        return allCases.map { $0.rawValue.capitalized }
+        return allCases.map { $0.rawValue }
     }
     
     case YoungProfessional = "Young Professional"
