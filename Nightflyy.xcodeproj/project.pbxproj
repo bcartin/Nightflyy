@@ -366,12 +366,13 @@
 				CODE_SIGN_ENTITLEMENTS = Nightflyy/Nightflyy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_ASSET_PATHS = "\"Nightflyy/Preview Content\"";
 				DEVELOPMENT_TEAM = YVH7KZM656;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nightflyy/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app uses your location to display nearby events.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This app uses your location to display nearby events.";
@@ -388,7 +389,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.2.0;
+				MARKETING_VERSION = 3.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.com.slydelife.Slyde;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -412,13 +413,14 @@
 				CODE_SIGN_ENTITLEMENTS = Nightflyy/Nightflyy.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_ASSET_PATHS = "\"Nightflyy/Preview Content\"";
 				DEVELOPMENT_TEAM = YVH7KZM656;
 				ENABLE_PREVIEWS = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nightflyy/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app uses your location to display nearby events.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This app uses your location to display nearby events.";
@@ -435,7 +437,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.2.0;
+				MARKETING_VERSION = 3.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.slydelife.Slyde;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -509,8 +511,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/qonversion/qonversion-ios-sdk";
 			requirement = {
-				kind = exactVersion;
-				version = 6.0.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
 			};
 		};
 		CBC270662E0487C20075C931 /* XCRemoteSwiftPackageReference "mixpanel-swift" */ = {

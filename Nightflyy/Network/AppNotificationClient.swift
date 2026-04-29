@@ -18,8 +18,10 @@ class AppNotificationClient {
             return []
         }
         var notifications: [AppNotification] = .init()
-        let dbRef = FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value).document(uid).collection(FirestoreCollections.Accounts.notifications)
-//            .whereField("date", isGreaterThan: lastUpdated ?? Date(timeIntervalSince1970: 0))
+        var dbRef: Query = FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value).document(uid).collection(FirestoreCollections.Accounts.notifications)
+        if let lastUpdated {
+            dbRef = dbRef.whereField("date", isGreaterThan: lastUpdated)
+        }
         let snapshot = try await dbRef.getDocuments()
         notifications = try snapshot.documents.map({ document in
             return try document.data(as: AppNotification.self)

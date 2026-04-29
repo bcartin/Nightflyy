@@ -11,16 +11,19 @@ enum UserDefaultsKeys :String {
     case hideSwipeForActionsPrompt
     case bonusCredit
     case nfpReferred
-    
+    case lastNotificationsFetchDate
+
     func getValue<T>() -> T? {
         switch self {
-            
+
         case .hideSwipeForActionsPrompt:
-            UserDefaults.standard.bool(forKey: rawValue) as? T 
+            UserDefaults.standard.bool(forKey: rawValue) as? T
         case .bonusCredit:
             UserDefaults.standard.integer(forKey: rawValue) as? T
         case .nfpReferred:
             UserDefaults.standard.string(forKey: rawValue) as? T
+        case .lastNotificationsFetchDate:
+            UserDefaults.standard.object(forKey: rawValue) as? Date as? T
         }
    
     }
