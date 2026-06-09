@@ -44,6 +44,15 @@ struct RedeemButtonView: View {
             Text("Credits Remaining this week: 1")
                 .font(.system(size: 16))
                 .foregroundColor(.gray)
+            
+            Button {
+                viewModel.changeView(to: .youtubeVideo)
+            } label: {
+                Text("How to use Nightflly+")
+                    .font(.system(size: 16))
+                    .foregroundColor(.mainPurple)
+            }
+
         }
         
     }
