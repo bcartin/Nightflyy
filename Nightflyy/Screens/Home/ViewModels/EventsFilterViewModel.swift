@@ -52,8 +52,9 @@ class EventsFilterViewModel {
     
     func setFilterAsNearby() {
         Task {
+            guard let location = LocationManager.shared.currentLocation else { return }
             selectedFiler = .nearby
-            await EventsManager.shared.fetchNearbyVenues()
+            await EventsManager.shared.fetchNearbyVenues(for: location)
         }
     }
     

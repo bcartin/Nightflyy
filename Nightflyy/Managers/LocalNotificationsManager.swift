@@ -36,6 +36,19 @@ class LocalNotificationsManager: LocalNotificationsManaging {
         unCenter.add(request)
     }
     
+    func sendLocalNotification(title: String, body: String) async {
+        let content = UNMutableNotificationContent()
+        content.title = ""
+        content.body = ""
+        content.categoryIdentifier = "alarm"
+        content.sound = UNNotificationSound.default
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1.0, repeats: false)
+        let request = UNNotificationRequest(identifier: "", content: content, trigger: trigger)
+        
+        try? await unCenter.add(request)
+    }
+    
     func removeAllScheduledNotifications() {
         unCenter.removeAllPendingNotificationRequests()
     }

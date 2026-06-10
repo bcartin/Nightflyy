@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 // MARK: - Venue Profile Convenience
 
@@ -21,6 +22,14 @@ extension Account {
     
     var hasVenuePerk: Bool {
         perkName != nil && perkDetails != nil
+    }
+    
+    func distance(to location: CLLocation) -> CLLocationDistance {
+        return location.distance(from: self.getCLLocation())
+    }
+    
+    func getCLLocation() -> CLLocation {
+        return CLLocation(latitude: self.location?.latitude ?? 0, longitude: self.location?.longitude ?? 0)
     }
     
 }

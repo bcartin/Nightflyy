@@ -15,8 +15,8 @@ protocol EventsManaging: AnyObject {
     var interestedEvents: [Event] { get set }
     var hostingEvents: [Event] { get set }
     var locationVenues: [Account] { get set }
-    func fetchNearbyEvents() async
-    func fetchNearbyVenues() async
+    func fetchNearbyEvents(for location: CLLocation) async
+    func fetchNearbyVenues(for location: CLLocation) async
     func fetchFollowingEvents(account: Account) async
     func fetchHubEvents(refetch: Bool) async
     func fetchHostingEvents(refetch: Bool) async
