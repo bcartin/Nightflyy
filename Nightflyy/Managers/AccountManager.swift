@@ -31,8 +31,7 @@ class AccountManager: AccountManaging {
     }
     
     var isPlusMember: Bool {
-        return true
-//        account?.hasActiveSubscription ?? false
+        account?.hasActiveSubscription ?? false
     }
     
     var isPlusProvider: Bool {
