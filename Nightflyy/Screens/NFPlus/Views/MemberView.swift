@@ -17,7 +17,9 @@ struct MemberView: View {
             
             switch viewModel.displayView {
             case .noCredits:
-                NoCreditsView(viewModel: $viewModel)
+//                NoCreditsView(viewModel: $viewModel)
+                RedeemButtonView(viewModel: $viewModel)
+                    .transition(.blurReplace)
             case .hasCredits:
                 RedeemButtonView(viewModel: $viewModel)
                     .transition(.blurReplace)

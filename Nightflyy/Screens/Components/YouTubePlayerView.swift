@@ -46,6 +46,23 @@ struct YouTubePlayerView: View {
                 .cornerRadius(12)
                 .shadow(radius: 5)
                 .padding()
+            
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Step 1 - Tap the “Use Your Perk” tab at the bottom of the home screen.")
+                
+                Text("Step 2 - Tap the glowing Nightflyy Plus button.")
+                
+                Text("Step 3 - Show the empty 4-digit code screen to your server, bartender, or door attendant.")
+                
+                Text("Step 4 - Your server will type in a code then tap redeem.")
+                
+                Text("Step 5 - Your perk will be provided and it should be reflected on your bill.")
+                
+                Text("*Afterwards, your Nightflyy Plus screen will lock until the following Monday morning.")
+            }
+            .foregroundStyle(.white)
+            .font(.system(size: 14))
+            .padding(.horizontal)
         }
     }
 }

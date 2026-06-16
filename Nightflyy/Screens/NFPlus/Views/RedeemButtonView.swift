@@ -15,6 +15,20 @@ struct RedeemButtonView: View {
     var body: some View {
         VStack(spacing: 36) {
             
+            Button {
+                viewModel.changeView(to: .youtubeVideo)
+            } label: {
+                Text("Watch the tutorial")
+                    .font(.system(size: 12))
+                    .padding(8)
+                    .foregroundColor(.white)
+                    .background {
+                        Capsule()
+                            .strokeBorder(.mainPurple, lineWidth: 1)
+                    }
+            }
+            
+            
             Text("Tap Below")
                 .font(.system(size: 16))
                 .foregroundColor(.gray)
@@ -45,14 +59,8 @@ struct RedeemButtonView: View {
                 .font(.system(size: 16))
                 .foregroundColor(.gray)
             
-            Button {
-                viewModel.changeView(to: .youtubeVideo)
-            } label: {
-                Text("How to use Nightflly+")
-                    .font(.system(size: 16))
-                    .foregroundColor(.mainPurple)
-            }
-
+            Spacer()
+                .frame(height: 48)
         }
         
     }
