@@ -19,13 +19,16 @@ class LocationManager: NSObject {
     
     private let eventsManager: any EventsManaging
     private let authenticationManager: AuthenticationManager
+    private let localNotificationsManager: LocalNotificationsManaging
     
     private init(
         eventsManager: any EventsManaging = EventsManager.shared,
-        authenticationManager: AuthenticationManager = AuthenticationManager.shared
+        authenticationManager: AuthenticationManager = AuthenticationManager.shared,
+        localNotificationsManager: LocalNotificationsManaging = LocalNotificationsManager.shared
     ) {
         self.eventsManager = eventsManager
         self.authenticationManager = authenticationManager
+        self.localNotificationsManager = localNotificationsManager
         super.init()
         commonSetup();
     }
@@ -76,12 +79,16 @@ extension LocationManager: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        let nearbyVenues = self.nearbyVenues()
-        guard let venue = nearbyVenues.first(where: { $0.uid == region.identifier }) else {
-            return
+        Task {
+            let nearbyVenues = self.nearbyVenues()
+            guard let venue = nearbyVenues.first(where: { $0.uid == region.identifier }) else {
+                return
+            }
+            
+            let title = "Welcome to \(venue.name ?? "")✨"
+            let body = "Tap here to get \(venue.perkName ?? "") 🥂"
+            await localNotificationsManager.sendLocalNotification(title: title, body: body)
         }
-        
-        //send local notification about venue
     }
     
     func fetchRecords() {
@@ -119,7 +126,7 @@ extension LocationManager {
         guard let currentLocation = self.currentLocation else { return [] }
         
         let nearbyVenues = eventsManager.locationVenues
-        let sortedClosest = nearbyVenues.sorted(by: { $0.distance(to: currentLocation) < $1.distance(to: currentLocation)})
+        let sortedClosest = nearbyVenues.filter{$0.plusProvider ?? false == true}.sorted(by: { $0.distance(to: currentLocation) < $1.distance(to: currentLocation)})
         return Array(sortedClosest.prefix(15))
     }
     
