@@ -16,7 +16,7 @@ class NotificationsSettingsViewModel {
     var isLoading: Bool = false
     
     init() {
-        self.account =  AccountManager.shared.account ?? Account()
+        self.account = AccountManager.shared.account ?? Account()
     }
     
     var allowPushNotificaitons: Bool {

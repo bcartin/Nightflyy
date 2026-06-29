@@ -78,17 +78,28 @@ extension LocationManager: CLLocationManagerDelegate {
         fetchRecords()
     }
     
-    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        Task {
-            let nearbyVenues = self.nearbyVenues()
-            guard let venue = nearbyVenues.first(where: { $0.uid == region.identifier }) else {
-                return
-            }
-            
-            let title = "Welcome to \(venue.name ?? "")✨"
-            let body = "Tap here to get \(venue.perkName ?? "") 🥂"
-            await localNotificationsManager.sendLocalNotification(title: title, body: body)
+    func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
+        let nearbyVenues = self.nearbyVenues()
+        guard let venue = nearbyVenues.first(where: { $0.uid == region.identifier }) else {
+            return
         }
+        
+        let title = "Welcome to \(venue.name ?? "")✨"
+        let body = "Tap here to get \(venue.perkName ?? "") 🥂"
+        let data: [String:Any] = ["type":UniversalLinkType.venue.rawValue, "id":venue.uid]
+        localNotificationsManager.sendLocalNotification(title: title, body: body, data: data)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+        let nearbyVenues = self.nearbyVenues()
+        guard let venue = nearbyVenues.first(where: { $0.uid == region.identifier }) else {
+            return
+        }
+        
+        let title = "Welcome to \(venue.name ?? "")✨"
+        let body = "Tap here to get \(venue.perkName ?? "") 🥂"
+        let data: [String:Any] = ["type":UniversalLinkType.venue.rawValue, "id":venue.uid]
+        localNotificationsManager.sendLocalNotification(title: title, body: body, data: data)
     }
     
     func fetchRecords() {

@@ -10,6 +10,7 @@ import SwiftUI
 struct NotificationsSettingsView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(ToastsManager.self) private var toastsManager
+    @Environment(PushNotificationsManager.self) private var pushNotificationsManager
     @Bindable var viewModel: NotificationsSettingsViewModel
     
     var body: some View {
@@ -80,6 +81,9 @@ struct NotificationsSettingsView: View {
         }
         .tint(.white)
         .interactiveToast($toastsManager.toasts)
+        .task {
+            await pushNotificationsManager.refreshAuthorizationStatus()
+        }
     }
     
     @ViewBuilder
