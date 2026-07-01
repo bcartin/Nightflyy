@@ -78,6 +78,14 @@ struct NotificationsSettingsView: View {
                 
             }
             .errorAlert(error: $viewModel.error, buttonTitle: "OK")
+            .alert("Change in Settings", isPresented: $viewModel.showSettingsAlert) {
+                Button("Not Now", role: .cancel) { }
+                Button("Open Settings") {
+                    viewModel.openAppSettings()
+                }
+            } message: {
+                Text("You can turn push notifications on or off from the iOS Settings app.")
+            }
         }
         .tint(.white)
         .interactiveToast($toastsManager.toasts)

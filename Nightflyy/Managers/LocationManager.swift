@@ -79,27 +79,16 @@ extension LocationManager: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
-        let nearbyVenues = self.nearbyVenues()
-        guard let venue = nearbyVenues.first(where: { $0.uid == region.identifier }) else {
-            return
-        }
-        
-        let title = "Welcome to \(venue.name ?? "")✨"
-        let body = "Tap here to get \(venue.perkName ?? "") 🥂"
-        let data: [String:Any] = ["type":UniversalLinkType.venue.rawValue, "id":venue.uid]
-        localNotificationsManager.sendLocalNotification(title: title, body: body, data: data)
+        // Only notify when the user is actually inside the region. Without this
+        // guard, iOS reporting an `.outside`/`.unknown` state (which happens
+        // every time monitoring starts) would fire a notification even when the
+        // user is miles away from the venue.
+        guard state == .inside else { return }
+        sendVenueNotification(for: region)
     }
-    
+
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        let nearbyVenues = self.nearbyVenues()
-        guard let venue = nearbyVenues.first(where: { $0.uid == region.identifier }) else {
-            return
-        }
-        
-        let title = "Welcome to \(venue.name ?? "")✨"
-        let body = "Tap here to get \(venue.perkName ?? "") 🥂"
-        let data: [String:Any] = ["type":UniversalLinkType.venue.rawValue, "id":venue.uid]
-        localNotificationsManager.sendLocalNotification(title: title, body: body, data: data)
+        sendVenueNotification(for: region)
     }
     
     func fetchRecords() {
@@ -114,7 +103,35 @@ extension LocationManager: CLLocationManagerDelegate {
 
 
 extension LocationManager {
-    
+
+    /// Minimum time that must elapse before the same venue can trigger another notification.
+    private static let notificationDedupWindow: TimeInterval = 12 * 60 * 60
+
+    /// Sends the venue welcome notification, unless one was already sent for the
+    /// same venue within the last 12 hours. This prevents the repeated
+    /// notifications caused by monitoring restarting on every location update.
+    private func sendVenueNotification(for region: CLRegion) {
+        let nearbyVenues = self.nearbyVenues()
+        guard let venue = nearbyVenues.first(where: { $0.uid == region.identifier }) else {
+            return
+        }
+
+        var timestamps: [String: Date] = UserDefaultsKeys.venueNotificationTimestamps.getValue() ?? [:]
+
+        if let lastSent = timestamps[venue.uid],
+           Date.now.timeIntervalSince(lastSent) < Self.notificationDedupWindow {
+            return
+        }
+
+        let title = "Welcome to \(venue.name ?? "")✨"
+        let body = "Tap here to get \(venue.perkName ?? "") 🥂"
+        let data: [String: Any] = ["type": UniversalLinkType.venue.rawValue, "id": venue.uid]
+        localNotificationsManager.sendLocalNotification(title: title, body: body, data: data)
+
+        timestamps[venue.uid] = .now
+        UserDefaultsKeys.venueNotificationTimestamps.setValue(timestamps)
+    }
+
     func restartVenueMonitoring(for locations: [Account]) async {
         if authenticationManager.isSignedIn {
             await stopMonitoring()
