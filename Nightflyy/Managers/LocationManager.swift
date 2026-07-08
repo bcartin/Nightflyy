@@ -140,7 +140,7 @@ extension LocationManager {
             for venue in nearbyVenues {
                 let geofenceRegionCenter = CLLocationCoordinate2DMake(venue.getCLLocation().coordinate.latitude, venue.getCLLocation().coordinate.longitude)
                 let geofenceRegion = CLCircularRegion(center: geofenceRegionCenter,
-                                                      radius: 50,
+                                                      radius: 20,
                                                       identifier: "\(venue.uid)")
                 geofenceRegion.notifyOnEntry = true
                 geofenceRegion.notifyOnExit = true
