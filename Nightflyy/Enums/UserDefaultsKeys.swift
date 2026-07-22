@@ -12,6 +12,7 @@ enum UserDefaultsKeys :String {
     case bonusCredit
     case nfpReferred
     case lastNotificationsFetchDate
+    case venueNotificationTimestamps
 
     func getValue<T>() -> T? {
         switch self {
@@ -24,8 +25,10 @@ enum UserDefaultsKeys :String {
             UserDefaults.standard.string(forKey: rawValue) as? T
         case .lastNotificationsFetchDate:
             UserDefaults.standard.object(forKey: rawValue) as? Date as? T
+        case .venueNotificationTimestamps:
+            UserDefaults.standard.dictionary(forKey: rawValue) as? [String: Date] as? T
         }
-   
+
     }
     
     func setValue<T>(_ value: T) {

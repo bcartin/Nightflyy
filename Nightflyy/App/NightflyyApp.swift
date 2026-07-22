@@ -42,6 +42,7 @@ struct NightflyyApp: App {
                             .environment(toastsManager)
                             .environment(router)
                             .environment(authenticationManager)
+                            .environment(pushNotificationsManager)
                 }
                 else {
                     SignedOutView()

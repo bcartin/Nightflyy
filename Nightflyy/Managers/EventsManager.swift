@@ -36,9 +36,8 @@ class EventsManager: EventsManaging {
         self.accountManager = accountManager
     }
     
-    func fetchNearbyEvents() async {
+    func fetchNearbyEvents(for location: CLLocation) async {
         do {
-            guard let location = LocationManager.shared.currentLocation else { return }
             nearbyEvents = try await geoClient.fetchEventsForLocation(location)
         }
         catch {
@@ -46,10 +45,9 @@ class EventsManager: EventsManaging {
         }
     }
     
-    func fetchNearbyVenues() async {
+    func fetchNearbyVenues(for location: CLLocation) async {
         do {
             locationVenues.removeAll()
-            guard let location = LocationManager.shared.currentLocation else { return }
             locationVenues = try await geoClient.fetchVenuesForLocation(location)
         }
         catch {

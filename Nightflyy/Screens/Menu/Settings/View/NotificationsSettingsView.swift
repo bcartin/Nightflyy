@@ -10,6 +10,7 @@ import SwiftUI
 struct NotificationsSettingsView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(ToastsManager.self) private var toastsManager
+    @Environment(PushNotificationsManager.self) private var pushNotificationsManager
     @Bindable var viewModel: NotificationsSettingsViewModel
     
     var body: some View {
@@ -77,9 +78,20 @@ struct NotificationsSettingsView: View {
                 
             }
             .errorAlert(error: $viewModel.error, buttonTitle: "OK")
+            .alert("Change in Settings", isPresented: $viewModel.showSettingsAlert) {
+                Button("Not Now", role: .cancel) { }
+                Button("Open Settings") {
+                    viewModel.openAppSettings()
+                }
+            } message: {
+                Text("You can turn push notifications on or off from the iOS Settings app.")
+            }
         }
         .tint(.white)
         .interactiveToast($toastsManager.toasts)
+        .task {
+            await pushNotificationsManager.refreshAuthorizationStatus()
+        }
     }
     
     @ViewBuilder

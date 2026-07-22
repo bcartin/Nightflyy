@@ -31,6 +31,8 @@ struct MemberView: View {
                 NFPVenuesView(viewModel: $viewModel)
             case .help:
                 NFPHelpView(viewModel: $viewModel)
+            case .youtubeVideo:
+                YouTubePlayerView(videoID: "0bGwcFEffBE")
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -52,7 +54,7 @@ struct MemberView: View {
                     switch viewModel.displayView {
                     case .hasCredits, .noCredits, .redeemSuccess:
                         dismiss()
-                    case .codeScreen, .venues, .help:
+                    case .codeScreen, .venues, .help, .youtubeVideo:
                         viewModel.seeVenuesButtonIsVisible = true
                         viewModel.changeView(to: viewModel.mainDisplayView)
                     }

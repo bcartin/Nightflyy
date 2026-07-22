@@ -17,9 +17,12 @@ class MainCoordinator {
             AnalyticsManager.setUserID(value: uid)
             await AccountManager.shared.fetchAccount(uid: uid)
             PushNotificationsManager.shared.configure()
-            await EventsManager.shared.fetchNearbyEvents()
-            await EventsManager.shared.fetchNearbyVenues()
             await NFPManager.shared.checkSubscriptionStatus()
+            if let location = LocationManager.shared.currentLocation {
+                await EventsManager.shared.fetchNearbyEvents(for: location)
+                await EventsManager.shared.fetchNearbyVenues(for: location)
+                LocationManager.shared.startMonitoring()
+            }
             AppState.shared.showSplashScreen = false
             await ChatsManager.shared.initChatsListener(uid: uid)
         }

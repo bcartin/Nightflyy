@@ -16,6 +16,7 @@ enum RedeemView {
     case redeemSuccess
     case venues
     case help
+    case youtubeVideo
 }
 
 @Observable @MainActor
