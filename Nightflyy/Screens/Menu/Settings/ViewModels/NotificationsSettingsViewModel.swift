@@ -11,12 +11,13 @@ import SwiftUI
 class NotificationsSettingsViewModel {
     
     var error: Error?
-    
+
     var account: Account
     var isLoading: Bool = false
+    var showSettingsAlert: Bool = false
     
     init() {
-        self.account =  AccountManager.shared.account ?? Account()
+        self.account = AccountManager.shared.account ?? Account()
     }
     
     var allowPushNotificaitons: Bool {
@@ -24,9 +25,7 @@ class NotificationsSettingsViewModel {
             PushNotificationsManager.shared.authorizationStatus == .authorized
         }
         set(newValue) {
-            Task {
-                try? await PushNotificationsManager.shared.requestPermission()
-            }
+            showSettingsAlert = true
         }
     }
     
@@ -117,5 +116,16 @@ class NotificationsSettingsViewModel {
                 }
             }
     }
+    
+    func openAppSettings() {
+        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+        
+        if UIApplication.shared.canOpenURL(settingsUrl) {
+            UIApplication.shared.open(settingsUrl, options: [:], completionHandler: nil)
+        }
+    }
+
     
 }
