@@ -15,7 +15,7 @@ class AppNotificationClient {
     
     static func fetchNewAppNotifications(lastUpdated: Date? = nil) async throws -> [AppNotification] {
         guard let uid = AccountManager.shared.account?.uid else {
-            return []
+            throw NetworkError.unauthorized
         }
         var notifications: [AppNotification] = .init()
         var dbRef: Query = FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value).document(uid).collection(FirestoreCollections.Accounts.notifications)

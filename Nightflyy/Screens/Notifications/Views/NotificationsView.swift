@@ -53,7 +53,7 @@ struct NotificationsView: View {
                 }
                 .listStyle(PlainListStyle())
                 .refreshable {
-                    await AppNotificationsManager.shared.fetchNotifications(refetch: true)
+                    await AppNotificationsManager.shared.fetchNotifications()
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
