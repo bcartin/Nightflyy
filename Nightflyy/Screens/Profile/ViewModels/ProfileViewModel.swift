@@ -137,12 +137,12 @@ class ProfileViewModel: Hashable {
         }
         else {
             if attendingEvents.isEmpty {
-                attendingEvents = await EventClient.fetchEventsAttending(uid: account.uid).map{EventListItemViewModel(event: $0)}.sortedByDate()
+                attendingEvents = await EventClient.fetchEventsAttending(uid: account.uid).removingPrivateEvents().map{EventListItemViewModel(event: $0)}.sortedByDate()
             }
             if futureHostingEvents.isEmpty || pastHostingEvents.isEmpty {
                 let hostingEvents = await EventClient.fetchEventsHostedBy(uid: account.uid)
-                pastHostingEvents = hostingEvents.onlyPastEvents().map{EventListItemViewModel(event: $0)}.sortedByDate()
-                futureHostingEvents = hostingEvents.removingPastEvents().map{EventListItemViewModel(event: $0)}.sortedByDate()
+                pastHostingEvents = hostingEvents.onlyPastEvents().removingPrivateEvents().map{EventListItemViewModel(event: $0)}.sortedByDate()
+                futureHostingEvents = hostingEvents.removingPastEvents().removingPrivateEvents().map{EventListItemViewModel(event: $0)}.sortedByDate()
             }
         }
     }
@@ -262,13 +262,11 @@ extension ProfileViewModel { // VENUE SPECIFIC FIELDS & FUNCTIONS
         return "\(reviewsCount)"
     }
     
-//    func getNumberOfReviews() {
-//        Task {
-//            if !isPersonalAccount {
-//                account.reviews = await AccountClient.fetchAccountReviews(for: account.uid)
-//            }
-//        }
-//    }
+    func getNumberOfReviews() async {
+            if !isPersonalAccount {
+                account.reviews = await AccountClient.fetchAccountReviews(for: account.uid)
+            }
+    }
     
     func openWebsite() {
         guard let url = URL(string: account.website ?? "") else { return }

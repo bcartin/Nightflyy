@@ -21,4 +21,8 @@ extension [Event] {
         return self.filter({$0.endDate ?? Date() < Date()})
     }
     
+    func removingPrivateEvents() -> [Event] {
+        return self.filter({$0.eventIsPrivate == false})
+    }
+    
 }

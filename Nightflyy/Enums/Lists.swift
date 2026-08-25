@@ -19,6 +19,7 @@ enum VenuesType: String, CaseIterable {
     case Club
     case StripClub = "Strip Club"
     case Other
+    case LiveMusic = "Live Music"
     
 }
 
@@ -48,6 +49,11 @@ enum MusicGenre: String, CaseIterable {
     case Classical
     case Amapiano
     case House
+    case Kompa
+    case Dembow
+    case Throwbacks
+    case Disco
+    case Bollywood
 }
 
 enum ClienteleType: String, CaseIterable {
