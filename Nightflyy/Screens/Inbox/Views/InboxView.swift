@@ -69,6 +69,9 @@ struct InboxView: View {
             .sheet(isPresented: $viewModel.shouldPresentNewChatView) {
                 NewChatView(viewModel: NewChatViewModel())
             }
+            .onAppear {
+                print(ChatsManager.shared.hasNewChats)
+            }
         }
         
         

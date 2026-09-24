@@ -84,8 +84,7 @@ class NFPRedeemViewModel {
     }
     
     func navigateToProfile(account: Account) {
-        let viewModel = ProfileViewModel(account: account)
-        Router.shared.navigateTo(.Profile(viewModel))
+        Router.shared.navigateToProfile(account: account)
     }
     
 }

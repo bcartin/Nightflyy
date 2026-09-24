@@ -12,6 +12,7 @@ struct Message: Codable, Identifiable {
     
     @DocumentID var id = UUID().uuidString
     var sender: String
+    var senderName: String
     var recipient: String
     var date: Date?
     var type: MessageType
@@ -22,6 +23,7 @@ struct Message: Codable, Identifiable {
         case date
         case type = "message_type"
         case sender
+        case senderName = "sender_name"
         case recipient
         case messageData = "message_data"
     }

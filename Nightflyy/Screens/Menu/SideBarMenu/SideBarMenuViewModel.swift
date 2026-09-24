@@ -22,10 +22,8 @@ class SideBarMenuViewModel {
     }
     
     func navigateToProfile() {
-        if let account = AccountManager.shared.account {
-            let viewModel = ProfileViewModel(account: account)
-            Router.shared.navigateTo(.Profile(viewModel))
-        }
+        let account = AccountManager.shared.account
+        Router.shared.navigateToProfile(account: account)
     }
     
     func selectMenuItem(_ item: MenuItem) {

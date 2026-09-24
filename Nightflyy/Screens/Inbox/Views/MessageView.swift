@@ -67,6 +67,7 @@ struct MessageView: View {
 
 #Preview {
     MessageView(viewModel: MessageViewModel(message: Message(sender: "",
+                                                             senderName: "",
                                                              recipient: "",
                                                              type: .text,
                                                              messageData: MessageData())))

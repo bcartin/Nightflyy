@@ -25,7 +25,19 @@ class NotificationsSettingsViewModel {
             PushNotificationsManager.shared.authorizationStatus == .authorized
         }
         set(newValue) {
-            showSettingsAlert = true
+            Task {
+                if PushNotificationsManager.shared.authorizationStatus == .notDetermined {
+                    do {
+                        try await PushNotificationsManager.shared.requestPermission()
+                    }
+                    catch {
+                        self.error = error
+                    }
+                }
+                else {
+                    showSettingsAlert = true
+                }
+            }
         }
     }
     

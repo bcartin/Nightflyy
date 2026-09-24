@@ -68,12 +68,7 @@ class EventListItemViewModel: Hashable {
     }
     
     func navigateToEvent() {
-        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: { [weak self] in
-//            guard let self = self else { return }
-            let viewModel = EventViewModel(event: self.event, eventOwner: self.eventOwner)
-            Router.shared.navigateTo(.Event(viewModel))
-//        })
+        Router.shared.navigateToEvent(event: self.event, eventOwner: self.eventOwner)
     }
     
     func markAsSelected() {

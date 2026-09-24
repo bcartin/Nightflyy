@@ -22,10 +22,17 @@ class ChatsManager {
         self.accountManager = accountManager ?? AccountManager.shared
     }
     
-    var chats: [Chat] = []
     var viewModels: [InboxRowViewModel] = []
     private var listener: ListenerRegistration?
     private var messagesListener: ListenerRegistration?
+    var hasNewChats: Bool {
+        viewModels.contains { $0.shouldHighlight == true }
+    }
+    
+    var newChatsCount: Int {
+        viewModels.count { $0.shouldHighlight == true
+        }
+    }
     
     func initChatsListener(uid: String) async {
         self.createChatsListenerChats(uid: uid) { [weak self] chats in
@@ -108,6 +115,15 @@ class ChatsManager {
     func stopMessagesListener() {
         messagesListener?.remove()
         messagesListener = nil
+    }
+
+    /// Stops all listeners and clears cached chats. Call on logout so the
+    /// previous user's data and listeners don't survive into the next session.
+    func stopChatsListener() {
+        listener?.remove()
+        listener = nil
+        stopMessagesListener()
+        viewModels = []
     }
     
     func getChat(with accountId: String) throws -> Chat {

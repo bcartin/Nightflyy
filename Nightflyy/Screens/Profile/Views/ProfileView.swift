@@ -12,6 +12,7 @@ struct ProfileView: View {
     @Environment(Router.self) private var router
     @Environment(ToastsManager.self) private var toastsManager
     @Bindable var viewModel: ProfileViewModel
+    @State private var hasLoadedInitialData = false
     var safeArea: EdgeInsets
     var size: CGSize
     
@@ -178,8 +179,12 @@ struct ProfileView: View {
         .toolbarVisibility(.hidden, for: .navigationBar)
         .background(.backgroundBlack)
         .task {
-            await viewModel.loadAccountEvents()
             viewModel.updateAccount()
+            
+            guard !hasLoadedInitialData else { return }
+            hasLoadedInitialData = true
+            await viewModel.loadAccountEvents()
+            
         }
         .sheet(item: $viewModel.selectedPresentView) { screen in
             switch screen {

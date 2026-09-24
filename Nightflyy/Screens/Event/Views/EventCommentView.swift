@@ -23,12 +23,14 @@ struct EventCommentView: View {
                     Text(viewModel.comment.date.timeAgo())
                         .font(.system(size: 11))
                         .foregroundStyle(.gray)
+                        
                     
                     Spacer()
                 }
                 
                 Text(viewModel.comment.comment)
                     .font(.system(size: 13))
+                    .fontWeight(viewModel.shouldHighlight ? .heavy : .regular)
             }
             .foregroundStyle(.white)
             

@@ -131,20 +131,19 @@ class NotificationViewModel {
     
     func goToProfile() {
         Task {
-            if let account = await AccountClient.fetchAccount(accountId: notification.sender) {
-                let viewModel = ProfileViewModel(account: account)
-                Router.shared.navigateTo(.Profile(viewModel))
-            }
+            let account = await AccountClient.fetchAccount(accountId: notification.sender)
+            Router.shared.navigateToProfile(account: account)
         }
     }
     
     func goToEvent() {
-        guard let eventId =  notification.notificationData.event_id else { return }
+        guard let eventId = notification.notificationData.event_id else {
+            Router.shared.navigateTo(.NotFound(.event))
+            return
+        }
         Task {
-            if let event = await EventClient.fetchEvent(eventId: eventId) {
-                let viewModel = EventViewModel(event: event)
-                Router.shared.navigateTo(.Event(viewModel))
-            }
+            let event = await EventClient.fetchEvent(eventId: eventId)
+            Router.shared.navigateToEvent(event: event)
         }
     }
     

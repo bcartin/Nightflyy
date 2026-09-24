@@ -22,7 +22,7 @@ extension [Event] {
     }
     
     func removingPrivateEvents() -> [Event] {
-        return self.filter({$0.eventIsPrivate == false})
+        return self.filter({$0.eventIsPrivate != true})
     }
     
 }

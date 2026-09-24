@@ -79,6 +79,7 @@ struct NotificationsView: View {
             }
             .task {
                 await AppNotificationsManager.shared.fetchNotifications()
+                AccountManager.shared.resetBadgeCount()
             }
         }
     }

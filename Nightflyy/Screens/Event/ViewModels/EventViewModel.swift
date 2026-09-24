@@ -127,15 +127,22 @@ class EventViewModel: Hashable {
         event.eventVenueId != nil
     }
     
+    var hasNewComments: Bool {
+        event.newComments ?? 0 > 0
+    }
+    
+    var newComments: String {
+        guard let newComments = event.newComments else { return "" }
+        return "\(newComments)"
+    }
+    
     func setAttendanceStatus() {
         guard let uid = AccountManager.shared.account?.uid else { return }
         self.attendanceStatus = event.getAttendanceStatus(uid: uid)
     }
     
     func navigateToOwnerProfile() {
-        guard let account = eventOwner else { return }
-        let viewModel = ProfileViewModel(account: account)
-        Router.shared.navigateTo(.Profile(viewModel))
+        Router.shared.navigateToProfile(account: eventOwner)
     }
     
     func markAsAttenging() {
@@ -271,9 +278,10 @@ class EventViewModel: Hashable {
         }
     }
     
-    func fetchEventComments(since: Date? = nil) async {
+    func fetchEventComments() async {
         do {
-            let comments = try await CommentsClient.fetchComments(for: event.uid, since: since)
+            let latestComment = self.comments.first?.date.addingTimeInterval(1)
+            let comments = try await CommentsClient.fetchComments(for: event.uid, since: latestComment)
             if self.comments.isEmpty {
                 self.comments = comments
             }
@@ -310,11 +318,18 @@ class EventViewModel: Hashable {
                                   comment: commentText,
                                   account: uid)
             try CommentsClient.saveComment(for: event.uid, comment: comment)
+            //Update the new comments counter
+            let newComments = event.newComments ?? 0
+            event.newComments = newComments + 1
+            try event.save()
+            
+            //Send notification
             sendCommentNotifiation()
             self.commentText = ""
-            let latestComment = self.comments.first?.date
+            
+            //Fetch comments to display new comment on the list
             Task {
-                await fetchEventComments(since: latestComment)
+                await fetchEventComments()
             }
         }
         catch {
@@ -323,18 +338,27 @@ class EventViewModel: Hashable {
     }
     
     func navigateToVenue() {
-        guard let venueId = event.eventVenueId else {return}
+        guard let venueId = event.eventVenueId else {
+            Router.shared.navigateTo(.NotFound(.profile))
+            return
+        }
         Task {
-            guard let venue = await AccountClient.fetchAccount(accountId: venueId) else { return }
-            let viewModel = ProfileViewModel(account: venue)
-            Router.shared.navigateTo(.Profile(viewModel))
+            let venue = await AccountClient.fetchAccount(accountId: venueId)
+            Router.shared.navigateToProfile(account: venue)
         }
     }
     
-//    func getNumberOfComments() {
-//        Task {
-//            self.numberOfComments = await CommentsClient.getNumberOfComments(for: event.uid)
-//        }
-//    }
+    func updateCommentsCounter() {
+        if isOwner {
+            event.lastCommentsCheck = Date()
+            event.newComments = 0
+            do {
+                try event.save()
+            }
+            catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
     
 }

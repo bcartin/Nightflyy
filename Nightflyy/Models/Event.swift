@@ -7,8 +7,6 @@
 
 import Foundation
 import FirebaseFirestore
-//import FirebaseFirestoreSwift
-//import CoreLocation
 
 struct Event: Identifiable, Codable {
     static var collection: String = FirestoreCollections.Events.value
@@ -37,10 +35,12 @@ struct Event: Identifiable, Codable {
     var invited: [String]?
     var hasNewPosts: Bool?
     var latitude: Double?
+    var lastCommentsCheck: Date?
     var location: GeoPoint?
     var longitude: Double?
     var maxPrice: Int?
     var minPrice: Int?
+    var newComments: Int?
     var rating: Float?
     var recurringID: String?
     var startDate: Date?
@@ -110,7 +110,8 @@ struct Event: Identifiable, Codable {
         case rating
         case status
         case recurringID = "recurring_id"
-        case hasNewPosts = "has_new_posts"
+        case newComments = "new_comments"
+        case lastCommentsCheck = "last_comments_check"
         
         //MARK: NFPLUS
         

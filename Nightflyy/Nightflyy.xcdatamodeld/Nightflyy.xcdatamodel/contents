@@ -29,6 +29,7 @@
         <attribute name="profileImageUrl" optional="YES" attributeType="String"/>
         <attribute name="recipient" attributeType="String"/>
         <attribute name="sender" attributeType="String"/>
+        <attribute name="senderName" optional="YES" attributeType="String"/>
         <attribute name="uid" optional="YES" attributeType="String"/>
         <attribute name="username" optional="YES" attributeType="String"/>
     </entity>

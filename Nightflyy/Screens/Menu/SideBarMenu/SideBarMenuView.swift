@@ -121,6 +121,7 @@ struct SideBarMenuView: View {
             HStack {
                 SideBarButton(.logout) {
                     showMenu = false
+                    ChatsManager.shared.stopChatsListener()
                     try? AuthenticationManager.shared.logOut()
                 }
                 

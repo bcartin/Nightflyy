@@ -42,10 +42,12 @@ struct ContentView: View {
                         NotificationsView(showMenu: $showMenu, viewModel: NotificationsViewModel())
                             .toolbarVisibility(Router.shared.path.isEmpty ? .visible : .hidden, for: .tabBar)
                     }
+                    .badge(AccountManager.shared.badgeCount ?? 0)
                     Tab("", image: "ic_message", value: AppTab.inbox) {
                         InboxView(showMenu: $showMenu, viewModel: InboxViewModel())
                             .toolbarVisibility(Router.shared.path.isEmpty ? .visible : .hidden, for: .tabBar)
                     }
+                    .badge(ChatsManager.shared.newChatsCount)
                 }
                 .accentColor(.mainPurple)
                 .environment(\.colorScheme, .dark)

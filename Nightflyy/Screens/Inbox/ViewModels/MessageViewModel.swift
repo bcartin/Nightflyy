@@ -73,21 +73,23 @@ class MessageViewModel: Identifiable {
     
     private func navigateToAccount() {
         Task {
-            guard let uid = message.messageData.uid else { return }
-            if let account = await AccountClient.fetchAccount(accountId: uid) {
-                let viewModel = await ProfileViewModel(account: account)
-                await Router.shared.navigateTo(.Profile(viewModel))
+            guard let uid = message.messageData.uid else {
+                await Router.shared.navigateTo(.NotFound(.profile))
+                return
             }
+            let account = await AccountClient.fetchAccount(accountId: uid)
+            await Router.shared.navigateToProfile(account: account)
         }
     }
     
     private func navigateToEvent() {
         Task {
-            guard let eventId = message.messageData.event_id else { return }
-            if let event = await EventClient.fetchEvent(eventId: eventId) {
-                let viewModel = await EventViewModel(event: event)
-                await Router.shared.navigateTo(.Event(viewModel))
+            guard let eventId = message.messageData.event_id else {
+                await Router.shared.navigateTo(.NotFound(.event))
+                return
             }
+            let event = await EventClient.fetchEvent(eventId: eventId)
+            await Router.shared.navigateToEvent(event: event)
         }
     }
     
