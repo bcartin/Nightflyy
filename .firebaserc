@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "slydeapp-dc745",
+    "prod": "slydeapp-dc745",
+    "dev": "nightflyydev"
+  }
+}
