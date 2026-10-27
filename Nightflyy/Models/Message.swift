@@ -32,10 +32,21 @@ struct Message: Codable, Identifiable {
 
 struct MessageData: Codable {
     var message: String?
-    var event_name: String?
-    var event_id: String?
-    var event_flyer_url: String?
+    var eventName: String?
+    var eventId: String?
+    var eventFlyerUrl: String?
     var username: String?
     var uid: String?
-    var profile_image_url: String?
+    var profileImageUrl: String?
+
+    /// Firestore field names (snake_case).
+    enum CodingKeys: String, CodingKey {
+        case message
+        case eventName = "event_name"
+        case eventId = "event_id"
+        case eventFlyerUrl = "event_flyer_url"
+        case username
+        case uid
+        case profileImageUrl = "profile_image_url"
+    }
 }

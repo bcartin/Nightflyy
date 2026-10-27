@@ -30,9 +30,9 @@ class MessageViewModel: Identifiable {
         case .text:
             return nil
         case .account:
-            return message.messageData.profile_image_url
+            return message.messageData.profileImageUrl
         case .event:
-            return message.messageData.event_flyer_url
+            return message.messageData.eventFlyerUrl
 
         }
     }
@@ -44,7 +44,7 @@ class MessageViewModel: Identifiable {
         case .account:
             return message.messageData.username ?? ""
         case .event:
-            return message.messageData.event_name ?? ""
+            return message.messageData.eventName ?? ""
 
         }
     }
@@ -84,7 +84,7 @@ class MessageViewModel: Identifiable {
 
     private func navigateToEvent() {
         Task {
-            guard let eventId = message.messageData.event_id else {
+            guard let eventId = message.messageData.eventId else {
                 await Router.shared.navigateTo(.notFound(.event))
                 return
             }

@@ -6,41 +6,41 @@
 //
 
 enum AppNotificationType: String, Codable {
-    case follow_request = "follow_request"
-    case follow_accepted = "follow_accepted"
-    case follow_start = "follow_start"
-    case event_assigned = "event_assigned"
-    case invite_to_event = "invite_to_event"
-    case event_going = "event_going"
-    case event_comment = "event_comment"
-    case review_submitted = "review_submitted"
-    case event_created = "event_created"
-    case event_alert = "event_alert"
-    case event_interested = "event_interested"
+    case followRequest = "follow_request"
+    case followAccepted = "follow_accepted"
+    case followStart = "follow_start"
+    case eventAssigned = "event_assigned"
+    case inviteToEvent = "invite_to_event"
+    case eventGoing = "event_going"
+    case eventComment = "event_comment"
+    case reviewSubmitted = "review_submitted"
+    case eventCreated = "event_created"
+    case eventAlert = "event_alert"
+    case eventInterested = "event_interested"
 
     var mainLabelText: String {
         switch self {
-        case .follow_request:
+        case .followRequest:
             return "requested to follow you."
-        case .follow_accepted:
+        case .followAccepted:
             return "accepted your follow request."
-        case .follow_start:
+        case .followStart:
             return "started following you."
-        case .event_assigned:
+        case .eventAssigned:
             return "You've been invited to claim an event."
-        case .invite_to_event:
+        case .inviteToEvent:
             return "invited you to an event."
-        case .event_going:
+        case .eventGoing:
             return "is coming to your event."
-        case .event_comment:
+        case .eventComment:
             return "commented on your event."
-        case .review_submitted:
+        case .reviewSubmitted:
             return "rated your venue."
-        case .event_created:
+        case .eventCreated:
             return "has posted a new event."
-        case .event_alert:
+        case .eventAlert:
             return "Remember to update the event status."
-        case .event_interested:
+        case .eventInterested:
             return " is interested in "
         }
     }

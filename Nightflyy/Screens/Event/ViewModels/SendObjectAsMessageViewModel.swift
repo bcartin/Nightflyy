@@ -64,9 +64,9 @@ class SendObjectAsMessageViewModel: Hashable {
 
     func getMessageData() -> MessageData {
         if isEvent {
-            return MessageData(event_name: event?.eventName, event_id: event?.uid, event_flyer_url: event?.eventFlyerUrl)
+            return MessageData(eventName: event?.eventName, eventId: event?.uid, eventFlyerUrl: event?.eventFlyerUrl)
         } else {
-            return MessageData(username: account?.username, uid: account?.uid, profile_image_url: account?.profileImageUrl)
+            return MessageData(username: account?.username, uid: account?.uid, profileImageUrl: account?.profileImageUrl)
         }
     }
 

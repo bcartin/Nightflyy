@@ -22,8 +22,8 @@ class AppState {
 
     var showUpdateScreen: Bool {
         let appVersion = UIApplication.appVersion
-        let remoteConfigAppVersion = RemoteConfigManager.shared.string(forKey: .latest_app_version)
+        let remoteConfigAppVersion = RemoteConfigManager.shared.string(forKey: .latestAppVersion)
         let result = remoteConfigAppVersion.compare(appVersion, options: .numeric)
-        return result == .orderedDescending && RemoteConfigManager.shared.bool(forKey: .force_update)
+        return result == .orderedDescending && RemoteConfigManager.shared.bool(forKey: .forceUpdate)
     }
 }

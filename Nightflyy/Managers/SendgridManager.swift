@@ -41,14 +41,14 @@ class SendgridManager {
         let dobString = dob?.stringValue(format: "MM/dd/yyyy")
 
         let contact = Contact(email: account.email,
-                              external_id: account.uid,
-                              first_name: account.name,
-                              custom_fields: CustomFields(username: account.username, dob: dobString))
+                              externalId: account.uid,
+                              firstName: account.name,
+                              customFields: CustomFields(username: account.username, dob: dobString))
 
-        let list_ids = lists.map { $0.id }
+        let listIds = lists.map { $0.id }
 
         // TODO: add to all and non nightflyy lists, make list a parameter
-        let body = ContactRequestBody(list_ids: list_ids, contacts: [contact])
+        let body = ContactRequestBody(listIds: listIds, contacts: [contact])
 
         guard let request = ContactRequest(body: body) else { return }
         do {

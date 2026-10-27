@@ -39,11 +39,11 @@ extension EventViewModel {
         guard let account = AccountManager.shared.account, let eventOwner = event.createdBy else { return }
         let notification = AppNotification(sender: account.uid,
                                            date: .now,
-                                           type: .event_comment,
-                                           notificationData: NotificationData(event_flyer_url: event.eventFlyerUrl,
-                                                                              event_id: event.uid,
-                                                                              event_name: event.eventName,
-                                                                              profile_image_url: account.profileImageUrl,
+                                           type: .eventComment,
+                                           notificationData: NotificationData(eventFlyerUrl: event.eventFlyerUrl,
+                                                                              eventId: event.uid,
+                                                                              eventName: event.eventName,
+                                                                              profileImageUrl: account.profileImageUrl,
                                                                               username: account.username))
         try? AppNotificationClient.saveNotification(for: eventOwner, notification: notification)
     }

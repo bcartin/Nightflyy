@@ -45,11 +45,11 @@ class InviteFromEventViewModel {
                 let uid = account.uid
                 let notification = AppNotification(sender: uid,
                                                    date: Date(),
-                                                   type: AppNotificationType.invite_to_event,
-                                                   notificationData: NotificationData(event_flyer_url: event.eventFlyerUrl,
-                                                                                      event_id: event.uid,
-                                                                                      event_name: event.eventName,
-                                                                                      profile_image_url: account.profileImageUrl,
+                                                   type: AppNotificationType.inviteToEvent,
+                                                   notificationData: NotificationData(eventFlyerUrl: event.eventFlyerUrl,
+                                                                                      eventId: event.uid,
+                                                                                      eventName: event.eventName,
+                                                                                      profileImageUrl: account.profileImageUrl,
                                                                                       username: account.username))
                 try AppNotificationClient.saveNotification(for: accountId, notification: notification)
             } catch {

@@ -26,12 +26,12 @@ extension Message {
             type: type,
             messageData: MessageData(
                 message: cached.message,
-                event_name: cached.eventName,
-                event_id: cached.eventId,
-                event_flyer_url: cached.eventFlyerUrl,
+                eventName: cached.eventName,
+                eventId: cached.eventId,
+                eventFlyerUrl: cached.eventFlyerUrl,
                 username: cached.username,
                 uid: cached.uid,
-                profile_image_url: cached.profileImageUrl
+                profileImageUrl: cached.profileImageUrl
             )
         )
         message.id = id
@@ -48,11 +48,11 @@ extension Message {
         cached.date = date
         cached.messageType = type.rawValue
         cached.message = messageData.message
-        cached.eventName = messageData.event_name
-        cached.eventId = messageData.event_id
-        cached.eventFlyerUrl = messageData.event_flyer_url
+        cached.eventName = messageData.eventName
+        cached.eventId = messageData.eventId
+        cached.eventFlyerUrl = messageData.eventFlyerUrl
         cached.username = messageData.username
         cached.uid = messageData.uid
-        cached.profileImageUrl = messageData.profile_image_url
+        cached.profileImageUrl = messageData.profileImageUrl
     }
 }

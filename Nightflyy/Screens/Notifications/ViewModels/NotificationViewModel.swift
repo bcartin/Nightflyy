@@ -19,11 +19,11 @@ class NotificationViewModel {
     }
 
     var userImageUrl: String {
-        return notification.notificationData.profile_image_url ?? ""
+        return notification.notificationData.profileImageUrl ?? ""
     }
 
     var eventFlyerUrl: String? {
-        return notification.notificationData.event_flyer_url
+        return notification.notificationData.eventFlyerUrl
     }
 
     var timeReceived: String {
@@ -35,11 +35,11 @@ class NotificationViewModel {
     }
 
     var hasUser: Bool {
-        return notificationType != .event_assigned
+        return notificationType != .eventAssigned
     }
 
     var hasEvent: Bool {
-        return notification.notificationData.event_id != nil
+        return notification.notificationData.eventId != nil
     }
 
     func buildMainLabel() -> Text {
@@ -50,7 +50,7 @@ class NotificationViewModel {
     @ViewBuilder
     func actionsView() -> some View {
         switch self.notificationType {
-        case .follow_request:
+        case .followRequest:
             Button { [weak self] in
                 self?.acceptFollowRequest()
                 self?.deleteNotification()
@@ -65,13 +65,13 @@ class NotificationViewModel {
                 Text("Decline")
             }
             .tint(.gray)
-        case .follow_accepted:
+        case .followAccepted:
             deleteAction()
-        case .follow_start:
+        case .followStart:
             deleteAction()
-        case .invite_to_event:
+        case .inviteToEvent:
             inviteToEventActions()
-        case .event_assigned:
+        case .eventAssigned:
             Button { [weak self] in
                 self?.acceptEventAssigned()
                 self?.deleteNotification()
@@ -86,7 +86,7 @@ class NotificationViewModel {
                 Text("View Event")
             }
             .tint(.gray)
-        case .event_going, .event_comment, .review_submitted, .event_created, .event_alert, .event_interested:
+        case .eventGoing, .eventComment, .reviewSubmitted, .eventCreated, .eventAlert, .eventInterested:
             deleteAction()
         }
     }
@@ -142,7 +142,7 @@ class NotificationViewModel {
     }
 
     func goToEvent() {
-        guard let eventId = notification.notificationData.event_id else {
+        guard let eventId = notification.notificationData.eventId else {
             Router.shared.navigateTo(.notFound(.event))
             return
         }
@@ -153,7 +153,7 @@ class NotificationViewModel {
     }
 
     func markAsInterested() {
-        guard let uid = AccountManager.shared.account?.uid, let eventId =  notification.notificationData.event_id else { return }
+        guard let uid = AccountManager.shared.account?.uid, let eventId =  notification.notificationData.eventId else { return }
         Task {
             do {
                 try await EventClient.addUserToInterested(eventId: eventId, uid: uid)
@@ -166,7 +166,7 @@ class NotificationViewModel {
     }
 
     func markAsAttenging() {
-        guard let eventId =  notification.notificationData.event_id else { return }
+        guard let eventId =  notification.notificationData.eventId else { return }
         Task {
             do {
                 guard var event = await EventClient.fetchEvent(eventId: eventId) else { return }
@@ -190,7 +190,7 @@ class NotificationViewModel {
     }
 
     func acceptEventAssigned() {
-        guard let uid = AccountManager.shared.account?.uid, let eventId =  notification.notificationData.event_id else { return }
+        guard let uid = AccountManager.shared.account?.uid, let eventId =  notification.notificationData.eventId else { return }
         Task {
             do {
                 try await EventClient.setEventOwner(eventId: eventId, uid: uid)

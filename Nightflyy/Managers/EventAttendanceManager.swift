@@ -56,11 +56,11 @@ class EventAttendanceManager {
         if let eventCreator = event.createdBy, !event.isUnclaimed {
             let notification = AppNotification(sender: uid,
                                                date: Date(),
-                                               type: AppNotificationType.event_going,
-                                               notificationData: NotificationData(event_flyer_url: event.eventFlyerUrl,
-                                                                                  event_id: eventId,
-                                                                                  event_name: event.eventName,
-                                                                                  profile_image_url: accountManager.account?.profileImageUrl,
+                                               type: AppNotificationType.eventGoing,
+                                               notificationData: NotificationData(eventFlyerUrl: event.eventFlyerUrl,
+                                                                                  eventId: eventId,
+                                                                                  eventName: event.eventName,
+                                                                                  profileImageUrl: accountManager.account?.profileImageUrl,
                                                                                   username: accountManager.account?.username))
             try notificationClient.saveNotification(for: eventCreator, notification: notification)
         }
