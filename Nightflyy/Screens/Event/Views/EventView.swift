@@ -89,7 +89,7 @@ struct EventView: View {
 
                         IconButton(iconName: "ic_crowd", title: "Guest List") {
                             let viewModel = EventGuestListViewModel(event: viewModel.event, selectedSegment: 1)
-                            router.navigateTo(.EventGuestList(viewModel))
+                            router.navigateTo(.eventGuestList(viewModel))
                         }
                         .frame(maxWidth: .infinity)
 

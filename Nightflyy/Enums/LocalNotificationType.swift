@@ -35,6 +35,7 @@ enum LocalNotificationType {
         case .perkReminder:
             nil
         case .eventReminder(let event):
-            "\(event.eventName ?? "Event") begins in 1 hour. Tap for details."}
+            "\(event.eventName ?? "Event") begins in 1 hour. Tap for details."
+        }
     }
 }

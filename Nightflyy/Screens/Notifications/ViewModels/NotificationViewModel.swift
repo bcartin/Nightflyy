@@ -138,7 +138,7 @@ class NotificationViewModel {
 
     func goToEvent() {
         guard let eventId = notification.notificationData.event_id else {
-            Router.shared.navigateTo(.NotFound(.event))
+            Router.shared.navigateTo(.notFound(.event))
             return
         }
         Task {

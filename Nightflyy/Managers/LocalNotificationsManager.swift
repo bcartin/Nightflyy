@@ -29,7 +29,7 @@ class LocalNotificationsManager: LocalNotificationsManaging {
             content.userInfo = data
         }
 
-        let dateComponents = Calendar.current.dateComponents(Set(arrayLiteral: Calendar.Component.year, Calendar.Component.month, Calendar.Component.day, Calendar.Component.hour, Calendar.Component.minute), from: date)
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date)
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
 
         let request = UNNotificationRequest(identifier: type.identifier, content: content, trigger: trigger)

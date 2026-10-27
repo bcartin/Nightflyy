@@ -19,8 +19,8 @@ class SearchManager: SearchManaging {
     static let shared = SearchManager()
 
     var searchClient: SearchClient?
-    let C_DEVSEARCHINDEX = "dev_search_index"
-    let C_PRODSEARCHINDEX = "prod_search_index"
+    let devSearchIndex = "dev_search_index"
+    let prodSearchIndex = "prod_search_index"
 
     func reloadClient() {
         if self.searchClient == nil {
@@ -43,7 +43,7 @@ class SearchManager: SearchManaging {
         #if RELEASE
         if let client = searchClient {
             do {
-                let index = client.index(withName: IndexName(rawValue: C_PRODSEARCHINDEX))
+                let index = client.index(withName: IndexName(rawValue: prodSearchIndex))
                 let response = try index.search(query: Query(searchText))
                 let results: [AlgoliaSearchResult] = try response.extractHits()
                 return results
@@ -57,7 +57,7 @@ class SearchManager: SearchManaging {
 
     func updateFirestoreSearchIndex(object: AlgoliaSearchResult) throws {
         #if RELEASE
-        try FirebaseManager.shared.db.collection(C_PRODSEARCHINDEX).document(object.objectID).setData(from: object)
+        try FirebaseManager.shared.db.collection(prodSearchIndex).document(object.objectID).setData(from: object)
         #endif
     }
 

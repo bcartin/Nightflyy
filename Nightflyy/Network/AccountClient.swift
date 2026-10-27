@@ -21,21 +21,23 @@ class AccountClient {
         if let cached = firebaseCache[accountId] {
             switch cached {
             case .account(let account):
-                Logger.network.info("\(Logger.Category.Network.rawValue): Fetched account \(accountId) from cache.")
+                Logger.network.info("\(Logger.Category.network.rawValue): Fetched account \(accountId) from cache.")
                 return account
             default:
                 return nil
             }
         }
         do {
-            let account = try await FirebaseManager.shared.getDocument(collection: FirestoreCollections.Accounts.value, documentId: accountId, Account.self)
+            let account = try await FirebaseManager.shared.getDocument(collection: FirestoreCollections.Accounts.value,
+                                                                      documentId: accountId,
+                                                                      Account.self)
             if let account = account {
                 firebaseCache[accountId] = .account(account)
             }
-            Logger.network.info("\(Logger.Category.Network.rawValue): Fetched account \(accountId) from firebase.")
+            Logger.network.info("\(Logger.Category.network.rawValue): Fetched account \(accountId) from firebase.")
             return account
         } catch {
-            Logger.network.error("\(Logger.Category.Network.rawValue): Error fetching account \(accountId): \(error.localizedDescription)")
+            Logger.network.error("\(Logger.Category.network.rawValue): Error fetching account \(accountId): \(error.localizedDescription)")
             return nil
         }
     }
@@ -95,7 +97,10 @@ class AccountClient {
     static func fetchAccountReviews(for uid: String) async -> [Review] {
         do {
             var reviews: [Review] = .init()
-            let dbRef = FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value).document(uid).collection(FirestoreCollections.Accounts.reviews)
+            let dbRef = FirebaseManager.shared.db
+                .collection(FirestoreCollections.Accounts.value)
+                .document(uid)
+                .collection(FirestoreCollections.Accounts.reviews)
             let snapshot = try await dbRef.getDocuments()
             reviews = try snapshot.documents.map({ document in
                 return try document.data(as: Review.self)
@@ -108,7 +113,10 @@ class AccountClient {
     }
 
     static func getAccountReviewCount(for uid: String) async -> Int {
-        let query = FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value).document(uid).collection(FirestoreCollections.Accounts.reviews)
+        let query = FirebaseManager.shared.db
+            .collection(FirestoreCollections.Accounts.value)
+            .document(uid)
+            .collection(FirestoreCollections.Accounts.reviews)
         let countQuery = query.count
         do {
             let snapshot = try await countQuery.getAggregation(source: .server)
@@ -138,7 +146,11 @@ class AccountClient {
     }
 
     static func submitReview(accountId: String, review: Review) throws {
-        try FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value).document(accountId).collection(FirestoreCollections.Accounts.reviews).addDocument(from: review)
+        try FirebaseManager.shared.db
+            .collection(FirestoreCollections.Accounts.value)
+            .document(accountId)
+            .collection(FirestoreCollections.Accounts.reviews)
+            .addDocument(from: review)
     }
 
     static func fetchNightflyyPlusMember() async -> [Account] {

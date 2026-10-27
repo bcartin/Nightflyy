@@ -141,7 +141,7 @@ class DiscoverViewModel {
 
     func navigateToResultsView() {
         let viewModel = makeFilterResultsViewModel()
-        Router.shared.navigateTo(.SearchResultsListView(viewModel))
+        Router.shared.navigateTo(.searchResultsListView(viewModel))
     }
 
     func selectFilterView(_ filter: FilterView) {

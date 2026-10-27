@@ -199,7 +199,7 @@ class EventViewModel: Hashable {
             self?.event = event
             General.showSavedMessage()
         }
-        Router.shared.navigateTo(.CreateEvent(viewModel))
+        Router.shared.navigateTo(.createEvent(viewModel))
     }
 
     func deleteEvent() {
@@ -258,7 +258,7 @@ class EventViewModel: Hashable {
     func handleSendAsMessageTapped() {
         presentShareDialog = false
         let viewModel = SendObjectAsMessageViewModel(event: self.event)
-        Router.shared.navigateTo(.SendObjectAsMessage(viewModel))
+        Router.shared.navigateTo(.sendObjectAsMessage(viewModel))
     }
 
     func fetchEventOwner() async {
@@ -327,7 +327,7 @@ class EventViewModel: Hashable {
 
     func navigateToVenue() {
         guard let venueId = event.eventVenueId else {
-            Router.shared.navigateTo(.NotFound(.profile))
+            Router.shared.navigateTo(.notFound(.profile))
             return
         }
         Task {

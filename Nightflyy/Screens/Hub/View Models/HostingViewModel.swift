@@ -29,7 +29,7 @@ class HostingViewModel {
     func goToGuestList() {
         guard let event = headerEvent?.event else { return }
         let viewModel = EventGuestListViewModel(event: event, selectedSegment: 1)
-        Router.shared.navigateTo(.EventGuestList(viewModel))
+        Router.shared.navigateTo(.eventGuestList(viewModel))
     }
 
 }

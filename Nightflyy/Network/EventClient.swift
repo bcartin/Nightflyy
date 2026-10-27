@@ -17,7 +17,7 @@ class EventClient {
         if let cached = firebaseCache[eventId] {
             switch cached {
             case .event(let event):
-                Logger.network.info("\(Logger.Category.Network.rawValue): Fetched event \(eventId) from cache.")
+                Logger.network.info("\(Logger.Category.network.rawValue): Fetched event \(eventId) from cache.")
                 return event
             default:
                 return nil
@@ -28,7 +28,7 @@ class EventClient {
             if let event = event {
                 firebaseCache[eventId] = .event(event)
             }
-            Logger.network.info("\(Logger.Category.Network.rawValue): Fetched event \(eventId) from firebase.")
+            Logger.network.info("\(Logger.Category.network.rawValue): Fetched event \(eventId) from firebase.")
             return event
         } catch {
             Logger.network.error("Error fetching event \(eventId): \(error.localizedDescription)")
@@ -187,7 +187,10 @@ class EventClient {
     }
 
     static func declineClaim(eventId: String) async throws {
-        try await FirebaseManager.shared.db.collection(FirestoreCollections.Events.value).document(eventId).updateData([FirestoreCollections.Events.assigned_to: ""])
+        try await FirebaseManager.shared.db
+            .collection(FirestoreCollections.Events.value)
+            .document(eventId)
+            .updateData([FirestoreCollections.Events.assigned_to: ""])
     }
 
     static func fetchEventByRedemptionCode(code: String) async throws -> Event? {

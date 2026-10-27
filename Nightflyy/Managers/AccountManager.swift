@@ -72,7 +72,11 @@ class AccountManager: AccountManaging {
         self.account?.following?.append(updatedAccount.uid)
         updatedAccount.followers?.append(uid)
 
-        let notification = AppNotification(sender: uid, date: Date(), type: .follow_start, notificationData: NotificationData(profile_image_url: account?.profileImageUrl, username: account?.username))
+        let notification = AppNotification(sender: uid,
+                                           date: Date(),
+                                           type: .follow_start,
+                                           notificationData: NotificationData(profile_image_url: account?.profileImageUrl,
+                                                                              username: account?.username))
         try notificationClient.saveNotification(for: updatedAccount.uid, notification: notification)
         return updatedAccount
     }
@@ -99,7 +103,11 @@ class AccountManager: AccountManaging {
         self.account?.requested?.append(accountId)
         try self.account?.save()
 
-        let notification = AppNotification(sender: uid, date: Date(), type: .follow_request, notificationData: NotificationData(profile_image_url: account?.profileImageUrl, username: account?.username))
+        let notification = AppNotification(sender: uid,
+                                           date: Date(),
+                                           type: .follow_request,
+                                           notificationData: NotificationData(profile_image_url: account?.profileImageUrl,
+                                                                              username: account?.username))
         try notificationClient.saveNotification(for: accountId, notification: notification)
     }
 
@@ -111,7 +119,11 @@ class AccountManager: AccountManaging {
         self.account?.followers?.append(updatedFollower.uid)
         updatedFollower.following?.append(uid)
 
-        let notification = AppNotification(sender: uid, date: Date(), type: .follow_accepted, notificationData: NotificationData(profile_image_url: account?.profileImageUrl, username: account?.username))
+        let notification = AppNotification(sender: uid,
+                                           date: Date(),
+                                           type: .follow_accepted,
+                                           notificationData: NotificationData(profile_image_url: account?.profileImageUrl,
+                                                                              username: account?.username))
         try notificationClient.saveNotification(for: updatedFollower.uid, notification: notification)
         try await accountClient.removeFromRequested(accountId: updatedFollower.uid)
         return updatedFollower

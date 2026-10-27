@@ -56,7 +56,7 @@ struct ProfileView: View {
                         .font(.system(size: 14))
                         .onTapGesture {
                             let viewModel = NetworkViewModel(account: viewModel.account, selectedSegment: 1)
-                            router.navigateTo(.Network(viewModel))
+                            router.navigateTo(.network(viewModel))
                         }
 
                         VStack(alignment: .center) {
@@ -66,7 +66,7 @@ struct ProfileView: View {
                         .font(.system(size: 14))
                         .onTapGesture {
                             let viewModel = NetworkViewModel(account: viewModel.account, selectedSegment: 2)
-                            router.navigateTo(.Network(viewModel))
+                            router.navigateTo(.network(viewModel))
                         }
                     }
                 }
@@ -97,7 +97,7 @@ struct ProfileView: View {
 
                         IconButton(iconName: "ic_invite", title: "Invite", isEnabled: viewModel.canInteract) {
                             let viewModel = InviteToEventViewModel(accountToInvite: viewModel.account)
-                            router.navigateTo(.InviteToEvent(viewModel))
+                            router.navigateTo(.inviteToEvent(viewModel))
                         }
                         .frame(maxWidth: .infinity)
 
