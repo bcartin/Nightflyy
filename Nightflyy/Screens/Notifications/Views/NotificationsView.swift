@@ -53,7 +53,7 @@ struct NotificationsView: View {
                 }
                 .listStyle(PlainListStyle())
                 .refreshable {
-                    await AppNotificationsManager.shared.fetchNotifications(refetch: true)
+                    await AppNotificationsManager.shared.fetchNotifications()
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -79,6 +79,7 @@ struct NotificationsView: View {
             }
             .task {
                 await AppNotificationsManager.shared.fetchNotifications()
+                AccountManager.shared.resetBadgeCount()
             }
         }
     }

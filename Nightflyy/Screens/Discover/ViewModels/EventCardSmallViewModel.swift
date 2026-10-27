@@ -27,7 +27,6 @@ class EventCardSmallViewModel {
     }
     
     func navigateToEvent() {
-        let viewModel = EventViewModel(event: event, eventOwner: eventOwner)
-        Router.shared.navigateTo(.Event(viewModel))
+        Router.shared.navigateToEvent(event: event, eventOwner: eventOwner)
     }
 }

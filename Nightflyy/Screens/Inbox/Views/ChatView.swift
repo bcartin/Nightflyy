@@ -107,9 +107,9 @@ struct ChatView: View {
     }
 }
 
-#Preview {
-    InboxView(showMenu: .constant(false), viewModel: InboxViewModel())
-        .preferredColorScheme(.dark)
-}
+//#Preview {
+//    InboxView(showMenu: .constant(false), viewModel: InboxViewModel())
+//        .preferredColorScheme(.dark)
+//}
 
 

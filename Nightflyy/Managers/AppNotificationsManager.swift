@@ -27,21 +27,25 @@ class AppNotificationsManager {
         self.viewContext = viewContext
     }
 
-    func fetchNotifications(refetch: Bool = false) async {
+    func fetchNotifications() async {
         // Load cached notifications from Core Data for instant display
         notifications = loadFromCache()
 
-        if notifications.isEmpty || refetch {
-            do {
-                let lastFetchDate: Date? = UserDefaultsKeys.lastNotificationsFetchDate.getValue()
-                let newNotifications = try await notificationClient.fetchNewAppNotifications(lastUpdated: lastFetchDate)
-                saveToCache(newNotifications)
-                UserDefaultsKeys.lastNotificationsFetchDate.setValue(Date.now)
-                notifications = loadFromCache()
-            }
-            catch {
-                Logger.general.error("Error fetching notifications: \(error.localizedDescription)")
-            }
+        // Don't fetch (or advance the fetch cursor) until the account is loaded.
+        // Otherwise a fetch made before sign-in completes would silently succeed
+        // with no results and poison `lastNotificationsFetchDate`, permanently
+        // skipping the user's existing notifications on new installs.
+        guard AccountManager.shared.account?.uid != nil else { return }
+
+        do {
+            let lastFetchDate: Date? = UserDefaultsKeys.lastNotificationsFetchDate.getValue()
+            let newNotifications = try await notificationClient.fetchNewAppNotifications(lastUpdated: lastFetchDate)
+            saveToCache(newNotifications)
+            UserDefaultsKeys.lastNotificationsFetchDate.setValue(Date.now)
+            notifications = loadFromCache()
+        }
+        catch {
+            Logger.general.error("Error fetching notifications: \(error.localizedDescription)")
         }
     }
 

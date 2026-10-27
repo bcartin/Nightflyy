@@ -20,6 +20,7 @@ extension Message {
         }
         var message = Message(
             sender: sender,
+            senderName: cached.senderName ?? "",
             recipient: recipient,
             date: cached.date,
             type: type,
@@ -42,6 +43,7 @@ extension Message {
     func populate(_ cached: CachedMessage) {
         cached.id = id
         cached.sender = sender
+        cached.senderName = senderName
         cached.recipient = recipient
         cached.date = date
         cached.messageType = type.rawValue

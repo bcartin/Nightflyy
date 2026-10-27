@@ -32,8 +32,7 @@ class VenueListItemViewModel: Hashable {
     }
 
     func navigateToProfile() {
-        let viewModel = ProfileViewModel(account: venue)
-        Router.shared.navigateTo(.Profile(viewModel))
+        Router.shared.navigateToProfile(account: venue)
     }
     
 }

@@ -73,16 +73,14 @@ class Navigator {
     
     private func navigateToEvent(eventId: String) async {
         guard AuthenticationManager.shared.isSignedIn else {return}
-        guard let event = await EventClient.fetchEvent(eventId: eventId) else {return}
-        let viewModel = EventViewModel(event: event)
-        router.navigateTo(.Event(viewModel))
+        let event = await EventClient.fetchEvent(eventId: eventId)
+        router.navigateToEvent(event: event)
     }
     
     private func navigateToAccount(accountId: String) async {
         guard AuthenticationManager.shared.isSignedIn else {return}
-        guard let account = await AccountClient.fetchAccount(accountId: accountId) else {return}
-        let viewModel = ProfileViewModel(account: account)
-        router.navigateTo(.Profile(viewModel))
+        let account = await AccountClient.fetchAccount(accountId: accountId)
+        router.navigateToProfile(account: account)
     }
     
     private func openNFPpaywall(accountId: String?) async {

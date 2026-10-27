@@ -49,7 +49,8 @@ class SendObjectAsMessageViewModel: Hashable {
     }
     
     func createMessage() {
-        self.message =  Message(sender: AccountManager.shared.account?.uid ?? "", recipient: "", date: Date(), type: messageType, messageData: getMessageData())
+        guard let sender = AccountManager.shared.account else { return }
+        self.message =  Message(sender: sender.uid, senderName: sender.username ?? "", recipient: "", date: Date(), type: messageType, messageData: getMessageData())
     }
     
     var messageType: MessageType {

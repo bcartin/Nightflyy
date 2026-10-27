@@ -67,15 +67,11 @@ class EventCardViewModel {
     }
     
     func navigateToProfile() {
-        if let account = eventOwner {
-            let viewModel = ProfileViewModel(account: account)
-            Router.shared.navigateTo(.Profile(viewModel))
-        }
+        Router.shared.navigateToProfile(account: eventOwner)
     }
     
     func navigateToEventDetails() {
-        let viewModel = EventViewModel(event: event, eventOwner: eventOwner)
-        Router.shared.navigateTo(.Event(viewModel))
+        Router.shared.navigateToEvent(event: event, eventOwner: eventOwner)
     }
     
     func navigateToGuestList() {
