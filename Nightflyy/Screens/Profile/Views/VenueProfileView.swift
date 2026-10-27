@@ -194,14 +194,18 @@ struct VenueProfileView: View {
 
                 PillListView(header: "CROWD", items: viewModel.account.clientele ?? [])
 
-                eventListView(header: "Upcoming Events", viewModels: viewModel.futureHostingEvents)
+                EventListSection(header: "Upcoming Events", viewModels: viewModel.futureHostingEvents)
                 if viewModel.isPersonalAccount {
-                    eventListView(header: "Events Attending", viewModels: viewModel.attendingEvents)
+                    EventListSection(header: "Events Attending", viewModels: viewModel.attendingEvents)
                 }
-                eventListView(header: "Past Events", viewModels: viewModel.pastHostingEvents)
+                EventListSection(header: "Past Events", viewModels: viewModel.pastHostingEvents)
             }
             .overlay(alignment: .top) {
-                headerView()
+                CollapsingHeaderBar(title: viewModel.account.username ?? "",
+                                    size: size,
+                                    safeArea: safeArea,
+                                    optionsImage: viewModel.isSelf ? "ic_edit" : "ic_dotmenu",
+                                    onOptions: { viewModel.handleOptionsTapped() })
             }
         }
         .scrollIndicators(.hidden)
@@ -279,117 +283,5 @@ struct VenueProfileView: View {
             }
         }
         .interactiveToast($toastsManager.toasts)
-    }
-
-    @ViewBuilder
-    func headerView() -> some View {
-        GeometryReader { proxy in
-            let minY = proxy.frame(in: .named("SCROLL")).minY
-            let height = size.height * 0.45
-            let progress = minY / (height * (minY > 0 ? 0.5 : 0.8))
-            let titleProress = minY / height
-
-            HStack(spacing: 10) {
-                if #available(iOS 26.0, *) { // TODO: Remove when min version is iOS 26
-                    Button {
-                        router.navigateBack()
-                    } label: {
-                        Label("Back", systemImage: "chevron.left")
-                            .labelStyle(.iconOnly)
-                            .frame(width: 50, height: 50)
-                            .foregroundStyle(.white)
-                    }
-                    .glassEffect()
-                } else {
-                    Button {
-                        router.navigateBack()
-                    } label: {
-                        HStack {
-                            Spacer()
-                                .frame(width: 12)
-                            Image(systemName: "chevron.left")
-                                .font(.title3)
-                                .foregroundStyle(.white)
-                            Spacer()
-                                .frame(width: 48)
-                        }
-                    }
-                }
-
-                Spacer()
-
-                if #available(iOS 26.0, *) { // TODO: Remove when min version is iOS 26
-                    Button {
-                        viewModel.handleOptionsTapped()
-                    } label: {
-                        Label("Options", image: viewModel.isSelf ? "ic_edit" : "ic_dotmenu")
-                            .labelStyle(.iconOnly)
-                            .frame(width: 50, height: 50)
-                            .foregroundStyle(.white)
-                    }
-                    .glassEffect()
-                } else {
-                    Button {
-                        viewModel.handleOptionsTapped()
-                    } label: {
-                        Image(viewModel.isSelf ? "ic_edit" : "ic_dotmenu")
-                            .font(.title3)
-                            .foregroundStyle(.white)
-                            .tint(.white)
-                    }
-                }
-
-            }
-            .overlay(content: {
-                Text(viewModel.account.username ?? "")
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.white)
-                    .offset(y: -titleProress > 0.75 ? 0 : 45)
-                    .clipped()
-                    .animation(.easeInOut(duration: 0.25), value: -titleProress > 0.75)
-            })
-            .padding(.top, safeArea.top + 10)
-            .padding([.horizontal, .bottom], 15)
-            .background(
-                .backgroundBlack
-                    .opacity(-progress > 1 ? 1 : 0)
-            )
-            .offset(y: -minY)
-        }
-        .frame(height: 35)
-    }
-
-    @ViewBuilder
-    func eventListView(header: String, viewModels: [EventListItemViewModel]) -> some View {
-
-        VStack(alignment: .leading) {
-            Text(header.uppercased())
-                .foregroundStyle(.white)
-                .fontWeight(.medium)
-
-            if viewModels.isEmpty {
-                Text("No Events")
-                    .foregroundStyle(.gray)
-                    .fontWeight(.medium)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding()
-            } else {
-                ForEach(viewModels, id: \.self) { viewModel in
-                    LazyVStack {
-                        EventListItemView(viewModel: viewModel) {
-                            viewModel.navigateToEvent()
-                        }
-                        .task {
-                            await viewModel.fetchOwner()
-                        }
-
-                    }
-                }
-            }
-
-        }
-        .padding(.top, 8)
-        .padding(.horizontal, 12)
-
     }
 }

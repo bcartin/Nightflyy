@@ -26,7 +26,7 @@ struct EventView: View {
                     HeaderImage(size: size, safeArea: safeArea, imageUrl: viewModel.event.eventFlyerUrl) {
                         VStack {
                             if viewModel.showClaimView {
-                                claimView()
+                                ClaimEventBanner(onAccept: { viewModel.claimEvent() }, onDecline: { viewModel.declineEvent() })
                             }
 
                             HStack {
@@ -122,61 +122,30 @@ struct EventView: View {
                         .background(.white)
 
                     if viewModel.event.hasPerk ?? false {
-                        Button {
+                        EventPerkCard(name: viewModel.event.perkName ?? "", details: viewModel.event.perkDetails ?? "") {
                             viewModel.presentPaywall.toggle()
-                        } label: {
-                            HStack {
-                                Image("plus_badge")
-                                    .resizable()
-                                    .frame(width: 30, height: 30)
-
-                                VStack(alignment: .leading) {
-                                    Text("Nightflyy+ Perk")
-                                        .font(.system(size: 12))
-                                        .foregroundColor(.onlineBlue)
-
-                                    Text(viewModel.event.perkName ?? "")
-                                        .font(.system(size: 15, weight: .bold))
-                                        .foregroundStyle(.white)
-
-                                    Text(viewModel.event.perkDetails ?? "")
-                                        .font(.system(size: 10))
-                                        .foregroundStyle(.white)
-                                }
-
-                                Spacer()
-
-                                Image(systemName: "chevron.right")
-                                    .foregroundStyle(.onlineBlue)
-                            }
-                            .padding(8)
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(.onlineBlue, lineWidth: 1)
-                            }
-                            .padding(12)
                         }
                     }
 
                     HStack {
-                        eventItemView(header: "Event Type", value: viewModel.event.eventIsPrivate ?? false ? "Private" : "Public")
+                        EventDetailItem(header: "Event Type", value: viewModel.event.eventIsPrivate ?? false ? "Private" : "Public")
 
-                        eventItemView(header: "Time", value: viewModel.startTimeString + " - " + viewModel.endTimeString)
+                        EventDetailItem(header: "Time", value: viewModel.startTimeString + " - " + viewModel.endTimeString)
                     }
 
                     HStack {
-                        eventItemView(header: "Cover Charge", value: viewModel.eventPrice)
+                        EventDetailItem(header: "Cover Charge", value: viewModel.eventPrice)
 
-                        eventItemView(header: "Going", value: viewModel.numberOfAttendees)
+                        EventDetailItem(header: "Going", value: viewModel.numberOfAttendees)
                     }
 
-                    eventItemView(header: "Venue",
-                                  value: viewModel.event.eventVenue ?? "",
-                                  itemColor: viewModel.venueHasProfile ? .mainPurple : .white) {
+                    EventDetailItem(header: "Venue",
+                                    value: viewModel.event.eventVenue ?? "",
+                                    itemColor: viewModel.venueHasProfile ? .mainPurple : .white) {
                         viewModel.navigateToVenue()
                     }
 
-                    eventItemView(header: "Address", value: viewModel.event.eventAddress ?? "", underline: true, action: {
+                    EventDetailItem(header: "Address", value: viewModel.event.eventAddress ?? "", underline: true, action: {
                         viewModel.openMapsWithAddress()
                     })
 
@@ -188,7 +157,12 @@ struct EventView: View {
                         .padding(.bottom, 24)
                 }
                 .overlay(alignment: .top) {
-                    headerView()
+                    CollapsingHeaderBar(title: viewModel.event.eventName ?? "",
+                                        size: size,
+                                        safeArea: safeArea,
+                                        titleHorizontalPadding: 36,
+                                        optionsLabel: "Menu",
+                                        onOptions: viewModel.shouldShowOptionsButton ? { viewModel.presentOptionsDialog.toggle() } : nil)
                 }
 
             }
@@ -299,140 +273,6 @@ struct EventView: View {
             NFPContainerView()
         }
 
-    }
-
-    @ViewBuilder
-    func headerView() -> some View {
-        GeometryReader { proxy in
-            let minY = proxy.frame(in: .named("SCROLL")).minY
-            let height = size.height * 0.45
-            let progress = minY / (height * (minY > 0 ? 0.5 : 0.8))
-            let titleProress = minY / height
-
-            HStack(spacing: 10) {
-                if #available(iOS 26.0, *) { // TODO: Remove when min version is iOS 26
-                    Button {
-                        router.navigateBack()
-                    } label: {
-                        Label("Back", systemImage: "chevron.left")
-                            .labelStyle(.iconOnly)
-                            .frame(width: 50, height: 50)
-                            .foregroundStyle(.white)
-                    }
-                    .glassEffect()
-                } else {
-                    Button {
-                        router.navigateBack()
-                    } label: {
-                        HStack {
-                            Spacer()
-                                .frame(width: 12)
-                            Image(systemName: "chevron.left")
-                                .font(.title3)
-                                .foregroundStyle(.white)
-                            Spacer()
-                                .frame(width: 48)
-                        }
-                    }
-                }
-
-                Spacer()
-
-                if viewModel.shouldShowOptionsButton {
-                    if #available(iOS 26.0, *) { // TODO: Remove when min version is iOS 26
-                        Button {
-                            viewModel.presentOptionsDialog.toggle()
-                        } label: {
-                            Label("Menu", image: "ic_dotmenu")
-                                .labelStyle(.iconOnly)
-                                .frame(width: 50, height: 50)
-                                .foregroundStyle(.white)
-                        }
-                        .glassEffect()
-                    } else {
-                        Button {
-                            viewModel.presentOptionsDialog.toggle()
-                        } label: {
-                            Image("ic_dotmenu")
-                                .font(.title3)
-                                .foregroundStyle(.white)
-                                .tint(.white)
-                        }
-                    }
-                }
-
-            }
-            .overlay(content: {
-                Text(viewModel.event.eventName ?? "")
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.white)
-                    .offset(y: -titleProress > 0.75 ? 0 : 45)
-                    .clipped()
-                    .padding(.horizontal, 36)
-                    .animation(.easeInOut(duration: 0.25), value: -titleProress > 0.75)
-            })
-            .padding(.top, safeArea.top + 10)
-            .padding([.horizontal, .bottom], 15)
-            .background(
-                .backgroundBlack
-                    .opacity(-progress > 1 ? 1 : 0)
-            )
-            .offset(y: -minY)
-        }
-        .frame(height: 35)
-    }
-
-    @ViewBuilder
-    func eventItemView(header: String, value: String, itemColor: Color = .white, underline: Bool = false, action: ButtonAction? = nil) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(header.uppercased())
-                .foregroundStyle(.gray)
-                .font(.system(size: 13))
-            Text(value)
-                .foregroundStyle(itemColor)
-                .underline(underline)
-                .onTapGesture {
-                    guard let action = action else { return }
-                    action()
-                }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
-    }
-
-    @ViewBuilder
-    func claimView() -> some View {
-        ZStack {
-            Rectangle()
-                .fill(.mainPurple)
-                .frame(height: 100)
-
-            VStack {
-                Text("You have been invited to claim this event")
-                    .foregroundStyle(.white)
-
-                HStack(spacing: 12) {
-                    Button("Accept") {
-                        viewModel.claimEvent()
-                    }
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 8)
-                    .foregroundStyle(.mainPurple)
-                    .background(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-
-                    Button("Decline") {
-                        viewModel.declineEvent()
-                    }
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 8)
-                    .foregroundStyle(.mainPurple)
-                    .background(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                }
-            }
-        }
     }
 }
 
