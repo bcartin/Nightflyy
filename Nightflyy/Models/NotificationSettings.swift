@@ -6,10 +6,10 @@
 //
 
 import Foundation
-//import FirebaseFirestoreSwift
+// import FirebaseFirestoreSwift
 
 struct NotificationSettings: Codable {
-    
+
     var alertReceived: Bool
     var eventComment: Bool
     var eventGoing: Bool
@@ -18,7 +18,7 @@ struct NotificationSettings: Codable {
     var followStart: Bool
     var inviteToEvent: Bool
     var message: Bool
-    
+
     enum CodingKeys: String, CodingKey {
         case alertReceived = "alert_received"
         case message = "message"
@@ -29,7 +29,7 @@ struct NotificationSettings: Codable {
         case followStart = "follow_start"
         case inviteToEvent = "invite_to_event"
     }
-    
+
     init(defaultValue: Bool = true) {
         alertReceived = defaultValue
         message = defaultValue
@@ -40,6 +40,5 @@ struct NotificationSettings: Codable {
         followStart = defaultValue
         inviteToEvent = defaultValue
     }
-    
-    
+
 }

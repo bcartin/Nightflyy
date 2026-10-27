@@ -9,15 +9,15 @@ import SwiftUI
 
 @Observable
 class AppState {
-    
+
     static let shared = AppState()
-    
+
     private init() {}
-    
+
     var isLoading: Bool = false
-    
+
     var showSplashScreen = true
-    
+
     var selectedTab: AppTab = .home
 
     var showUpdateScreen: Bool {

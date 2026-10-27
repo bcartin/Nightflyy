@@ -10,9 +10,9 @@ import FirebaseFirestore
 
 struct Account: Identifiable, Codable, Savable {
     static var collection: String = FirestoreCollections.Accounts.value
-    
+
     @DocumentID var id = UUID().uuidString
-    
+
     // MARK: - Identity
     var accountType: AccountType?
     var accountIsPrivate: Bool?
@@ -25,7 +25,7 @@ struct Account: Identifiable, Codable, Savable {
     var phoneNumber: String?
     var profileImageUrl: String?
     var photoFileName: String?
-    
+
     // MARK: - Venue Profile
     var address: String?
     var businessEmail: String?
@@ -40,14 +40,14 @@ struct Account: Identifiable, Codable, Savable {
     var venues: [String]?
     var venueType: String?
     var website: String?
-    
+
     // MARK: - Plus Subscription
-    @ExplicitNull var bonusCreditDate: Date? = nil
+    @ExplicitNull var bonusCreditDate: Date?
     var nextCreditDate: Date?
     var plusCredits: Int?
     var plusMember: Bool?
     var plusProvider: Bool?
-    
+
     // MARK: - Social
     var attending: [String]?
     var blocked: [String]?
@@ -59,13 +59,13 @@ struct Account: Identifiable, Codable, Savable {
     var interested: [String]?
     var invited: [String]?
     var requested: [String]?
-    
+
     // MARK: - Location
     var city: String?
     var state: String?
     var geohash: String?
     var location: GeoPoint?
-    
+
     // MARK: - App Metadata
     var appVersion: String?
     var badgeCount: Int?
@@ -75,19 +75,18 @@ struct Account: Identifiable, Codable, Savable {
     var messageCount: Int?
     var notificationSettings: NotificationSettings?
     var token: String?
-    
+
     // MARK: - Computed Properties
 
     var uid: String {
         return self.id ?? ""
     }
-    
+
     // MARK: - Codable
-    
-    
+
     enum CodingKeys: String, CodingKey {
         case id
-        
+
         // Identity
         case accountType = "account_type"
         case accountIsPrivate = "account_is_private"
@@ -100,7 +99,7 @@ struct Account: Identifiable, Codable, Savable {
         case phoneNumber = "phone_number"
         case profileImageUrl = "profile_image_url"
         case photoFileName = "photo_file_name"
-        
+
         // Venue Profile
         case address
         case businessEmail = "business_email"
@@ -115,14 +114,14 @@ struct Account: Identifiable, Codable, Savable {
         case venues
         case venueType = "venue_type"
         case website
-        
+
         // Plus Subscription
         case bonusCreditDate = "bonus_credit_date"
         case nextCreditDate = "next_credit_date"
         case plusCredits = "plus_credits"
         case plusMember = "plus_member"
         case plusProvider = "plus_provider"
-        
+
         // Social
         case attending
         case blocked
@@ -134,13 +133,13 @@ struct Account: Identifiable, Codable, Savable {
         case interested
         case invited
         case requested
-        
+
         // Location
         case city
         case state
         case geohash = "g"
         case location = "l"
-        
+
         // App Metadata
         case appVersion = "app_version"
         case badgeCount = "badge_count"
@@ -154,12 +153,12 @@ struct Account: Identifiable, Codable, Savable {
 }
 
 extension Account {
-    
+
     func save() throws {
         try FirebaseManager.shared.db.collection(Account.collection).document(id!).setData(from: self, merge: true)
         firebaseCache[uid] = .account(self)
     }
-    
+
     func updateCache() {
         firebaseCache[uid] = .account(self)
     }
@@ -169,6 +168,5 @@ extension Account: Equatable {
     static func == (lhs: Account, rhs: Account) -> Bool {
         lhs.uid == rhs.uid
     }
-    
-    
+
 }

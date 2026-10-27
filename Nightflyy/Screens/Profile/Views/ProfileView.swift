@@ -8,48 +8,46 @@
 import SwiftUI
 
 struct ProfileView: View {
-    
+
     @Environment(Router.self) private var router
     @Environment(ToastsManager.self) private var toastsManager
     @Bindable var viewModel: ProfileViewModel
     @State private var hasLoadedInitialData = false
     var safeArea: EdgeInsets
     var size: CGSize
-    
-    
+
     var body: some View {
         @Bindable var toastsManager = toastsManager
-        
+
         ScrollView(.vertical) {
             VStack(alignment: .leading) {
                 HeaderImage(size: size, safeArea: safeArea, imageUrl: viewModel.account.profileImageUrl, hideImage: !viewModel.canInteract) {
-                    
+
                     HStack {
                         Text(viewModel.account.username ?? "")
                             .font(.system(size: 24, weight: .bold))
                             .foregroundStyle(.white)
-                        
+
                         if viewModel.isPlusProvider {
                             Image("plus_badge")
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                        }
-                        else if viewModel.isPlusAccount {
+                        } else if viewModel.isPlusAccount {
                             Image("plus_badge_user")
                                 .resizable()
                                 .frame(width: 24, height: 24)
                         }
-                        
+
                         Spacer()
                     }
                     .padding(.bottom, 15)
                 }
-                
+
                 HStack(alignment: .top, spacing: 16) {
                     Text(viewModel.account.name ?? "")
-                    
+
                     Spacer()
-                    
+
                     if viewModel.canInteract {
                         VStack(alignment: .center) {
                             Text("Followers")
@@ -60,7 +58,7 @@ struct ProfileView: View {
                             let viewModel = NetworkViewModel(account: viewModel.account, selectedSegment: 1)
                             router.navigateTo(.Network(viewModel))
                         }
-                        
+
                         VStack(alignment: .center) {
                             Text("Following")
                             Text("\(viewModel.account.followingCount)")
@@ -75,42 +73,40 @@ struct ProfileView: View {
                 .foregroundStyle(.white)
                 .font(.system(size: 18))
                 .padding(.horizontal, 12)
-                
+
                 if viewModel.hasBio {
                     ExpandableText(text: viewModel.account.bio ?? "", isExpanded: false)
                         .foregroundStyle(.white.opacity(0.8))
                 }
-                
+
                 if !viewModel.isSelf {
                     Divider()
                         .background(.white)
-                    
+
                     HStack {
-                        
+
                         IconButton(iconName: viewModel.followButtonProperties.icon, title: viewModel.followButtonProperties.title, color: viewModel.followButtonProperties.color) {
                             viewModel.followButtonAction()
                         }
                         .frame(maxWidth: .infinity)
-                        
-                        
+
                         IconButton(iconName: "ic_message", title: "Message") {
                             viewModel.messageButtonAction()
                         }
                         .frame(maxWidth: .infinity)
-                        
-                        
+
                         IconButton(iconName: "ic_invite", title: "Invite", isEnabled: viewModel.canInteract) {
                             let viewModel = InviteToEventViewModel(accountToInvite: viewModel.account)
                             router.navigateTo(.InviteToEvent(viewModel))
                         }
                         .frame(maxWidth: .infinity)
-                        
+
                     }
                 }
-                
+
                 Divider()
                     .background(.white)
-                
+
                 if viewModel.isPlusProvider {
                     Button {
                         viewModel.selectPresentView(for: .paywall)
@@ -119,23 +115,23 @@ struct ProfileView: View {
                             Image("plus_badge")
                                 .resizable()
                                 .frame(width: 30, height: 30)
-                            
+
                             VStack(alignment: .leading) {
                                 Text("Nightflyy+ Perk")
                                     .font(.system(size: 12))
                                     .foregroundColor(.onlineBlue)
-                                
+
                                 Text(viewModel.account.perkName ?? "")
                                     .font(.system(size: 15, weight: .bold))
                                     .foregroundStyle(.white)
-                                
+
                                 Text(viewModel.account.perkDetails ?? "")
                                     .font(.system(size: 10))
                                     .foregroundStyle(.white)
                             }
-                            
+
                             Spacer()
-                            
+
                             Image(systemName: "chevron.right")
                                 .foregroundStyle(.onlineBlue)
                         }
@@ -148,22 +144,20 @@ struct ProfileView: View {
                     }
 
                 }
-                
+
                 if viewModel.canInteract {
                     EventListView(header: "Upcoming Events", viewModels: viewModel.futureHostingEvents)
                     EventListView(header: "Events Attending", viewModels: viewModel.attendingEvents)
                     EventListView(header: "Past Events", viewModels: viewModel.pastHostingEvents)
-                }
-                else {
+                } else {
                     VStack(alignment: .center, spacing: 8) {
                         Spacer()
                             .frame(height: 120)
-                        
+
                         Image("ic_eye")
-                        
-                        
+
                         Text("Account is Private")
-                        
+
                         Spacer()
                     }
                     .foregroundStyle(.gray)
@@ -180,11 +174,11 @@ struct ProfileView: View {
         .background(.backgroundBlack)
         .task {
             viewModel.updateAccount()
-            
+
             guard !hasLoadedInitialData else { return }
             hasLoadedInitialData = true
             await viewModel.loadAccountEvents()
-            
+
         }
         .sheet(item: $viewModel.selectedPresentView) { screen in
             switch screen {
@@ -202,7 +196,7 @@ struct ProfileView: View {
         }
         .alert(isPresented: $viewModel.presentUnfollowAlert) {
             CustomDialog(title: "Unfollow \(viewModel.account.username ?? "")?",
-                         button1: .init(content: "Unfollow", tint: .mainPurple, foreground: .white, action: { folder in
+                         button1: .init(content: "Unfollow", tint: .mainPurple, foreground: .white, action: { _ in
                 viewModel.unfollowAccount()
             }),
                          button2: .init(content: "Cancel", tint: .gray, foreground: .white, action: { _ in
@@ -215,7 +209,7 @@ struct ProfileView: View {
         }
         .alert(isPresented: $viewModel.presentBlockAlert) {
             CustomDialog(title: "Block \(viewModel.account.username ?? "")?",
-                         button1: .init(content: "Block", tint: .mainPurple, foreground: .white, action: { folder in
+                         button1: .init(content: "Block", tint: .mainPurple, foreground: .white, action: { _ in
                 viewModel.handleBlockTapped()
             }),
                          button2: .init(content: "Cancel", tint: .gray, foreground: .white, action: { _ in
@@ -243,7 +237,7 @@ struct ProfileView: View {
         }
         .interactiveToast($toastsManager.toasts)
     }
-    
+
     @ViewBuilder
     func HeaderView() -> some View {
         GeometryReader { proxy in
@@ -251,9 +245,9 @@ struct ProfileView: View {
             let height = size.height * 0.45
             let progress = minY / (height * (minY > 0 ? 0.5 : 0.8))
             let titleProress = minY / height
-            
+
             HStack(spacing: 10) {
-                if #available(iOS 26.0, *) { //TODO: Remove when min version is iOS 26
+                if #available(iOS 26.0, *) { // TODO: Remove when min version is iOS 26
                     Button {
                         router.navigateBack()
                     } label: {
@@ -278,10 +272,10 @@ struct ProfileView: View {
                         }
                     }
                 }
-                
+
                 Spacer()
-                
-                if #available(iOS 26.0, *) { //TODO: Remove when min version is iOS 26
+
+                if #available(iOS 26.0, *) { // TODO: Remove when min version is iOS 26
                     Button {
                         viewModel.handleOptionsTapped()
                     } label: {
@@ -304,8 +298,8 @@ struct ProfileView: View {
                                 .tint(.white)
                         }
                     }
-                }                
-                
+                }
+
             }
             .overlay(content: {
                 Text(viewModel.account.username ?? "")
@@ -325,25 +319,23 @@ struct ProfileView: View {
         }
         .frame(height: 35)
     }
-    
-    
+
     @ViewBuilder
     func EventListView(header: String, viewModels: [EventListItemViewModel]) -> some View {
-        
+
         VStack(alignment: .leading) {
             Text(header.uppercased())
                 .font(.system(size: 14))
                 .foregroundStyle(.white)
                 .fontWeight(.medium)
-            
+
             if viewModels.isEmpty {
                 Text("No Events")
                     .foregroundStyle(.gray)
                     .fontWeight(.medium)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding()
-            }
-            else {
+            } else {
                 ForEach(viewModels, id: \.self) { viewModel in
                     LazyVStack {
                         EventListItemView(viewModel: viewModel) {
@@ -352,19 +344,19 @@ struct ProfileView: View {
                         .task {
                             await viewModel.fetchOwner()
                         }
-                        
+
                     }
                 }
             }
-            
+
         }
         .padding(.top, 8)
         .padding(.horizontal, 12)
-        
+
     }
 }
 
-//#Preview {
+// #Preview {
 //        ProfileContainer()
 //            .preferredColorScheme(.dark)
-//}
+// }

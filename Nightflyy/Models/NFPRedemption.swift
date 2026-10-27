@@ -15,14 +15,14 @@ enum RedemptionType: String, Codable {
 
 struct NFPRedemption: Codable, Savable {
     static var collection: String = FirestoreCollections.NFPRedemptions.value
-    
+
     @DocumentID var id = UUID().uuidString
     var venueID: String
     var venueName: String
     var redemptionType: RedemptionType?
     var date: Date
     var clientID: String
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case venueID = "venue_id"
@@ -34,7 +34,7 @@ struct NFPRedemption: Codable, Savable {
 }
 
 extension NFPRedemption {
-    
+
     func save() throws {
         try FirebaseManager.shared.db.collection(NFPRedemption.collection).document(id!).setData(from: self, merge: true)
     }

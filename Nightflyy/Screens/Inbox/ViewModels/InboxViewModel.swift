@@ -9,19 +9,18 @@ import SwiftUI
 
 @Observable @MainActor
 class InboxViewModel {
-    
+
     var shouldPresentNewChatView: Bool = false
     var searchText: String = ""
-    
+
     var viewModels: [InboxRowViewModel] {
         if searchText.isEmpty {
             return ChatsManager.shared.viewModels
-        }
-        else {
-            return ChatsManager.shared.viewModels.filter{$0.account?.username?.contains(searchText) ?? false}
+        } else {
+            return ChatsManager.shared.viewModels.filter {$0.account?.username?.contains(searchText) ?? false}
         }
     }
-    
+
     func markAsRead(chat: Chat) {
         if chat.lastMessageSender != AccountManager.shared.account?.uid {
             var chat = chat
@@ -29,10 +28,10 @@ class InboxViewModel {
             try? chat.save()
         }
     }
-    
+
     func navigateToChat(viewModel: InboxRowViewModel) {
         markAsRead(chat: viewModel.chat)
         Router.shared.navigateTo(.ChatView(viewModel))
     }
-    
+
 }

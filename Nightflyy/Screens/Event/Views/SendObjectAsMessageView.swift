@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct SendObjectAsMessageView: View {
-    
+
     @Bindable var viewModel: SendObjectAsMessageViewModel
     @FocusState private var isKeyboardActive: Bool
-    
+
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack {
@@ -20,11 +20,11 @@ struct SendObjectAsMessageView: View {
                         Image(systemName: "magnifyingglass")
                             .font(.callout)
                             .foregroundStyle(.white.opacity(0.5))
-                        
+
                         TextField("", text: $viewModel.searchText, prompt: Text("Search").foregroundStyle(.white.opacity(0.5)))
                             .submitLabel(.search)
                             .focused($isKeyboardActive)
-                        
+
                         if !viewModel.searchText.isEmpty {
                             Button {
                                 viewModel.searchText = ""
@@ -40,17 +40,16 @@ struct SendObjectAsMessageView: View {
                     .glassEffect(.regular, in: .capsule)
                     .padding(.top, 8)
                     .padding(.horizontal, 16)
-                }
-                else {
+                } else {
                     HStack(spacing: 8) {
                         Image(systemName: "magnifyingglass")
                             .font(.callout)
                             .foregroundStyle(.white.opacity(0.5))
-                        
+
                         TextField("", text: $viewModel.searchText, prompt: Text("Search").foregroundStyle(.white.opacity(0.5)))
                             .submitLabel(.search)
                             .focused($isKeyboardActive)
-                        
+
                         if !viewModel.searchText.isEmpty {
                             Button {
                                 viewModel.searchText = ""
@@ -67,22 +66,22 @@ struct SendObjectAsMessageView: View {
                     .cornerRadius(8)
                     .padding(.top, 8)
                     .padding(.horizontal, 16)
-                    
+
                 }
-                
+
                 ScrollView {
                     LazyVStack {
                         ForEach(viewModel.followers, id: \.self) { followerId in
                             MultiSelectAccountListItemView(accountId: followerId, selectedAccounts: $viewModel.selectedAccounts)
                                 .padding(.horizontal)
                         }
-                        
+
                         Divider()
                     }
                 }
                 .scrollIndicators(.hidden)
             }
-            
+
             if !viewModel.selectedAccounts.isEmpty {
                 Button(viewModel.isEvent ? "Send Invite" : "Send") {
                     viewModel.sendMessages()

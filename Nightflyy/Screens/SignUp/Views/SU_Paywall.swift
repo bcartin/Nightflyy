@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct SU_Paywall: View {
-    
+
     @Binding var viewModel: SignupViewModel
-    
+
     var body: some View {
         NFPContainerView()
             .navigationBarBackButtonHidden()

@@ -9,24 +9,24 @@ import SwiftUI
 
 @Observable @MainActor
 class ReportViewModel {
-    
+
     var reportReasons: [String] = ["Offensive Language",
                                    "Rude/Obscene Photos",
                                    "Inappropriate Messages",
                                    "Other"]
-    
+
     var selectedReason: String?
     var objectId: String
     var notes: String = ""
-    
+
     init(objectId: String) {
         self.objectId = objectId
     }
-    
+
     var hasSelectedReason: Bool {
         selectedReason != nil
     }
-    
+
     func submitReport() {
         guard let reason = selectedReason else { return }
         guard let uid = AccountManager.shared.account?.uid else { return }
@@ -34,6 +34,5 @@ class ReportViewModel {
         try? ReportsClient.submitReport(report: report)
         General.showSuccessMessage(message: "Report Sent", imageName: "checkmark.circle.fill")
     }
-    
-    
+
 }

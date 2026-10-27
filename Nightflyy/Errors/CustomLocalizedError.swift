@@ -8,17 +8,16 @@
 import Foundation
 
 struct CustomLocalizedError: LocalizedError {
-    
+
     var error: Error
-    
+
     var errorDescription: String? {
         return error.localizedDescription
     }
-    
+
     init?(error: Error?) {
         guard let error = error else { return nil }
         self.error = error
     }
-    
-}
 
+}

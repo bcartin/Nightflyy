@@ -8,21 +8,21 @@
 import Foundation
 
 extension [Event] {
-    
+
     func sorted() -> [Event] {
-        return self.sorted{$0.startDate ?? Date() < $1.startDate ?? Date()}
+        return self.sorted {$0.startDate ?? Date() < $1.startDate ?? Date()}
     }
-    
+
     func removingPastEvents() -> [Event] {
         return self.filter({$0.endDate ?? Date() > Date()})
     }
-    
+
     func onlyPastEvents() -> [Event] {
         return self.filter({$0.endDate ?? Date() < Date()})
     }
-    
+
     func removingPrivateEvents() -> [Event] {
         return self.filter({$0.eventIsPrivate != true})
     }
-    
+
 }

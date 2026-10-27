@@ -9,37 +9,37 @@ import SwiftUI
 
 @Observable
 class ToastsManager {
-    
+
     static let shared = ToastsManager()
-    
+
     private init() {}
-    
+
     var toasts: [Toast] = []
-    
+
     func showToast(label: String, imageName: String, autoDismiss: Bool = true) {
         withAnimation(.bouncy) {
             let toast = Toast { id in
                 self.ToastView(id, autoDismiss: autoDismiss, label: label, imageName: imageName)
             }
-            
+
             toasts.append(toast)
         }
     }
-    
+
     @ViewBuilder
     func ToastView(_ id: String, autoDismiss: Bool = true, label: String, imageName: String) -> some View {
         HStack(spacing: 12) {
             if autoDismiss {
                 Spacer()
             }
-            
+
             Image(systemName: imageName)
-            
+
             Text(label)
                 .font(.callout)
-            
+
             Spacer(minLength: 0)
-            
+
             if !autoDismiss {
                 Button {
                     self.toasts.delete(id)

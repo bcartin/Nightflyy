@@ -8,11 +8,11 @@
 import Foundation
 
 enum VenuesType: String, CaseIterable {
-    
+
     static var allValues: [String] {
         return allCases.map { $0.rawValue }
     }
-    
+
     case Bar
     case Lounge
     case Brewery
@@ -20,15 +20,15 @@ enum VenuesType: String, CaseIterable {
     case StripClub = "Strip Club"
     case Other
     case LiveMusic = "Live Music"
-    
+
 }
 
 enum MusicGenre: String, CaseIterable {
-    
+
     static var allValues: [String] {
         return allCases.map { $0.rawValue }
     }
-    
+
     case Top40 = "Top 40"
     case HipHop = "Hip-Hop"
     case RNB = "R&B"
@@ -57,11 +57,11 @@ enum MusicGenre: String, CaseIterable {
 }
 
 enum ClienteleType: String, CaseIterable {
-    
+
     static var allValues: [String] {
         return allCases.map { $0.rawValue }
     }
-    
+
     case YoungProfessional = "Young Professional"
     case College
     case Urban
@@ -69,5 +69,5 @@ enum ClienteleType: String, CaseIterable {
     case Mature
     case Hipster
     case QueerLGBTQ =  "Queer/LGBTQ"
-    
+
 }

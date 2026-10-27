@@ -12,7 +12,7 @@ public struct CachedAsyncImage<S: Shape>: View {
     private let url: URL?
     private let contentMode: ContentMode = .fill
     private let size: CGSize
-    @State private var image: Image? = nil
+    @State private var image: Image?
     @State private var isLoading = false
 
     public init(url: URL?, size: CGSize, shape: S, contentMode: ContentMode = .fill) {

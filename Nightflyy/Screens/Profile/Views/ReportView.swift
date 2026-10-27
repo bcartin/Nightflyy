@@ -8,19 +8,18 @@
 import SwiftUI
 
 struct ReportView: View {
-    
+
     @Environment(\.dismiss) var dismiss
     @Bindable var viewModel: ReportViewModel
-    
+
     var body: some View {
         VStack {
             Text("Report User")
                 .font(.system(size: 18, weight: .bold))
                 .padding()
-            
-            
+
             Picker("", selection: $viewModel.selectedReason, ) {
-                Text("Select a Reason").tag(Optional<String>(nil))
+                Text("Select a Reason").tag(String?(nil))
                 ForEach(viewModel.reportReasons, id: \.self) {
                     Text($0).tag(Optional($0))
                 }
@@ -28,7 +27,7 @@ struct ReportView: View {
             .pickerStyle(.menu)
             .tint(.white)
             .padding()
-            
+
             TextField("", text: $viewModel.notes, prompt: Text("Notes").foregroundStyle(.white.opacity(0.4)), axis: .vertical)
                 .overlay(alignment: .bottom) {
                     Divider()
@@ -37,17 +36,17 @@ struct ReportView: View {
                 }
                 .multilineTextAlignment(.leading)
                 .padding(.horizontal, 36)
-            
+
             Spacer()
-            
+
             HStack {
                 Spacer()
-                
+
                 Button("CANCEL") {
                     dismiss()
                 }
                 .padding()
-                
+
                 Button("SUBMIT") {
                     viewModel.submitReport()
                     dismiss()

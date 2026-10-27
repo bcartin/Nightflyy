@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ChatView: View {
-    
+
     @Bindable var viewModel: InboxRowViewModel
-    
+
     var body: some View {
         VStack {
             ScrollView(.vertical) {
@@ -19,7 +19,7 @@ struct ChatView: View {
                         MessageView(viewModel: .init(message: message))
                             .padding(.horizontal, 12)
                     }
-                    
+
                     HStack { Spacer() }
                         .id("Bottom")
                         .onReceive(keyboardPublisher) { value in
@@ -36,12 +36,12 @@ struct ChatView: View {
                 }
             }
             .scrollDismissesKeyboard(.interactively)
-            
+
             HStack(alignment: .top) {
                 TextField("Message", text: $viewModel.messageText, axis: .vertical)
                     .padding()
                     .multilineTextAlignment(.leading)
-                
+
                 Button(action: {
                     viewModel.sendMessage()
                 }, label: {
@@ -72,7 +72,7 @@ struct ChatView: View {
         }
         .errorAlert(error: $viewModel.error, buttonTitle: "OK")
     }
-    
+
     @ViewBuilder
     func CustomHeaderView() -> some View {
         VStack(spacing: 6) {
@@ -80,13 +80,13 @@ struct ChatView: View {
                 UserImageRound(imageUrl: viewModel.profileImageUrl, size: 45)
             }
             .frame(width: 50, height: 50)
-            
+
             Button {
                 viewModel.goToProfile()
             } label: {
                 HStack(spacing: 2) {
                     Text(viewModel.userName )
-                    
+
                     Image(systemName: "chevron.right")
                         .font(.caption2)
                 }
@@ -107,9 +107,7 @@ struct ChatView: View {
     }
 }
 
-//#Preview {
+// #Preview {
 //    InboxView(showMenu: .constant(false), viewModel: InboxViewModel())
 //        .preferredColorScheme(.dark)
-//}
-
-
+// }

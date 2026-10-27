@@ -8,17 +8,16 @@
 import SwiftUI
 
 struct NFPContainerView: View {
-    
+
     @State var signUpViewModel: NFPSignUpViewModel = .init()
     @State var viewModel: NFPRedeemViewModel = .init()
     @Environment(AppState.self) private var appState
-    
+
     var body: some View {
         ZStack {
             if AccountManager.shared.isPlusMember {
                 MemberView()
-            }
-            else {
+            } else {
                 switch signUpViewModel.displayView {
                 case .paywall:
                     PaywallView(viewModel: $signUpViewModel)
@@ -36,7 +35,7 @@ struct NFPContainerView: View {
                         .transition(.opacity)
                 }
             }
-            
+
             if appState.isLoading {
                 LoadingView()
             }

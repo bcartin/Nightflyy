@@ -10,9 +10,9 @@ import FirebaseFirestore
 import OSLog
 
 class CommentsClient {
-    
+
     static let shared = CommentsClient()
-    
+
     static func fetchComments(for eventId: String, since: Date? = nil) async throws -> [Comment] {
         var comments: [Comment] = .init()
         let date = since ?? Date().addingTimeInterval(-10000000)
@@ -24,25 +24,24 @@ class CommentsClient {
         })
         return comments
     }
-    
+
     static func getNumberOfComments(for eventId: String) async -> Int {
         do {
             let query = FirebaseManager.shared.db.collection(FirestoreCollections.Events.value).document(eventId).collection(FirestoreCollections.Events.comments)
             let countQuery = query.count
             let snapshot = try await countQuery.getAggregation(source: .server)
             return Int(truncating: snapshot.count)
-        }
-        catch {
+        } catch {
             Logger.network.error("Error getting comment count for event \(eventId): \(error.localizedDescription)")
             return 0
         }
     }
-    
+
     static func saveComment(for eventId: String, comment: Comment) throws {
         let ref = FirebaseManager.shared.db.collection(FirestoreCollections.Events.value).document(eventId).collection(FirestoreCollections.Events.comments)
         try ref.addDocument(from: comment)
     }
-    
+
     static func likeComment(eventId: String, commentId: String) async throws {
         guard let uid = AccountManager.shared.account?.uid else {return}
         try await FirebaseManager.shared.db.collection(FirestoreCollections.Events.value)
@@ -53,7 +52,7 @@ class CommentsClient {
                 FirestoreCollections.Events.likes: FieldValue.arrayUnion([uid])
             ])
     }
-    
+
 }
 // MARK: - CommentsClientProtocol
 
@@ -61,17 +60,16 @@ extension CommentsClient: CommentsClientProtocol {
     func fetchComments(for eventId: String, since: Date?) async throws -> [Comment] {
         try await Self.fetchComments(for: eventId, since: since)
     }
-    
+
     func getNumberOfComments(for eventId: String) async -> Int {
         await Self.getNumberOfComments(for: eventId)
     }
-    
+
     func saveComment(for eventId: String, comment: Comment) throws {
         try Self.saveComment(for: eventId, comment: comment)
     }
-    
+
     func likeComment(eventId: String, commentId: String) async throws {
         try await Self.likeComment(eventId: eventId, commentId: commentId)
     }
 }
-

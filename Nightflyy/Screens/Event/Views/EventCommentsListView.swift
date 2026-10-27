@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct EventCommentsListView: View {
-    
+
     @Bindable var viewModel: EventViewModel
-    
+
     var body: some View {
         VStack {
             ScrollView {
                 Text("Comments")
                     .font(.system(size: 14, weight: .medium))
                     .padding(18)
-                
+
                 ForEach(viewModel.commentsViewModels, id: \.self) { viewModel in
                     LazyVStack {
                         EventCommentView(viewModel: viewModel)
@@ -28,12 +28,12 @@ struct EventCommentsListView: View {
                     }
                 }
             }
-            
+
             HStack(alignment: .top) {
                 TextField("", text: $viewModel.commentText, prompt: Text("Comment").foregroundStyle(.gray.opacity(0.5)), axis: .vertical)
                     .padding()
                     .multilineTextAlignment(.leading)
-                
+
                 Button(action: {
                     viewModel.saveComment()
                 }, label: {
@@ -54,8 +54,6 @@ struct EventCommentsListView: View {
         .backgroundImage("slyde_background")
         .background(.backgroundBlack)
         .scrollIndicators(.hidden)
-        
+
     }
 }
-
-

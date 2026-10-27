@@ -8,10 +8,10 @@
 import Foundation
 
 enum FirestoreCollections {
-    
+
     enum Accounts {
         static let value = "accounts"
-        
+
         static let reviews = "reviews"
         static let notifications = "notifications"
         static let redemptionCode = "redemption_code"
@@ -25,10 +25,10 @@ enum FirestoreCollections {
         static let followers = "followers"
         static let following = "following"
     }
-    
+
     enum Events {
         static let value = "events"
-        
+
         static let attending = "attending"
         static let invited = "invited"
         static let interested = "interested"
@@ -40,53 +40,53 @@ enum FirestoreCollections {
         static let likes = "likes"
         static let perkRedemptionCode = "perk_redemption_code"
     }
-    
+
     enum Chats {
         static let value = "chats"
-        
+
         static let members = "members"
     }
-    
+
     enum Messages {
         static let value = "messages"
-        
+
         static let date = "date"
     }
-    
+
     enum Usernames {
         static let value = "usernames"
-        
+
         static let usernames = "usernames"
     }
-    
+
     enum Notifications {
         static let value = "notifications"
-        
+
         static let date = "date"
     }
-    
+
     enum NFPRedemptions {
         static let value = "nfp_redemptions"
     }
-    
+
     enum NFPInvites {
         static let value = "nfp_invites"
     }
-    
+
     enum BACodes {
         static let value = "ba_codes"
-        
+
         static let code = "code"
         static let isEnabled = "is_enabled"
         static let redemptions = "redemptions"
     }
-    
+
     enum Reports {
         static let value = "reports"
     }
-    
+
     enum GenericFields {
         static let date = "date"
     }
-    
+
 }

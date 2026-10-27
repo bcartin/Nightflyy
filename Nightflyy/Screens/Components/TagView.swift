@@ -5,9 +5,9 @@
 //  Created by Bernie Cartin on 4/11/25.
 //
 
-//import SwiftUI
+// import SwiftUI
 //
-//struct TagView: View {
+// struct TagView: View {
 //    
 //    var tag: String
 //    var color: Color
@@ -31,8 +31,8 @@
 //        }
 //        
 //    }
-//}
+// }
 //
-//#Preview {
+// #Preview {
 //    TagView(tag: "Reggae", color: .mainPurple, icon: "music.note", isSelected: false)
-//}
+// }

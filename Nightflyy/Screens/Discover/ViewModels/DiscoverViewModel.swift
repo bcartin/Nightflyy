@@ -6,11 +6,11 @@
 //
 
 import SwiftUI
-//import Combine
+// import Combine
 
 @Observable @MainActor
 class DiscoverViewModel {
-    
+
     var selectedVenues: [String] = .init()
     var selectedMusic: [String] = .init()
     var selectedCrowds: [String] = .init()
@@ -20,16 +20,16 @@ class DiscoverViewModel {
     var presentFilterView: Bool = false
     var selectedFilterView: FilterView?
     var filterPlusOnly: Bool = false
-        
+
     var filterViewModel = EventsFilterViewModel(searchForVenues: true)
-    
+
     var searchText: String = ""
     var searchResultsViewModel: SearchResultsListViewModel!
-    
+
     init() {
         searchResultsViewModel = SearchResultsListViewModel()
     }
-    
+
     func clearFilters() {
         selectedVenues.removeAll()
         selectedMusic.removeAll()
@@ -39,7 +39,7 @@ class DiscoverViewModel {
         selectedMaxCover = nil
         searchText = ""
     }
-    
+
     var locationFilterButtonText: String {
         switch filterViewModel.selectedFiler {
         case .nearby:
@@ -50,47 +50,47 @@ class DiscoverViewModel {
             return "\(city.city), \(city.state)"
         }
     }
-    
+
     var dateFilterButtonText: String {
         return hasDateFilter ? selectedDate?.stringValue(format: "MMM, dd") ?? "" : "Date"
     }
-    
+
     var hasDateFilter: Bool {
         selectedDate != nil
     }
-    
+
     var coverFilterButtonText: String {
         return hasCoverFilter ? "$\(selectedMaxCover ?? 0)" : "Cover"
     }
-    
+
     var hasCoverFilter: Bool {
         selectedMaxCover != nil
     }
-    
+
     var ratingFilterButtonText: String {
         return hasRatingFilter ? "\(selectedRating ?? 0)⭐️" : "Rating"
     }
-    
+
     var hasRatingFilter: Bool {
         selectedRating != nil
     }
-    
+
     var displayEvents: [Event] {
         switch filterViewModel.selectedFiler {
-            
+
         case .nearby:
             filterEvents(EventsManager.shared.nearbyEvents)
         case .following:
             filterEvents(EventsManager.shared.followingEvents)
-        case .location(_):
+        case .location:
             filterEvents(EventsManager.shared.locationEvents)
         }
     }
-    
+
     var resultsCount: Int {
         return filteredDisplayEvents.count + filteredVenues.count
     }
-    
+
     var filteredDisplayEvents: [Event] {
         displayEvents
             .filter {
@@ -105,7 +105,7 @@ class DiscoverViewModel {
                 return selectedCrowds.contains(where: eventCrowds.contains) || selectedCrowds.isEmpty
             }
     }
-    
+
     var filteredVenues: [Account] {
         EventsManager.shared.locationVenues
             .filter {
@@ -123,11 +123,11 @@ class DiscoverViewModel {
                 !filterPlusOnly || ($0.plusProvider ?? false)
             }
     }
-    
+
     var hasResults: Bool {
         resultsCount > 0
     }
-    
+
     func makeFilterResultsViewModel() -> SearchResultsListViewModel {
         var searchResults: [SearchResult] = .init()
         searchResults.append(contentsOf: filteredDisplayEvents.map {
@@ -138,64 +138,64 @@ class DiscoverViewModel {
         })
         return SearchResultsListViewModel(searchResults: searchResults)
     }
-    
+
     func navigateToResultsView() {
         let viewModel = makeFilterResultsViewModel()
         Router.shared.navigateTo(.SearchResultsListView(viewModel))
     }
-    
+
     func selectFilterView(_ filter: FilterView) {
         selectedFilterView = filter
         presentFilterView = true
     }
-    
+
     func filterEvents(_ events: [Event]) -> [Event] {
         var events = events
-        
-        //Filter By Music
+
+        // Filter By Music
         events = selectedMusic.isEmpty ? events : events.filter({ event in
             if let music = event.eventMusic {
                 return music.contains(where: selectedMusic.contains)
             }
             return false
         })
-        
-        //Filter By Venue Type
-        events = selectedVenues.isEmpty ? events : events.filter{ selectedVenues.contains($0.eventVenueType ?? "")}
-        
-        //Filter By Crowds
+
+        // Filter By Venue Type
+        events = selectedVenues.isEmpty ? events : events.filter { selectedVenues.contains($0.eventVenueType ?? "")}
+
+        // Filter By Crowds
         events = selectedCrowds.isEmpty ? events : events.filter({ event in
             if let crowds = event.eventCrowds {
                 return crowds.contains(where: selectedCrowds.contains)
             }
             return false
         })
-        
-        //Filter By Date
+
+        // Filter By Date
         if let selectedDate = selectedDate {
-            events = events.filter{$0.startDate!.isSameDay(as: selectedDate)}
+            events = events.filter {$0.startDate!.isSameDay(as: selectedDate)}
         }
 
-        //Filter By Cover
+        // Filter By Cover
         if let selectedMaxCover = selectedMaxCover {
-            events = events.filter{$0.maxPrice ?? 0 <= selectedMaxCover}
+            events = events.filter {$0.maxPrice ?? 0 <= selectedMaxCover}
         }
-        
-        //Filter By Plus Only
+
+        // Filter By Plus Only
         if filterPlusOnly {
             events = events.filter({$0.hasPerk ?? false == true})
         }
-        
+
         return events
     }
 }
 
 extension DiscoverViewModel {
-    
+
     enum FilterView {
         case date
         case cover
         case rating
     }
-    
+
 }

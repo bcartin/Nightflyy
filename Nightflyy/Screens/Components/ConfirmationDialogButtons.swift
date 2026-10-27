@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct ConfirmationDialogButtons: View {
-    
-    //State values
+
+    // State values
     @State private var showButtonDialog = true
-    
-    //Body
+
+    // Body
     var body: some View {
         ZStack {
             VStack {
@@ -35,29 +35,29 @@ struct ConfirmationDialogButtons: View {
 
 extension View {
     func buttonDialog(
-        
+
         title: String? = nil,
         isPresented: Binding<Bool>,
-        
+
         labelColor: Color? = nil,
         buttonSpacing: CGFloat? = nil,
         buttonBackground: Color? = nil,
         buttonCornerRadius: CGFloat? = nil,
-        
+
         @ViewBuilder buttons: @escaping () -> some View
-        
+
     ) -> some View {
         self
             .modifier(
                 ButtonDialogModifier(
                     title: title,
                     isPresented: isPresented,
-                    
+
                     labelColor: labelColor,
                     buttonSpacing: buttonSpacing,
                     buttonBackground: buttonBackground,
                     buttonCornerRadius: buttonCornerRadius,
-                    
+
                     buttons: buttons
                 )
             )
@@ -65,71 +65,71 @@ extension View {
 }
 
 struct ButtonDialogModifier<Buttons: View>: ViewModifier {
-    
-    //Parameters
+
+    // Parameters
     var title: String?
     @Binding var isPresented: Bool
-    
+
     var labelColor: Color
     var buttonSpacing: CGFloat
     var buttonBackground: Color
     var buttonCornerRadius: CGFloat
     var dialogCornerRadius: CGFloat
-    
+
     @ViewBuilder let buttons: () -> Buttons
-    
-    //Default values
+
+    // Default values
     private let defaultLabelColor: Color = .mainPurple
     private let defaultButtonBackground: Color = .backgroundBlackLight
     private let defaultCornerRadius: CGFloat = 12
     private var cancelButtonLabelColor: Color
-    
-    //Initializer
+
+    // Initializer
     init(
         title: String? = nil,
         isPresented: Binding<Bool>,
-        
+
         labelColor: Color? = nil,
         buttonSpacing: CGFloat? = nil,
         buttonBackground: Color? = nil,
         buttonCornerRadius: CGFloat? = nil,
         dialogCornerRadius: CGFloat? = nil,
-        
+
         buttons: @escaping () -> Buttons
     ) {
-        //Initialize with default values
+        // Initialize with default values
         self.title = title
         self._isPresented = isPresented
-        
+
         self.labelColor = labelColor ?? defaultLabelColor
         self.buttonSpacing = buttonSpacing ?? 0
         self.buttonBackground = buttonBackground ?? defaultButtonBackground
         self.buttonCornerRadius = (buttonCornerRadius != nil ? buttonCornerRadius : self.buttonSpacing == 0 ? 0 : buttonCornerRadius) ?? defaultCornerRadius
         self.dialogCornerRadius = dialogCornerRadius ?? buttonCornerRadius ?? defaultCornerRadius
-        
+
         self.buttons = buttons
-        
+
         self.cancelButtonLabelColor = self.labelColor
     }
-    
-    //Body
+
+    // Body
     func body(content: Content) -> some View {
-        
+
         content
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .overlay {
                 ZStack(alignment: .bottom) {
-                    
+
                     if isPresented {
                         Color.black
                             .opacity(0.2)
                             .ignoresSafeArea()
                             .transition(.opacity)
                     }
-                    
+
                     if isPresented {
-                        
-                        //Menu wrapper
+
+                        // Menu wrapper
                         VStack(spacing: 10) {
                             VStack(spacing: buttonSpacing) {
                                 if let title {
@@ -146,8 +146,8 @@ struct ButtonDialogModifier<Buttons: View>: ViewModifier {
                             }
                             .font(.title3)
                             .clipShape(RoundedRectangle(cornerRadius: dialogCornerRadius))
-                            
-                            //Cancel button
+
+                            // Cancel button
                             Button {
                                 isPresented.toggle()
                             } label: {
@@ -164,15 +164,15 @@ struct ButtonDialogModifier<Buttons: View>: ViewModifier {
                 .animation(.easeInOut(duration: 0.2), value: isPresented)
             }
     }
-    
-    //Custom full-width button style
+
+    // Custom full-width button style
     struct FullWidthButtonStyle: ButtonStyle {
-        
-        //Parameters
+
+        // Parameters
         var labelColor: Color
         var buttonBackground: Color = Color(UIColor.secondarySystemBackground)
         var buttonCornerRadius: CGFloat
-        
+
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
                 .frame(maxWidth: .infinity) // Make the button full width
@@ -183,9 +183,8 @@ struct ButtonDialogModifier<Buttons: View>: ViewModifier {
                 .overlay(Divider(), alignment: .top)
         }
     }
-    
-}
 
+}
 
 #Preview {
     ConfirmationDialogButtons()

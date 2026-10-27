@@ -17,7 +17,7 @@ enum AppNotificationType: String, Codable {
     case event_created = "event_created"
     case event_alert = "event_alert"
     case event_interested = "event_interested"
-    
+
     var mainLabelText: String {
         switch self {
         case .follow_request:

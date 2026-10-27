@@ -9,13 +9,13 @@ import Foundation
 
 @MainActor
 class Navigator {
-    
+
     var router: Router
-    
+
     init(router: Router) {
         self.router = router
     }
-    
+
     func handleUniversalLink(url: URL) {
         Task {
             let link = UniversalLink(url: url)
@@ -40,8 +40,8 @@ class Navigator {
             }
         }
     }
-    
-    func handlePushNotification(userInfo: [AnyHashable:Any]) {
+
+    func handlePushNotification(userInfo: [AnyHashable: Any]) {
         Task {
             guard let typeString = userInfo["type"] as? String else {
                 print("Notification has no type")
@@ -70,19 +70,19 @@ class Navigator {
             }
         }
     }
-    
+
     private func navigateToEvent(eventId: String) async {
         guard AuthenticationManager.shared.isSignedIn else {return}
         let event = await EventClient.fetchEvent(eventId: eventId)
         router.navigateToEvent(event: event)
     }
-    
+
     private func navigateToAccount(accountId: String) async {
         guard AuthenticationManager.shared.isSignedIn else {return}
         let account = await AccountClient.fetchAccount(accountId: accountId)
         router.navigateToProfile(account: account)
     }
-    
+
     private func openNFPpaywall(accountId: String?) async {
         if let accountId = accountId, !accountId.isEmpty {
             if let account = await AccountClient.fetchAccount(accountId: accountId) {
@@ -92,7 +92,7 @@ class Navigator {
         guard AuthenticationManager.shared.isSignedIn else {return}
         NFPManager.shared.showNFPView = true
     }
-    
+
     private func navigateToChat(chatId: String?) async {
         AppState.shared.selectedTab = .inbox
         guard let chatId else {return}
@@ -100,9 +100,9 @@ class Navigator {
             router.navigateTo(.ChatView(viewModel))
         }
     }
-    
+
     private func navigateToTab(_ tab: AppTab) {
         AppState.shared.selectedTab = tab
     }
-    
+
 }

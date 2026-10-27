@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct DiscoverResultsListView: View {
-    
+
     @Bindable var viewModel: SearchResultsListViewModel
-    
+
     var body: some View {
         VStack(alignment: .leading) {
-            
+
             SegmentedView(segments: viewModel.segments, selected: $viewModel.selectedSegment)
-            
+
             ScrollView {
                 if viewModel.selectedSegment == 0 {
                     LazyVStack {
@@ -48,8 +48,7 @@ struct DiscoverResultsListView: View {
                             }
                         }
                     }
-                }
-                else if viewModel.selectedSegment == 1 {
+                } else if viewModel.selectedSegment == 1 {
                     LazyVStack {
                         ForEach(viewModel.eventResultsViewModels, id: \.self) { vm in
                             EventListItemView(viewModel: vm) {
@@ -60,15 +59,13 @@ struct DiscoverResultsListView: View {
                             }
                         }
                     }
-                }
-                else if viewModel.selectedSegment == 2 {
+                } else if viewModel.selectedSegment == 2 {
                     ForEach(viewModel.venueResultsViewModels, id: \.self) { vm in
                         VenueListItemView(viewModel: vm) {
                             vm.navigateToProfile()
                         }
                     }
-                }
-                else if viewModel.selectedSegment == 3 {
+                } else if viewModel.selectedSegment == 3 {
                     ForEach(viewModel.personResultsViewModels, id: \.self) { vm in
                         PersonListItemView(viewModel: vm) {
                             vm.navigateToProfile()
@@ -92,4 +89,3 @@ struct DiscoverResultsListView: View {
         }
     }
 }
-

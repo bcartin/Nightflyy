@@ -8,19 +8,19 @@
 import SwiftUI
 
 struct EventCardView: View {
-    
+
     @Bindable var viewModel: EventCardViewModel
     var size: CGSize
-    
+
     var body: some View {
         VStack(spacing: 0) {
             HStack {
                 UserImageRound(imageUrl: viewModel.eventOwner?.profileImageUrl, size: 24)
-                
+
                 Text(viewModel.ownerName)
                     .foregroundStyle(.white)
                     .font(.system(size: 16))
-                
+
                 Spacer()
             }
             .padding(.bottom, 8)
@@ -30,7 +30,7 @@ struct EventCardView: View {
                         viewModel.navigateToProfile()
                     }
             )
-            
+
             ZStack(alignment: .top) {
                 EventImage(imageUrl: viewModel.event.eventFlyerUrl, size: CGSize(width: size.width - 110, height: (size.width - 110) * 1.375))
                     .clipShape(.rect(cornerRadius: 12))
@@ -38,12 +38,12 @@ struct EventCardView: View {
                     .onTapGesture {
                         viewModel.navigateToEventDetails()
                     }
-                
-                HStack() {
+
+                HStack {
                     Spacer()
-                    
-                    VStack(alignment: .trailing ,spacing: 12) {
-                        
+
+                    VStack(alignment: .trailing, spacing: 12) {
+
                         Text(viewModel.eventDateString)
                             .foregroundStyle(.white)
                             .padding(6)
@@ -51,10 +51,10 @@ struct EventCardView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                             .padding(.trailing, 18)
                             .padding(.top, 4)
-                        
+
                         Spacer()
                             .frame(height: (size.width - 255) * 1.375)
-                        
+
                         Menu {
                             Button("Interested") {
                                 viewModel.markAsInterested()
@@ -81,7 +81,7 @@ struct EventCardView: View {
                                         .stroke(viewModel.attendingButtonProperties.color, lineWidth: 1)
                                 }
                         }
-                        
+
                         Menu {
                             ShareLink(item: viewModel.shareLink, message: Text("Check out this event on Nightflyy!")) {
                                 Label("Share Event", systemImage: "")
@@ -105,7 +105,7 @@ struct EventCardView: View {
                                         .stroke(.white, lineWidth: 1)
                                 }
                         }
-                        
+
                         Button {
                             viewModel.navigateToGuestList()
                         } label: {
@@ -124,30 +124,30 @@ struct EventCardView: View {
                                         .stroke(.white, lineWidth: 1)
                                 }
                         }
-                        
+
                     }
                     .frame(minHeight: .zero)
                 }
             }
-            
+
             Text(viewModel.event.eventName ?? "")
                 .font(.system(size: 24, weight: .bold))
                 .foregroundStyle(.white)
                 .padding(.top, 4)
-            
+
             HStack {
                 Image("ic_pin")
                     .resizable()
                     .frame(width: 14, height: 14)
                     .foregroundStyle(.mainPurple)
-                
+
                 Text(viewModel.eventLocation)
                     .font(.system(size: 17))
                     .foregroundStyle(.white)
                     .padding(.trailing, 14)
             }
             .frame(maxWidth: .infinity)
-            
+
             if viewModel.event.hasPerk ?? false {
                 Label {
                     Text(viewModel.event.perkName ?? "")
@@ -158,7 +158,7 @@ struct EventCardView: View {
                         .resizable()
                         .frame(width: 12, height: 12)
                 }
-                .padding(.horizontal,8)
+                .padding(.horizontal, 8)
                 .padding(.vertical, 2)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
@@ -167,7 +167,7 @@ struct EventCardView: View {
                 .padding(.top, 4)
 
             }
-            
+
         }
         .frame(width: size.width - 86)
         .background(.clear)
@@ -182,4 +182,3 @@ struct EventCardView: View {
     EventCardView(viewModel: EventCardViewModel(event: TestData.events.first!),
                   size: CGSize(width: 393, height: 392))
 }
-

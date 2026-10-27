@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct AlertTemplate: View {
-    
+
     @State private var showAlert = true
-    
+
     var body: some View {
         ScrollView {
             Button("Show Alert") {
@@ -20,7 +20,7 @@ struct AlertTemplate: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.backgroundBlack)
         .alert(isPresented: $showAlert) {
-            CustomDialog(title: "Unfollow NinjaTacos", content: nil,  button1: .init(content: "Unfollow", tint: .mainPurple, foreground: .white, action: { folder in
+            CustomDialog(title: "Unfollow NinjaTacos", content: nil, button1: .init(content: "Unfollow", tint: .mainPurple, foreground: .white, action: { folder in
                 print(folder)
                 showAlert = false
             }), button2: .init(content: "Cancel", tint: .white.opacity(0.5), foreground: .white, action: { _ in
@@ -31,8 +31,7 @@ struct AlertTemplate: View {
             Rectangle()
                 .fill(.primary.opacity(0.35))
         }
-        
-        
+
     }
 }
 
@@ -43,15 +42,15 @@ struct AlertTemplate: View {
 
 struct CustomDialog: View {
     var title: String
-    var content: String? 
+    var content: String?
     var image: Config = .init(content: "folder.fill.badge.plus", tint: .mainPurple, foreground: .backgroundBlackLight)
     var button1: Config
     var button2: Config?
     var addsTextField: Bool = false
     var textFieldHint: String = ""
-    
+
     @State private var text: String = ""
-    
+
     var body: some View {
         VStack(spacing: 15) {
             Image("ic_hub")
@@ -64,12 +63,12 @@ struct CustomDialog: View {
                     Circle()
                         .stroke(.clear, lineWidth: 4)
                 }
-            
+
             Text(title)
                 .font(.title3.bold())
                 .foregroundStyle(.white)
                 .padding(.top, 8)
-            
+
             if let content {
                 Text(content)
                     .font(.system(size: 14))
@@ -77,7 +76,7 @@ struct CustomDialog: View {
                     .lineLimit(2)
                     .foregroundStyle(.gray)
             }
-            
+
             if addsTextField {
                 TextField(textFieldHint, text: $text)
                     .padding(.horizontal, 15)
@@ -88,10 +87,10 @@ struct CustomDialog: View {
                     )
                     .padding(.bottom, 5)
             }
-            
+
             ButtonView(button1)
                 .padding(.top, 8)
-            
+
             if let button2 {
                 ButtonView(button2)
                     .padding(.top, -5)
@@ -107,7 +106,7 @@ struct CustomDialog: View {
         .frame(maxWidth: 310)
         .compositingGroup()
     }
-    
+
     @ViewBuilder
     private func ButtonView(_ config: Config) -> some View {
         Button {
@@ -119,15 +118,15 @@ struct CustomDialog: View {
                 .padding(.vertical, 10)
                 .frame(maxWidth: .infinity)
                 .background(config.tint.gradient, in: .rect(cornerRadius: 10))
-                
+
         }
 
     }
-    
+
     struct Config {
         var content: String
         var tint: Color
         var foreground: Color
-        var action: (String) -> () = { _ in }
+        var action: (String) -> Void = { _ in }
     }
 }

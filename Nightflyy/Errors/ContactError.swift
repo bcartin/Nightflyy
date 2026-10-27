@@ -8,7 +8,7 @@
 import Foundation
 
 enum ContactError: Error {
-    
+
     case failureResponse
-    
+
 }

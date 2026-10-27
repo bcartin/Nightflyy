@@ -13,16 +13,16 @@ struct LongTextInputView: View {
     @Binding var text: String
     @Environment(\.dismiss) var dismiss
     @FocusState private var isFieldFocused: Bool
-    
+
     var body: some View {
         VStack {
-            
+
             TextField("", text: $text, prompt: Text(prompt).foregroundStyle(.white.opacity(0.5)), axis: .vertical)
                 .font(.system(size: 14))
                 .focused($isFieldFocused)
-            
+
             Spacer()
-            
+
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)

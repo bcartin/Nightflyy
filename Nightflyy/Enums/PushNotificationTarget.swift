@@ -8,13 +8,13 @@
 import Foundation
 
 enum PushNotificationTarget: String, CaseIterable {
-    
+
     static var allValues: [String] {
         return allCases.map { $0.rawValue.capitalized }
     }
-    
+
     case everyone
     case nfplus = "nightflyy_plus"
     case test
-    
+
 }

@@ -8,26 +8,25 @@
 import SwiftUI
 
 struct VenueListItemView: View {
-    
+
     var viewModel: VenueListItemViewModel
-    var tapAction: ButtonAction? = nil
-    
+    var tapAction: ButtonAction?
+
     var body: some View {
         HStack(spacing: 0) {
-            
+
             if let profileImageUrl = viewModel.venue.profileImageUrl {
                 CachedAsyncImage(url: URL(string: profileImageUrl), size: .init(width: 70, height: 70), shape: .rect)
                 .cornerRadius(12, corners: [.bottomLeft, .topLeft])
-            }
-            else {
+            } else {
                 Image("venue_default", bundle: .main)
                     .resizable()
                     .frame(width: 70, height: 70)
                     .background(.white)
                     .cornerRadius(12, corners: [.bottomLeft, .topLeft])
-                    
+
             }
-            
+
             VStack(alignment: .leading, spacing: 4) {
                 Group {
                     HStack(alignment: .center) {
@@ -40,14 +39,14 @@ struct VenueListItemView: View {
                                 .resizable()
                                 .frame(width: 20, height: 20)
                         }
-                        
+
                         Spacer()
                     }
-                    
+
                     Text(viewModel.venue.venueType ?? "")
                         .foregroundStyle(Color.mainPurple)
                         .font(.system(size: 12))
-                    
+
                     HStack {
                         Text((viewModel.venue.city ?? "") + ", " + (viewModel.venue.state ?? ""))
                             .foregroundStyle(Color.gray)

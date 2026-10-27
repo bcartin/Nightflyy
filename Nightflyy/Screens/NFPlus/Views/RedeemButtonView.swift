@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct RedeemButtonView: View {
-    
+
     @State private var glow = false
     @Binding var viewModel: NFPRedeemViewModel
-    
+
     var body: some View {
         VStack(spacing: 36) {
-            
+
             Button {
                 viewModel.changeView(to: .youtubeVideo)
             } label: {
@@ -27,18 +27,17 @@ struct RedeemButtonView: View {
                             .strokeBorder(.mainPurple, lineWidth: 1)
                     }
             }
-            
-            
+
             Text("Tap Below")
                 .font(.system(size: 16))
                 .foregroundColor(.gray)
-            
+
             Button {
                 viewModel.seeVenuesButtonIsVisible = false
                 viewModel.changeView(to: .codeScreen)
             } label: {
                 ZStack {
-                    
+
                     Circle()
                         .fill(Color.onlineBlue)
                         .frame(width: 200, height: 200)
@@ -48,21 +47,21 @@ struct RedeemButtonView: View {
                                 glow.toggle()
                             }
                         }
-                    
+
                     Image("plus_button_borderless")
                         .resizable()
                         .frame(width: 200, height: 200)
                 }
             }
-            
+
             Text("Credits Remaining this week: 1")
                 .font(.system(size: 16))
                 .foregroundColor(.gray)
-            
+
             Spacer()
                 .frame(height: 48)
         }
-        
+
     }
 }
 

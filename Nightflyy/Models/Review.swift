@@ -9,14 +9,14 @@ import Foundation
 import FirebaseFirestore
 
 struct Review: Identifiable, Codable {
-    
+
     @DocumentID var id = UUID().uuidString
     var reviewer: String
     var rating: Int
     var likes: [String]?
     var dislikes: [String]?
     var date: Date
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case reviewer

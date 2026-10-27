@@ -27,9 +27,9 @@ enum SignupSheetView: Hashable {
 
 @Observable
 class SignupViewModel {
-    
+
     var account: Account?
-    
+
     var navigationPath: [SignupScreen] = []
     var error: Error? {
         didSet {
@@ -39,24 +39,24 @@ class SignupViewModel {
     var presentSheet: Bool = false
     var sheetView: SignupSheetView?
     var signupMethod: SignUpMethod?
-    
-    //Apple Sign In Fields
+
+    // Apple Sign In Fields
     var appleIDCredential: ASAuthorizationAppleIDCredential?
     var nonce: String = AuthenticationManager.shared.randomNonceString()
-    
-    //Account View Fields
+
+    // Account View Fields
     var email: String = ""
     var password: String = ""
     var confirmPassword: String = ""
-    
-    //Profile View Fields
+
+    // Profile View Fields
     var selectedImage: Image?
     var uiImage: UIImage?
     var username: String = ""
     var name: String = ""
     var gender: String = ""
     var dob: String = ""
-    
+
     var convertedDob: Date {
         get {
             return dob.dateValue(format: "MMM dd, yyyy") ?? Date()
@@ -65,7 +65,7 @@ class SignupViewModel {
             self.dob = newValue.stringValue(format: "MMM dd, yyyy")
         }
     }
-    
+
     func signUp() async {
         AuthenticationManager.shared.isSigningUp = true
         AppState.shared.isLoading = true
@@ -81,48 +81,46 @@ class SignupViewModel {
             return
         }
     }
-    
+
     func setValuesFromAppleCredential() {
         self.name = appleIDCredential?.fullName?.givenName ?? ""
         self.email = appleIDCredential?.email ?? ""
     }
-    
+
     func signupWithNightflyy() async {
         do {
             let uid = try await AuthenticationManager.shared.createUser(email: email, password: password)
             try await createAccount(uid: uid)
             try await PushNotificationsManager.shared.requestPermission()
-        }
-        catch {
+        } catch {
             print(error.localizedDescription)
             self.error = error
         }
     }
-    
+
     func signupWithApple() async {
         guard let appleIDToken = appleIDCredential?.identityToken else {
             error = SignupError.cannotProcessRequest
             return
         }
-        
+
         guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
             error = SignupError.cannotProcessRequest
             return
         }
-        
+
         let credential = OAuthProvider.appleCredential(withIDToken: idTokenString, rawNonce: nonce, fullName: appleIDCredential?.fullName)
-        
+
         do {
             let uid = try await AuthenticationManager.shared.signIn(with: credential)
             try await createAccount(uid: uid)
             try await PushNotificationsManager.shared.requestPermission()
-        }
-        catch {
+        } catch {
             print(error.localizedDescription)
             self.error = error
         }
     }
-    
+
     func createAccount(uid: String) async throws {
         account = Account(id: uid,
                           accountType: .personal,
@@ -138,36 +136,36 @@ class SignupViewModel {
         try await updateProfileImage()
         try account?.save()
         await UsernamesClient.saveUsername(username: username)
-        
+
         // Follow Jameel
         if let jameelAccount = await AccountClient.fetchAccount(accountId: "Ya2VB47Ei2QlfN4XB25BOUgoM6S2") {
             try await AccountManager.shared.followAccount(accountToFollow: jameelAccount)
         }
-        
+
         // Update search Index
         try SearchManager.shared.updateSearchIndex(objectID: uid, objectType: .person, name: name, username: username, venue: nil)
-        
+
         // Create contact in sendgrid
         await SendgridManager.createContactInSendgrid(account: account!, lists: [.ALL])
-        
+
         await MainCoordinator().initialAppSetup()
-        
+
         AppState.shared.isLoading = false
         self.goToScreen(.location)
     }
-    
+
     func goToScreen(_ navigateTo: SignupScreen) {
         navigationPath.append(navigateTo)
     }
-    
+
     func setSignupMethod(_ method: SignUpMethod) {
         self.signupMethod = method
     }
-    
+
 }
 
-extension SignupViewModel { //MARK: Account View Functions
-    
+extension SignupViewModel { // MARK: Account View Functions
+
     func validateAccountFields() {
         if email.isEmpty || password.isEmpty {
             error = AccountError.missingRequiredFields
@@ -182,36 +180,36 @@ extension SignupViewModel { //MARK: Account View Functions
         }
         goToScreen(.profile)
     }
-    
+
     private func validate(eMailAddress: String) -> Bool {
         let REGEX: String
         REGEX = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}"
         return NSPredicate(format: "SELF MATCHES %@", REGEX).evaluate(with: eMailAddress)
     }
-    
+
     private func validatePassword() -> Bool {
         if password != confirmPassword {
             error = AccountError.passwordsDontMatch
             return false
         }
-        
+
         if password.count < 8 {
             error = AccountError.passwordTooShort
             return false
         }
-        
+
         return true
     }
-    
+
 }
 
-extension SignupViewModel { //MARK: Profile View Functions
-    
+extension SignupViewModel { // MARK: Profile View Functions
+
     func presentSheet( _ sheetView: SignupSheetView) {
         self.sheetView = sheetView
         presentSheet = true
     }
-    
+
     func validateProfileFields() async -> Bool {
         if username.isEmpty || name.isEmpty || gender.isEmpty || dob.isEmpty {
             error = AccountError.missingRequiredFields
@@ -233,7 +231,7 @@ extension SignupViewModel { //MARK: Profile View Functions
         }
         return true
     }
-    
+
     func updateProfileImage() async throws {
         if let image = uiImage {
             let storageManager = StorageManager()
@@ -241,7 +239,7 @@ extension SignupViewModel { //MARK: Profile View Functions
             account?.profileImageUrl = imageUrl
         }
     }
-    
+
     func setImage(data: Data) {
         if let image = UIImage(data: data) {
             self.uiImage = image
@@ -249,5 +247,3 @@ extension SignupViewModel { //MARK: Profile View Functions
         }
     }
 }
-
-

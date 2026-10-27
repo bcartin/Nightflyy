@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct ExpandableText: View {
-    
-    var label: String? = nil
+
+    var label: String?
     var text: String
     @State var isExpanded: Bool
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             if let label {
@@ -20,7 +20,7 @@ struct ExpandableText: View {
                     .foregroundStyle(.gray)
                     .font(.system(size: 13))
             }
-            
+
             Text(text)
                 .lineLimit($isExpanded.wrappedValue ? nil : 4)
                 .overlay {
@@ -29,7 +29,7 @@ struct ExpandableText: View {
                             Rectangle()
                                 .fill(
                                     LinearGradient(colors: [.clear, .clear, .backgroundBlack], startPoint: .top, endPoint: .bottom)
-                                    
+
                                 )
                         }
                     }

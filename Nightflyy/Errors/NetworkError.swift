@@ -14,7 +14,7 @@ enum NetworkError: LocalizedError {
     case unauthorized
     case serverError
     case decodingFailed
-    
+
     var errorDescription: String? {
         switch self {
         case .noRecordFound:

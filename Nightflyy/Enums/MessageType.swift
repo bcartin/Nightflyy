@@ -12,4 +12,3 @@ enum MessageType: String, Codable {
     case event = "event"
     case account = "account"
 }
-

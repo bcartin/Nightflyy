@@ -43,8 +43,7 @@ class AppNotificationsManager {
             saveToCache(newNotifications)
             UserDefaultsKeys.lastNotificationsFetchDate.setValue(Date.now)
             notifications = loadFromCache()
-        }
-        catch {
+        } catch {
             Logger.general.error("Error fetching notifications: \(error.localizedDescription)")
         }
     }
@@ -55,8 +54,7 @@ class AppNotificationsManager {
                 try await notificationClient.deleteNotification(notificationId)
                 deleteFromCache(notificationId)
                 notifications.removeAll { $0.id == notificationId }
-            }
-            catch {
+            } catch {
                 Logger.general.error("Error deleting notification \(notificationId): \(error.localizedDescription)")
             }
         }
@@ -70,8 +68,7 @@ class AppNotificationsManager {
         do {
             let cached = try viewContext.fetch(request)
             return cached.compactMap { AppNotification.from($0) }
-        }
-        catch {
+        } catch {
             Logger.general.error("Error loading notifications from cache: \(error.localizedDescription)")
             return []
         }
@@ -87,16 +84,14 @@ class AppNotificationsManager {
                 let existing = try viewContext.fetch(request).first
                 let entity = existing ?? CachedAppNotification(context: viewContext)
                 notification.populate(entity)
-            }
-            catch {
+            } catch {
                 Logger.general.error("Error upserting notification to cache: \(error.localizedDescription)")
             }
         }
 
         do {
             try viewContext.save()
-        }
-        catch {
+        } catch {
             Logger.general.error("Error saving notification cache: \(error.localizedDescription)")
         }
     }
@@ -111,8 +106,7 @@ class AppNotificationsManager {
                 viewContext.delete(cached)
                 try viewContext.save()
             }
-        }
-        catch {
+        } catch {
             Logger.general.error("Error deleting notification from cache: \(error.localizedDescription)")
         }
     }

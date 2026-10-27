@@ -9,7 +9,7 @@ import Foundation
 import FirebaseFirestore
 
 struct Message: Codable, Identifiable {
-    
+
     @DocumentID var id = UUID().uuidString
     var sender: String
     var senderName: String
@@ -17,7 +17,7 @@ struct Message: Codable, Identifiable {
     var date: Date?
     var type: MessageType
     var messageData: MessageData
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case date
@@ -27,7 +27,7 @@ struct Message: Codable, Identifiable {
         case recipient
         case messageData = "message_data"
     }
-    
+
 }
 
 struct MessageData: Codable {

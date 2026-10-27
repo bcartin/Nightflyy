@@ -8,23 +8,22 @@
 import SwiftUI
 
 struct HeaderImage<FooterView: View>: View {
-    
+
     var size: CGSize
     var safeArea: EdgeInsets
     var imageUrl: String?
     var isShowingFullSizeImage: Bool = false
     var hideImage: Bool = false
     @ViewBuilder var footerView: () -> FooterView
-    
+
     var body: some View {
             let height = size.height * 0.45
-            GeometryReader{ proxy in
+            GeometryReader { proxy in
                 let size = proxy.size
                 let minY = proxy.frame(in: .named("SCROLL")).minY
                 let progress = minY / (height * (minY > 0 ? 0.5 : 0.8))
-                
-                imageView()
-                .aspectRatio(contentMode: .fill)
+
+                imageView().scaledToFill()
                 .frame(width: size.width, height: size.height + (minY > 0 ? minY : 0))
                 .clipped()
                 .overlay(content: {
@@ -42,7 +41,7 @@ struct HeaderImage<FooterView: View>: View {
                                     .backgroundBlack.opacity(1)
                                 ], startPoint: .top, endPoint: .bottom)
                             )
-                        
+
                         footerView()
                             .opacity(1 + (progress > 0 ? -progress : progress))
                             .padding(.horizontal, 12)
@@ -53,22 +52,19 @@ struct HeaderImage<FooterView: View>: View {
             }
             .frame(height: height + safeArea.top)
     }
-    
+
     @ViewBuilder
     func imageView() -> some View {
         if hideImage {
             Image(systemName: "eye.slash")
                 .font(.largeTitle)
-        }
-        else {
+        } else {
             if let imageUrl {
                 BasicCachedAsyncImage(url: URL(string: imageUrl))
-            }
-            else {
+            } else {
                 Image("ic_noImage")
                     .foregroundStyle(.mainPurple)
             }
         }
     }
 }
-

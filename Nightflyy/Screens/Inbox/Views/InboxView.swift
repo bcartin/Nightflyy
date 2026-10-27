@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct InboxView: View {
-    
+
     @Binding var showMenu: Bool
     @Bindable var viewModel: InboxViewModel
-    
+
     var body: some View {
         RouterView {
             List {
@@ -27,9 +27,9 @@ struct InboxView: View {
                         }
                         .tint(.red)
                     }
-                    
+
                 }
-                
+
             }
             .listStyle(PlainListStyle())
             .frame(maxWidth: .infinity)
@@ -45,7 +45,7 @@ struct InboxView: View {
                         .foregroundStyle(.white)
                         .font(.system(size: 18, weight: .medium))
                 }
-                
+
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: {
                         showMenu.toggle()
@@ -55,12 +55,12 @@ struct InboxView: View {
                             .contentTransition(.symbolEffect)
                     })
                 }
-                
+
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
                         viewModel.shouldPresentNewChatView = true
                     }, label: {
-                        Image(systemName:"square.and.pencil")
+                        Image(systemName: "square.and.pencil")
                             .foregroundStyle(.white)
                     })
                 }
@@ -73,8 +73,7 @@ struct InboxView: View {
                 print(ChatsManager.shared.hasNewChats)
             }
         }
-        
-        
+
     }
 }
 

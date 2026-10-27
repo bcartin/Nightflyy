@@ -10,17 +10,17 @@ import SwiftUI
 
 @Observable
 class CreateEventViewModel: Hashable {
-    
+
     nonisolated let id: String
-    
+
     nonisolated static func == (lhs: CreateEventViewModel, rhs: CreateEventViewModel) -> Bool {
         lhs.id == rhs.id
     }
-    
+
     nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
+
     var flyerImage: Image?
     var isLoading: Bool = false
     var event: Event
@@ -30,32 +30,32 @@ class CreateEventViewModel: Hashable {
     var error: Error?
     var uiImage: UIImage?
     var updatedEvent: ((Event) -> Void)?
-    
+
     init(event: Event) {
         self.id = event.uid
         self.event = event
     }
-    
+
     var eventName: String {
         get { event.eventName ?? "" }
         set { event.eventName = newValue }
     }
-    
+
     var eventDetails: String {
         get { event.eventDetails ?? "" }
         set { event.eventDetails = newValue }
     }
-    
+
     var eventVenue: String {
         get { event.eventVenue ?? "" }
         set { event.eventVenue = newValue }
     }
-    
+
     var eventAddress: String {
         get { event.eventAddress ?? "" }
         set { event.eventAddress = newValue }
     }
-    
+
     var startDate: Date {
         get { event.startDate ?? Date() }
         set {
@@ -63,7 +63,7 @@ class CreateEventViewModel: Hashable {
             event.startTime = newValue.getTime()
         }
     }
-    
+
     var endDate: Date {
         get { event.endDate ?? Date() }
         set {
@@ -71,52 +71,52 @@ class CreateEventViewModel: Hashable {
             event.endTime = newValue.getTime()
         }
     }
-    
+
     var guestsCanInvite: Bool {
         get { event.guestsCanInvite ?? false }
         set { event.guestsCanInvite = newValue }
     }
-    
+
     var eventIsPrivate: Bool {
         get { event.eventIsPrivate ?? false }
         set { event.eventIsPrivate = newValue }
     }
-    
+
     var venueType: String {
         get { event.eventVenueType ?? "" }
         set { event.eventVenueType = newValue }
     }
-    
+
     var eventMusic: [String] {
         get { event.eventMusic ?? [] }
         set { event.eventMusic = newValue }
     }
-    
+
     var eventMusicString: String {
         get { eventMusic.joined(separator: ", ") }
         set {  }
     }
-    
+
     var eventCrowds: [String] {
         get { event.eventCrowds ?? [] }
         set { event.eventCrowds = newValue }
     }
-    
+
     var eventCrowdsString: String {
         get { eventCrowds.joined(separator: ", ") }
         set {  }
     }
-    
+
     var minPrice: String {
         get { String(event.minPrice ?? 0) }
         set { event.minPrice = Int(newValue) }
     }
-    
+
     var maxPrice: String {
         get { String(event.maxPrice ?? 0) }
         set { event.maxPrice = Int(newValue) }
     }
-    
+
     var eventIsFree: Bool {
         get { event.eventIsFree ?? false }
         set {
@@ -125,12 +125,12 @@ class CreateEventViewModel: Hashable {
             event.maxPrice = 0
         }
     }
-    
+
     var ticketingUrl: String {
         get { event.ticketingUrl ?? "" }
         set { event.ticketingUrl = newValue }
     }
-    
+
     var selectedVenue: Account? {
         didSet {
             eventAddress = selectedVenue?.address ?? ""
@@ -140,15 +140,15 @@ class CreateEventViewModel: Hashable {
             event.eventVenueId = selectedVenue?.id
         }
     }
-    
-    //MARK: FUNCTIONS
-    
+
+    // MARK: FUNCTIONS
+
     func setEventIsFree() {
         self.eventIsFree.toggle()
         self.minPrice = eventIsFree ? "0" : ""
         self.maxPrice = eventIsFree ? "0" : ""
     }
-    
+
     func isValid() -> Bool {
         if event.eventName == nil || event.eventName!.isEmpty {
             error = EventError.missingRequiredFields
@@ -164,7 +164,7 @@ class CreateEventViewModel: Hashable {
         }
         return true
     }
-    
+
     func saveEvent() {
         guard isValid() else { return }
         Task {
@@ -180,30 +180,29 @@ class CreateEventViewModel: Hashable {
                 isLoading = false
                 updatedEvent?(event)
                 await Router.shared.navigateBack()
-            }
-            catch {
+            } catch {
                 self.error = error
             }
         }
     }
-    
+
     func setAdditionalEventVaues() async {
         event.createdBy = AccountManager.shared.account?.uid ?? ""
         event.createdDate = Date()
         if let location = await MapsManager.getLocation(from: event.eventAddress ?? "") {
             event.latitude = location.coordinate.latitude
             event.longitude = location.coordinate.longitude
-            //TODO: Set event status
+            // TODO: Set event status
         }
     }
-    
+
     func setImage(data: Data) {
         if let image = UIImage(data: data) {
             self.uiImage = image
             self.flyerImage = Image(uiImage: image)
         }
     }
-    
+
     func updateEventImage() async {
         if let image = uiImage {
             do {
@@ -213,20 +212,19 @@ class CreateEventViewModel: Hashable {
                 }
                 let imageUrl = try await storageManager.saveEventPhoto(photo: image)
                 event.eventFlyerUrl = imageUrl
-            }
-            catch {
+            } catch {
                 self.error = error
             }
         }
     }
-    
+
     func updateSearchIndex() {
         try? SearchManager.shared.updateSearchIndex(objectID: event.uid, objectType: .event, name: event.eventName, username: nil, venue: event.eventVenue)
     }
 }
 
 extension CreateEventViewModel {
-    
+
     enum NavigateTo {
         case details
         case venue
@@ -235,7 +233,7 @@ extension CreateEventViewModel {
         case eventMusic
         case eventCrowds
     }
-    
+
     func goToScreen(_ navigateTo: NavigateTo) {
         goToScreen = true
         selectedGoToScreen = navigateTo

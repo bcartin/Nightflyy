@@ -11,24 +11,24 @@ import SwiftUI
 import UIKit
 
 class StorageManager {
-    
+
     let storageRef = Storage.storage().reference()
-    
+
     func saveProfilePhoto(photo: UIImage) async throws -> String? {
         try await savePhoto(photo: photo, path: "profile_images")
     }
-    
+
     func saveEventPhoto(photo: UIImage) async throws -> String? {
         try await savePhoto(photo: photo, path: "event_images")
     }
-    
+
     func deletePhoto(url: String) async throws {
         if let storageUrl = URL(string: url) {
             let fileRef = try Storage.storage().reference(for: storageUrl)
             try await fileRef.delete()
         }
     }
-    
+
     private func savePhoto(photo: UIImage, path: String) async throws -> String? {
         let imageFileName = UUID().uuidString
         let imageStorageRef = storageRef.child(path).child(imageFileName)
@@ -42,7 +42,7 @@ class StorageManager {
         }
         return nil
     }
-    
+
     public func resizeImage(image: UIImage, maxSize: CGSize = CGSize(width: 400, height: 700)) -> UIImage {
         var actualHeight = image.size.height
         var actualWidth = image.size.width
@@ -55,13 +55,11 @@ class StorageManager {
                 imageRatio = maxHeight / actualHeight
                 actualWidth = imageRatio * actualWidth
                 actualHeight = maxHeight
-            }
-            else if imageRatio > maxRatio {
+            } else if imageRatio > maxRatio {
                 imageRatio = maxWidth / actualWidth
                 actualHeight = imageRatio * actualHeight
                 actualWidth = maxWidth
-            }
-            else {
+            } else {
                 actualHeight = maxHeight
                 actualWidth = maxWidth
             }
@@ -72,5 +70,5 @@ class StorageManager {
             image.draw(in: CGRect(origin: .zero, size: targetSize))
         }
     }
-    
+
 }

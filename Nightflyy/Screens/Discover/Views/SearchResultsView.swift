@@ -8,24 +8,24 @@
 import SwiftUI
 
 struct SearchResultsView: View {
-    
+
     @Bindable var viewModel: SearchResultsListViewModel
     @FocusState var isSearchFieldFocused: Bool
-    
+
     var body: some View {
-            
+
             VStack(alignment: .leading) {
-                
+
                 if #available(iOS 26.0, *) { // TODO: Remove when min version is iOS 26
                     HStack(spacing: 8) {
                         Image(systemName: "magnifyingglass")
                             .font(.callout)
                             .foregroundStyle(.white.opacity(0.5))
-                        
+
                         TextField("", text: $viewModel.searchText, prompt: Text("Search").foregroundStyle(.white.opacity(0.5)))
                             .submitLabel(.search)
                             .focused($isSearchFieldFocused)
-                        
+
                         if !viewModel.searchText.isEmpty {
                             Button {
                                 viewModel.clearSearchResults()
@@ -41,17 +41,16 @@ struct SearchResultsView: View {
                     .glassEffect(.regular, in: .capsule)
                     .padding(.top, 8)
                     .padding(.horizontal, 16)
-                }
-                else {
+                } else {
                     HStack(spacing: 8) {
                         Image(systemName: "magnifyingglass")
                             .font(.callout)
                             .foregroundStyle(.white.opacity(0.5))
-                        
+
                         TextField("", text: $viewModel.searchText, prompt: Text("Search").foregroundStyle(.white.opacity(0.5)))
                             .submitLabel(.search)
                             .focused($isSearchFieldFocused)
-                        
+
                         if !viewModel.searchText.isEmpty {
                             Button {
                                 viewModel.clearSearchResults()
@@ -68,9 +67,9 @@ struct SearchResultsView: View {
                     .cornerRadius(8)
                     .padding(.top, 8)
                     .padding(.horizontal, 16)
-                    
+
                 }
-                
+
 //                TextField("", text: $viewModel.searchText, prompt: Text("Search").foregroundStyle(.white.opacity(0.5)))
 //                    .foregroundStyle(.white)
 //                    .padding(8)
@@ -96,9 +95,9 @@ struct SearchResultsView: View {
 //                    }
 //                    .padding(.horizontal)
 //                    .padding(.top, 8)
-                
+
                 SegmentedView(segments: viewModel.segments, selected: $viewModel.selectedSegment)
-                
+
                 ScrollView {
                     if viewModel.selectedSegment == 0 {
                         LazyVStack {
@@ -131,8 +130,7 @@ struct SearchResultsView: View {
                                 }
                             }
                         }
-                    }
-                    else if viewModel.selectedSegment == 1 {
+                    } else if viewModel.selectedSegment == 1 {
                         LazyVStack {
                             ForEach(viewModel.eventResultsViewModels, id: \.self) { vm in
                                 EventListItemView(viewModel: vm) {
@@ -143,8 +141,7 @@ struct SearchResultsView: View {
                                 }
                             }
                         }
-                    }
-                    else if viewModel.selectedSegment == 2 {
+                    } else if viewModel.selectedSegment == 2 {
                         LazyVStack {
                             ForEach(viewModel.venueResultsViewModels, id: \.self) { vm in
                                 VenueListItemView(viewModel: vm) {
@@ -152,8 +149,7 @@ struct SearchResultsView: View {
                                 }
                             }
                         }
-                    }
-                    else if viewModel.selectedSegment == 3 {
+                    } else if viewModel.selectedSegment == 3 {
                         LazyVStack {
                             ForEach(viewModel.personResultsViewModels, id: \.self) { vm in
                                 PersonListItemView(viewModel: vm) {

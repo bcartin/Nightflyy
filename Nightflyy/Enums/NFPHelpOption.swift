@@ -6,7 +6,7 @@
 //
 
 enum NFPHelpOption: String {
-    
+
     case faq = "FAQs"
     case support = "Contact Support"
     case report = "Report a Problem"

@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct SignedOutView: View {
-    
+
     @State var loginViewModel = LoginViewModel()
     @State var viewModel: SignupViewModel = .init()
     @State var flip = true
-    
+
     var body: some View {
         NavigationStack(path: $viewModel.navigationPath) {
             ZStack {
@@ -21,7 +21,7 @@ struct SignedOutView: View {
                     .opacity(flip ? 1 : 0)
                     .rotation3DEffect(.degrees(flip ? 0: -89.9), axis: (x: 0, y: 1, z: 0))
                     .animation(flip ? .linear.delay(0.35) : .linear, value: flip)
-                
+
                 LoginView(viewModel: loginViewModel, signUpViewModel: $viewModel, flip: $flip)
                     .opacity(flip ? 0 : 1)
                     .rotation3DEffect(.degrees(flip ? 89.9 : 0), axis: (x: 0, y: 1, z: 0))
@@ -47,7 +47,7 @@ struct SignedOutView: View {
                     ForgotPasswordView(viewModel: $loginViewModel, signUpViewModel: $viewModel)
                 }
             }
-            
+
         }
         .tint(.white)
     }

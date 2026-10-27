@@ -12,7 +12,7 @@ enum IAPError: Error {
 }
 
 extension IAPError: LocalizedError {
-    
+
     public var errorDescription: String? {
         switch self {
         case .productNotFound:

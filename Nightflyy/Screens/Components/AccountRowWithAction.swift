@@ -8,24 +8,24 @@
 import SwiftUI
 
 struct AccountRowWithAction: View {
-    
+
     var accountId: String
     @State var account: Account?
     var actionName: String
     var buttonStyle: ActionButtonStyle
     var isDisabled: Bool
     var action: ButtonAction
-    
+
     var body: some View {
         HStack(spacing: 12) {
             UserImageRound(imageUrl: account?.profileImageUrl, size: 48)
-            
+
             Text(account?.username ?? "")
                 .foregroundStyle(.white)
                 .fontWeight(.medium)
-            
+
             Spacer()
-            
+
             Button(actionName) {
                 action()
             }

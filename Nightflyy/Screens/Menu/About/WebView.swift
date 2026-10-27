@@ -11,31 +11,30 @@ import WebKit
 
 struct WebViewRepresentable: UIViewRepresentable {
     let url: URL
-    
+
     init(_ url: String) {
         self.url = URL(string: url)!
     }
-    
+
     func makeUIView(context: Context) -> some UIView {
         let webView = WKWebView()
         webView.load(URLRequest(url: url))
-        
+
         return webView
     }
-    
+
     func updateUIView(_ uiView: UIViewType, context: Context) {}
 }
-
 
 struct WebView: View {
     @Environment(\.dismiss) var dismiss
     var url: String
     var title: String
-    
+
     var body: some View {
-        
+
         NavigationStack {
-            
+
             VStack {
                 WebViewRepresentable(url)
             }
@@ -51,7 +50,7 @@ struct WebView: View {
                             .foregroundStyle(.white)
                     }
                 }
-                
+
                 ToolbarItem(placement: .principal) {
                     Text(title)
                         .foregroundStyle(.white)
@@ -61,4 +60,3 @@ struct WebView: View {
         .tint(.white)
     }
 }
-
