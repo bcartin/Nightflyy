@@ -41,15 +41,16 @@ class InviteFromEventViewModel {
                 try await EventClient.addUserToInvited(eventId: event.uid, uid: accountId)
                 event.invited?.append(accountId)
 
-                guard let uid = AccountManager.shared.account?.uid else { return }
+                guard let account = AccountManager.shared.account else { return }
+                let uid = account.uid
                 let notification = AppNotification(sender: uid,
                                                    date: Date(),
                                                    type: AppNotificationType.invite_to_event,
                                                    notificationData: NotificationData(event_flyer_url: event.eventFlyerUrl,
                                                                                       event_id: event.uid,
                                                                                       event_name: event.eventName,
-                                                                                      profile_image_url: AccountManager.shared.account?.profileImageUrl,
-                                                                                      username: AccountManager.shared.account?.username))
+                                                                                      profile_image_url: account.profileImageUrl,
+                                                                                      username: account.username))
                 try AppNotificationClient.saveNotification(for: accountId, notification: notification)
             } catch {
                 self.error = error

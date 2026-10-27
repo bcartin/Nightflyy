@@ -19,8 +19,8 @@ struct InviteToEventView: View {
         ZStack(alignment: .bottom) {
             ScrollView {
                 LazyVStack {
-                    EventListView(header: "Hosting", viewModels: viewModel.futureHostingEvents)
-                    EventListView(header: "Attending", viewModels: viewModel.attendingEvents)
+                    eventListView(header: "Hosting", viewModels: viewModel.futureHostingEvents)
+                    eventListView(header: "Attending", viewModels: viewModel.attendingEvents)
                 }
             }
             .scrollIndicators(.hidden)
@@ -49,7 +49,7 @@ struct InviteToEventView: View {
     }
 
     @ViewBuilder
-    func EventListView(header: String, viewModels: [EventListItemViewModel]) -> some View {
+    func eventListView(header: String, viewModels: [EventListItemViewModel]) -> some View {
 
         VStack(alignment: .leading) {
             Text(header.uppercased())

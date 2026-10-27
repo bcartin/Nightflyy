@@ -27,7 +27,10 @@ struct CreateEventView: View {
                                 .cornerRadius(5, corners: .allCorners)
                                 .padding(.vertical, 20)
                         } else if let flyerUrl = viewModel.event.eventFlyerUrl {
-                            CachedAsyncImage(url: URL(string: flyerUrl), size: .init(width: width, height: width * 1.375), shape: .rect(cornerRadius: 5), contentMode: .fit)
+                            CachedAsyncImage(url: URL(string: flyerUrl),
+                                             size: .init(width: width, height: width * 1.375),
+                                             shape: .rect(cornerRadius: 5),
+                                             contentMode: .fit)
                             .padding(.vertical, 20)
                         } else {
                             (Text(Image(systemName: "plus.rectangle.portrait")) + Text(" Add Flyer"))
@@ -142,7 +145,8 @@ struct CreateEventView: View {
                     }
                     .padding(.vertical, 8)
 
-                    Button(viewModel.isShowingOptions ? "Hide Additional Options" : "Show Additional Options", systemImage: viewModel.isShowingOptions ? "minus" : "plus") {
+                    Button(viewModel.isShowingOptions ? "Hide Additional Options" : "Show Additional Options",
+                           systemImage: viewModel.isShowingOptions ? "minus" : "plus") {
                         withAnimation {
                             viewModel.isShowingOptions.toggle()
                         }
@@ -175,7 +179,7 @@ struct CreateEventView: View {
                                     .frame(width: 24, height: 24)
                                     .foregroundStyle(.mainPurple)
 
-                                ActionTextField(placeholder: "Music", value: $viewModel.eventMusicString) {
+                                ActionTextField(placeholder: "Music", value: .constant(viewModel.eventMusicString)) {
                                     viewModel.goToScreen(.eventMusic)
                                 }
                             }
@@ -189,7 +193,7 @@ struct CreateEventView: View {
                                     .frame(width: 24, height: 24)
                                     .foregroundStyle(.mainPurple)
 
-                                ActionTextField(placeholder: "Crowds", value: $viewModel.eventCrowdsString) {
+                                ActionTextField(placeholder: "Crowds", value: .constant(viewModel.eventCrowdsString)) {
                                     viewModel.goToScreen(.eventCrowds)
                                 }
                             }
@@ -258,7 +262,9 @@ struct CreateEventView: View {
                     case .details:
                         LongTextInputView(title: "Event Details", prompt: "Event Details", text: $viewModel.eventDetails)
                     case .venue:
-                        VenueSearchView(selectedVenueString: $viewModel.eventVenue, selectedVenue: $viewModel.selectedVenue, viewModel: VenueSearchViewModel())
+                        VenueSearchView(selectedVenueString: $viewModel.eventVenue,
+                                        selectedVenue: $viewModel.selectedVenue,
+                                        viewModel: VenueSearchViewModel())
                     case .address:
                         AddressSearchView(selectedAddress: $viewModel.eventAddress, viewModel: AddressSearchViewModel())
                     case .venueType:

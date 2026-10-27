@@ -106,7 +106,9 @@ struct VenueProfileView: View {
 
                     HStack {
 
-                        IconButton(iconName: viewModel.followButtonProperties.icon, title: viewModel.followButtonProperties.title, color: viewModel.followButtonProperties.color) {
+                        IconButton(iconName: viewModel.followButtonProperties.icon,
+                                   title: viewModel.followButtonProperties.title,
+                                   color: viewModel.followButtonProperties.color) {
                             viewModel.followButtonAction()
                         }
                         .frame(maxWidth: .infinity)
@@ -192,14 +194,14 @@ struct VenueProfileView: View {
 
                 PillListView(header: "CROWD", items: viewModel.account.clientele ?? [])
 
-                EventListView(header: "Upcoming Events", viewModels: viewModel.futureHostingEvents)
+                eventListView(header: "Upcoming Events", viewModels: viewModel.futureHostingEvents)
                 if viewModel.isPersonalAccount {
-                    EventListView(header: "Events Attending", viewModels: viewModel.attendingEvents)
+                    eventListView(header: "Events Attending", viewModels: viewModel.attendingEvents)
                 }
-                EventListView(header: "Past Events", viewModels: viewModel.pastHostingEvents)
+                eventListView(header: "Past Events", viewModels: viewModel.pastHostingEvents)
             }
             .overlay(alignment: .top) {
-                HeaderView()
+                headerView()
             }
         }
         .scrollIndicators(.hidden)
@@ -280,7 +282,7 @@ struct VenueProfileView: View {
     }
 
     @ViewBuilder
-    func HeaderView() -> some View {
+    func headerView() -> some View {
         GeometryReader { proxy in
             let minY = proxy.frame(in: .named("SCROLL")).minY
             let height = size.height * 0.45
@@ -358,7 +360,7 @@ struct VenueProfileView: View {
     }
 
     @ViewBuilder
-    func EventListView(header: String, viewModels: [EventListItemViewModel]) -> some View {
+    func eventListView(header: String, viewModels: [EventListItemViewModel]) -> some View {
 
         VStack(alignment: .leading) {
             Text(header.uppercased())

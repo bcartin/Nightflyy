@@ -48,7 +48,8 @@ class InviteToEventViewModel: Hashable {
     }
 
     func sendInvites() {
-        guard let uid = AccountManager.shared.account?.uid else { return }
+        guard let account = AccountManager.shared.account else { return }
+        let uid = account.uid
         selectedEvents.forEach { eventId in
 
             var event: Event?
@@ -64,8 +65,8 @@ class InviteToEventViewModel: Hashable {
                                                    notificationData: NotificationData(event_flyer_url: event.eventFlyerUrl,
                                                                                       event_id: event.uid,
                                                                                       event_name: event.eventName,
-                                                                                      profile_image_url: AccountManager.shared.account?.profileImageUrl,
-                                                                                      username: AccountManager.shared.account?.username))
+                                                                                      profile_image_url: account.profileImageUrl,
+                                                                                      username: account.username))
                 try? AppNotificationClient.saveNotification(for: accountToInvite.uid, notification: notification)
             }
         }

@@ -15,7 +15,10 @@ struct ReviewVenueView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 12) {
-                CustomImage(imageUrl: viewModel.account.profileImageUrl, size: .init(width: 200, height: 200), placeholder: "ic_noImage", isSystemImage: false)
+                CustomImage(imageUrl: viewModel.account.profileImageUrl,
+                            size: .init(width: 200, height: 200),
+                            placeholder: "ic_noImage",
+                            isSystemImage: false)
                     .overlay {
                         RoundedRectangle(cornerRadius: 12).stroke(.mainPurple)
                     }
@@ -30,7 +33,7 @@ struct ReviewVenueView: View {
 
                 HStack {
                     ForEach(1..<6) { value in
-                        StarButton(value: value)
+                        starButton(value: value)
                     }
                 }
 
@@ -60,7 +63,7 @@ struct ReviewVenueView: View {
     }
 
     @ViewBuilder
-    func StarButton(value: Int) -> some View {
+    func starButton(value: Int) -> some View {
         Button {
             viewModel.setRating(value: value)
         } label: {

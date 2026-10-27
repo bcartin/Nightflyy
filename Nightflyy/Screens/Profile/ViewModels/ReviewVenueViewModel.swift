@@ -100,7 +100,11 @@ class ReviewVenueViewModel: Hashable {
 
     func saveReviewNotification() throws {
         guard let myAccount = AccountManager.shared.account else { return }
-        let notification = AppNotification(sender: myAccount.uid, date: Date(), type: .review_submitted, notificationData: NotificationData(profile_image_url: myAccount.profileImageUrl, username: myAccount.username))
+        let notification = AppNotification(sender: myAccount.uid,
+                                           date: Date(),
+                                           type: .review_submitted,
+                                           notificationData: NotificationData(profile_image_url: myAccount.profileImageUrl,
+                                                                              username: myAccount.username))
         try AppNotificationClient.saveNotification(for: account.uid, notification: notification)
     }
 }
