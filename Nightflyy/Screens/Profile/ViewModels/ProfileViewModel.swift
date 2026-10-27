@@ -135,12 +135,19 @@ class ProfileViewModel: Hashable {
             futureHostingEvents = EventsManager.shared.hostingEvents.removingPastEvents().map {EventListItemViewModel(event: $0)}.sortedByDate()
         } else {
             if attendingEvents.isEmpty {
-                attendingEvents = await EventClient.fetchEventsAttending(uid: account.uid).removingPrivateEvents().map {EventListItemViewModel(event: $0)}.sortedByDate()
+                attendingEvents = await EventClient.fetchEventsAttending(uid: account.uid)
+                    .removingPrivateEvents()
+                    .map { EventListItemViewModel(event: $0) }
+                    .sortedByDate()
             }
             if futureHostingEvents.isEmpty || pastHostingEvents.isEmpty {
                 let hostingEvents = await EventClient.fetchEventsHostedBy(uid: account.uid)
                 pastHostingEvents = hostingEvents.onlyPastEvents().removingPrivateEvents().map {EventListItemViewModel(event: $0)}.sortedByDate()
-                futureHostingEvents = hostingEvents.removingPastEvents().removingPrivateEvents().map {EventListItemViewModel(event: $0)}.sortedByDate()
+                futureHostingEvents = hostingEvents
+                    .removingPastEvents()
+                    .removingPrivateEvents()
+                    .map { EventListItemViewModel(event: $0) }
+                    .sortedByDate()
             }
         }
     }

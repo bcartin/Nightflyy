@@ -26,7 +26,7 @@ struct EventView: View {
                     HeaderImage(size: size, safeArea: safeArea, imageUrl: viewModel.event.eventFlyerUrl) {
                         VStack {
                             if viewModel.showClaimView {
-                                ClaimView()
+                                claimView()
                             }
 
                             HStack {
@@ -77,7 +77,9 @@ struct EventView: View {
 
                     HStack {
 
-                        IconButton(iconName: viewModel.attendingButtonProperties.icon, title: viewModel.attendingButtonProperties.title, color: viewModel.attendingButtonProperties.color) {
+                        IconButton(iconName: viewModel.attendingButtonProperties.icon,
+                                   title: viewModel.attendingButtonProperties.title,
+                                   color: viewModel.attendingButtonProperties.color) {
                             viewModel.presentInterestedDialog = true
                         }
                         .frame(maxWidth: .infinity)
@@ -157,22 +159,24 @@ struct EventView: View {
                     }
 
                     HStack {
-                        EventItemView(header: "Event Type", value: viewModel.event.eventIsPrivate ?? false ? "Private" : "Public")
+                        eventItemView(header: "Event Type", value: viewModel.event.eventIsPrivate ?? false ? "Private" : "Public")
 
-                        EventItemView(header: "Time", value: viewModel.startTimeString + " - " + viewModel.endTimeString)
+                        eventItemView(header: "Time", value: viewModel.startTimeString + " - " + viewModel.endTimeString)
                     }
 
                     HStack {
-                        EventItemView(header: "Cover Charge", value: viewModel.eventPrice)
+                        eventItemView(header: "Cover Charge", value: viewModel.eventPrice)
 
-                        EventItemView(header: "Going", value: viewModel.numberOfAttendees)
+                        eventItemView(header: "Going", value: viewModel.numberOfAttendees)
                     }
 
-                    EventItemView(header: "Venue", value: viewModel.event.eventVenue ?? "", itemColor: viewModel.venueHasProfile ? .mainPurple : .white) {
+                    eventItemView(header: "Venue",
+                                  value: viewModel.event.eventVenue ?? "",
+                                  itemColor: viewModel.venueHasProfile ? .mainPurple : .white) {
                         viewModel.navigateToVenue()
                     }
 
-                    EventItemView(header: "Address", value: viewModel.event.eventAddress ?? "", underline: true, action: {
+                    eventItemView(header: "Address", value: viewModel.event.eventAddress ?? "", underline: true, action: {
                         viewModel.openMapsWithAddress()
                     })
 
@@ -184,7 +188,7 @@ struct EventView: View {
                         .padding(.bottom, 24)
                 }
                 .overlay(alignment: .top) {
-                    HeaderView()
+                    headerView()
                 }
 
             }
@@ -298,7 +302,7 @@ struct EventView: View {
     }
 
     @ViewBuilder
-    func HeaderView() -> some View {
+    func headerView() -> some View {
         GeometryReader { proxy in
             let minY = proxy.frame(in: .named("SCROLL")).minY
             let height = size.height * 0.45
@@ -379,7 +383,7 @@ struct EventView: View {
     }
 
     @ViewBuilder
-    func EventItemView(header: String, value: String, itemColor: Color = .white, underline: Bool = false, action: ButtonAction? = nil) -> some View {
+    func eventItemView(header: String, value: String, itemColor: Color = .white, underline: Bool = false, action: ButtonAction? = nil) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(header.uppercased())
                 .foregroundStyle(.gray)
@@ -398,7 +402,7 @@ struct EventView: View {
     }
 
     @ViewBuilder
-    func ClaimView() -> some View {
+    func claimView() -> some View {
         ZStack {
             Rectangle()
                 .fill(.mainPurple)

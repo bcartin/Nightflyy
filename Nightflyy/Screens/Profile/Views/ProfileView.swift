@@ -85,7 +85,9 @@ struct ProfileView: View {
 
                     HStack {
 
-                        IconButton(iconName: viewModel.followButtonProperties.icon, title: viewModel.followButtonProperties.title, color: viewModel.followButtonProperties.color) {
+                        IconButton(iconName: viewModel.followButtonProperties.icon,
+                                   title: viewModel.followButtonProperties.title,
+                                   color: viewModel.followButtonProperties.color) {
                             viewModel.followButtonAction()
                         }
                         .frame(maxWidth: .infinity)
@@ -146,9 +148,9 @@ struct ProfileView: View {
                 }
 
                 if viewModel.canInteract {
-                    EventListView(header: "Upcoming Events", viewModels: viewModel.futureHostingEvents)
-                    EventListView(header: "Events Attending", viewModels: viewModel.attendingEvents)
-                    EventListView(header: "Past Events", viewModels: viewModel.pastHostingEvents)
+                    eventListView(header: "Upcoming Events", viewModels: viewModel.futureHostingEvents)
+                    eventListView(header: "Events Attending", viewModels: viewModel.attendingEvents)
+                    eventListView(header: "Past Events", viewModels: viewModel.pastHostingEvents)
                 } else {
                     VStack(alignment: .center, spacing: 8) {
                         Spacer()
@@ -165,7 +167,7 @@ struct ProfileView: View {
                 }
             }
             .overlay(alignment: .top) {
-                HeaderView()
+                headerView()
             }
         }
         .scrollIndicators(.hidden)
@@ -239,7 +241,7 @@ struct ProfileView: View {
     }
 
     @ViewBuilder
-    func HeaderView() -> some View {
+    func headerView() -> some View {
         GeometryReader { proxy in
             let minY = proxy.frame(in: .named("SCROLL")).minY
             let height = size.height * 0.45
@@ -321,7 +323,7 @@ struct ProfileView: View {
     }
 
     @ViewBuilder
-    func EventListView(header: String, viewModels: [EventListItemViewModel]) -> some View {
+    func eventListView(header: String, viewModels: [EventListItemViewModel]) -> some View {
 
         VStack(alignment: .leading) {
             Text(header.uppercased())

@@ -13,3 +13,7 @@ identifier_name:
   excluded:
     - id
     - db
+
+# Named (icon, title, color) tuples are clear enough; no struct needed.
+large_tuple:
+  warning: 3

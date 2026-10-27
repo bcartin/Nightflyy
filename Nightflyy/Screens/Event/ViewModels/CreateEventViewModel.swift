@@ -93,8 +93,7 @@ class CreateEventViewModel: Hashable {
     }
 
     var eventMusicString: String {
-        get { eventMusic.joined(separator: ", ") }
-        set {  }
+        eventMusic.joined(separator: ", ")
     }
 
     var eventCrowds: [String] {
@@ -103,8 +102,7 @@ class CreateEventViewModel: Hashable {
     }
 
     var eventCrowdsString: String {
-        get { eventCrowds.joined(separator: ", ") }
-        set {  }
+        eventCrowds.joined(separator: ", ")
     }
 
     var minPrice: String {
@@ -219,7 +217,11 @@ class CreateEventViewModel: Hashable {
     }
 
     func updateSearchIndex() {
-        try? SearchManager.shared.updateSearchIndex(objectID: event.uid, objectType: .event, name: event.eventName, username: nil, venue: event.eventVenue)
+        try? SearchManager.shared.updateSearchIndex(objectID: event.uid,
+                                                    objectType: .event,
+                                                    name: event.eventName,
+                                                    username: nil,
+                                                    venue: event.eventVenue)
     }
 }
 
