@@ -1,6 +1,6 @@
 # Cloud Functions
 
-Firebase Cloud Functions for Nightflyy (TypeScript, Node 20, 1st-gen `firebase-functions/v1` API).
+Firebase Cloud Functions for Nightflyy (TypeScript, Node 24, 1st-gen `firebase-functions/v1` API).
 Moved here from the old Slyde repo. `firebase.json` and `.firebaserc` live at the repo root.
 
 ## Projects
