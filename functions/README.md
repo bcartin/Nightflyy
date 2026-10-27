@@ -46,6 +46,22 @@ firebase deploy --only "$FNS" -P dev
 Run that from the repo root after `npm --prefix functions run build`. `firebase deploy` also runs the build first
 (the `predeploy` step in `firebase.json`).
 
+## Callable auth
+
+Every callable needs a signed-in caller. `updateUser` and `deleteUser` let users act on their own uid
+(`updateUser` only changes `displayName` and `photoURL`). Everything else, and acting on another uid,
+needs the `admin: true` custom claim, which the NightflyyAdmin account must have.
+
+Set the claim once per project **before** deploying these functions there, or the admin app gets `permission-denied`.
+It uses your Application Default Credentials (`gcloud auth application-default login`):
+
+```bash
+cd functions
+node -e "const a=require('firebase-admin');a.initializeApp({projectId:process.argv[1]});a.auth().getUserByEmail(process.argv[2]).then(u=>a.auth().setCustomUserClaims(u.uid,{...u.customClaims,admin:true})).then(()=>console.log('done'))" nightflyydev ADMIN_EMAIL
+```
+
+Repeat with `slydeapp-dc745` for prod. The claim shows up on the next sign-in, and the admin app signs in on every launch, so relaunch it.
+
 ## Moving prod from 1st gen to 2nd gen (one time)
 
 Firebase can't upgrade a 1st-gen function to 2nd gen in place under the same name, and the app calls

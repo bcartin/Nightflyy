@@ -15,11 +15,25 @@ async function waitFor(label, check) {
   throw new Error('FAIL ' + label)
 }
 
-async function call(name, data) {
+async function call(name, data, token) {
+  const headers = { 'Content-Type': 'application/json' }
+  if (token) headers.Authorization = `Bearer ${token}`
   const res = await fetch(`http://127.0.0.1:5001/${PROJECT}/us-central1/${name}`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data })
+    method: 'POST', headers, body: JSON.stringify({ data })
   })
   return { status: res.status, body: await res.json() }
+}
+
+// Creates an Auth emulator user and signs in as them to get a real ID token.
+async function signIn(uid, claims) {
+  const email = `${uid}@example.com`
+  await admin.auth().createUser({ uid, email, password: 'secret123' })
+  if (claims) await admin.auth().setCustomUserClaims(uid, claims)
+  const res = await fetch('http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=fake', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password: 'secret123', returnSecureToken: true })
+  })
+  return (await res.json()).idToken
 }
 
 const acct = (id) => db.doc(`accounts/${id}`)
@@ -69,38 +83,74 @@ async function main() {
     return (await db.collection('accounts/u1/notifications').get()).empty && e2.attending.length === 0 && e2.interested.length === 0
   })
 
+  const adminToken = await signIn('admin1', { admin: true })
+  const userToken = await signIn('user1')
+  await admin.auth().createUser({ uid: 'auth1', email: 'a@example.com' })
   await db.doc('events/e3').set({ attending: ['u5'] })
-  let r = await call('sendNotificationToEventAttendees', { eventId: 'e3', notification: { notification_type: 'event_created', notification_data: { username: 'x' } } })
+  const attendeeNotification = { eventId: 'e3', notification: { notification_type: 'event_created', notification_data: { username: 'x' } } }
+
+  // Everything below targets someone else's data, so both callers must be turned away.
+  const denied = {
+    sendNotificationToTopicHttp: { title: 't', body: 'b', attachment: {}, topic: 'all' },
+    sendNotificationToEventAttendees: attendeeNotification,
+    listAllUsers: {},
+    getUser: { uid: 'auth1' },
+    updateUser: { uid: 'auth1', info: { displayName: 'Hacked' } },
+    deleteUser: { uid: 'auth1' },
+    updateGroupOfUsers: { users: [{ uid: 'auth1', displayName: 'Hacked' }] },
+  }
+  for (const [name, data] of Object.entries(denied)) {
+    assert.equal((await call(name, data)).status, 401, `${name} without a token`)
+    assert.equal((await call(name, data, userToken)).status, 403, `${name} as a non-admin`)
+  }
+  assert.equal((await admin.auth().getUser('auth1')).displayName, undefined)
+  assert.equal((await db.collection('accounts/u5/notifications').get()).size, 0)
+  console.log('PASS callables reject unauthenticated and non-admin callers')
+
+  let r = await call('updateUser', { uid: 'user1', info: { displayName: 'Me', photoURL: null, email: 'x@evil.com', emailVerified: true } }, userToken)
+  assert.equal(r.status, 200)
+  const me = await admin.auth().getUser('user1')
+  assert.equal(me.displayName, 'Me')
+  assert.equal(me.email, 'user1@example.com')
+  assert.equal(me.emailVerified, false)
+  console.log('PASS updateUser on own uid changes only displayName and photoURL')
+
+  r = await call('sendNotificationToEventAttendees', attendeeNotification, adminToken)
   assert.equal(r.status, 200)
   assert.equal((await db.collection('accounts/u5/notifications').get()).size, 1)
-  console.log('PASS sendNotificationToEventAttendees')
+  console.log('PASS sendNotificationToEventAttendees as admin')
 
-  await admin.auth().createUser({ uid: 'auth1', email: 'a@example.com' })
-  r = await call('updateUser', { uid: 'auth1', info: { displayName: 'New Name' } })
+  r = await call('updateUser', { uid: 'auth1', info: { displayName: 'New Name' } }, adminToken)
   assert.equal(r.status, 200)
   assert.equal((await admin.auth().getUser('auth1')).displayName, 'New Name')
-  console.log('PASS updateUser')
+  console.log('PASS updateUser as admin')
 
-  r = await call('updateGroupOfUsers', { users: [{ uid: 'missing', displayName: 'x' }, { uid: 'auth1', displayName: 'Group Name' }] })
+  r = await call('updateGroupOfUsers', { users: [{ uid: 'missing', displayName: 'x' }, { uid: 'auth1', displayName: 'Group Name' }] }, adminToken)
   assert.equal(r.status, 200)
   assert.equal((await admin.auth().getUser('auth1')).displayName, 'Group Name')
   console.log('PASS updateGroupOfUsers continues past a bad user')
 
-  r = await call('getUser', { uid: 'auth1' })
+  r = await call('getUser', { uid: 'auth1' }, adminToken)
   assert.equal(r.body.result.email, 'a@example.com')
-  r = await call('listAllUsers', {})
-  assert.equal(r.body.result.count, 1)
-  console.log('PASS getUser and listAllUsers')
+  r = await call('listAllUsers', {}, adminToken)
+  assert.equal(r.body.result.count, 3)
+  console.log('PASS getUser and listAllUsers as admin')
 
-  r = await call('deleteUser', { uid: 'auth1' })
+  r = await call('deleteUser', { uid: 'auth1' }, adminToken)
   assert.equal(r.status, 200)
-  r = await call('getUser', { uid: 'auth1' })
+  r = await call('getUser', { uid: 'auth1' }, adminToken)
   assert.equal(r.body.result.uid, null)
-  console.log('PASS deleteUser')
+  console.log('PASS deleteUser as admin')
 
-  r = await call('updateUser', { uid: 'nope', info: { displayName: 'x' } })
+  r = await call('deleteUser', { uid: 'user1' }, userToken)
+  assert.equal(r.status, 200)
+  r = await call('getUser', { uid: 'user1' }, adminToken)
+  assert.equal(r.body.result.uid, null)
+  console.log('PASS deleteUser on own uid')
+
+  r = await call('updateUser', { uid: 'nope', info: { displayName: 'x' } }, adminToken)
   assert.equal(r.status, 500)
-  console.log('PASS updateUser now reports errors')
+  console.log('PASS updateUser reports errors')
 
   console.log('ALL PASSED')
 }
