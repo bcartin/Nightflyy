@@ -208,6 +208,7 @@ struct VenueProfileView: View {
         .background(.backgroundBlack)
         .task {
             await viewModel.loadAccountEvents()
+            await viewModel.getNumberOfReviews()
             viewModel.updateAccount()
         }
         .sheet(item: $viewModel.selectedPresentView) { screen in

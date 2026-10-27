@@ -26,6 +26,7 @@ class Router {
         case ChatView(InboxRowViewModel)
         case ReviewVenueView(ReviewVenueViewModel)
         case SendObjectAsMessage(SendObjectAsMessageViewModel)
+        case NotFound(NotFoundView.ContentType)
     }
     
     var path: NavigationPath = NavigationPath()
@@ -71,6 +72,8 @@ class Router {
             ReviewVenueView(viewModel: viewModel)
         case .SendObjectAsMessage(let viewModel):
             SendObjectAsMessageView(viewModel: viewModel)
+        case .NotFound(let type):
+            NotFoundView(contentType: type)
         }
     
     }
@@ -100,6 +103,28 @@ class Router {
                 navigateBack()
             }
         }
+    }
+    
+}
+
+extension Router {
+    
+    func navigateToProfile(account: Account?) {
+        guard let account else {
+            self.navigateTo(.NotFound(.profile))
+            return
+        }
+        let viewModel = ProfileViewModel(account: account)
+        self.navigateTo(.Profile(viewModel))
+    }
+    
+    func navigateToEvent(event: Event?, eventOwner: Account? = nil) {
+        guard let event else {
+            self.navigateTo(.NotFound(.event))
+            return
+        }
+        let viewModel = EventViewModel(event: event, eventOwner: eventOwner)
+        self.navigateTo(.Event(viewModel))
     }
     
 }

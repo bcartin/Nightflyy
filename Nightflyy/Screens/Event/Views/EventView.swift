@@ -101,6 +101,19 @@ struct EventView: View {
                             }
                         }
                         .frame(maxWidth: .infinity)
+                        .overlay(alignment: .topLeading) {
+                            if viewModel.hasNewComments && viewModel.isOwner {
+                                Text(viewModel.newComments)
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(.white)
+                                    .padding(6)
+                                    .background {
+                                        Circle()
+                                            .fill(.red)
+                                    }
+                            }
+                                
+                        }
                         
                     }
                     
@@ -275,10 +288,12 @@ struct EventView: View {
         .sheet(isPresented: $viewModel.presentInviteScreen, onDismiss: nil) {
             InviteFromEventView(viewModel: InviteFromEventViewModel(event: viewModel.event))
         }
-        .sheet(isPresented: $viewModel.preseentCommentsScreen) {
+        .sheet(isPresented: $viewModel.preseentCommentsScreen, onDismiss: {
+            viewModel.updateCommentsCounter()
+        }, content: {
             EventCommentsListView(viewModel: viewModel)
-                .presentationDetents([.medium, .large])
-        }
+                .presentationDetents([.large])
+        })
         .sheet(isPresented: $viewModel.presentPaywall) {
             NFPContainerView()
         }

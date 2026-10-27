@@ -42,6 +42,10 @@ class AccountManager: AccountManaging {
         self.account?.isAdmin ?? false
     }
     
+    var badgeCount: Int? {
+        self.account?.badgeCount
+    }
+    
     func saveAccount() {
         do {
             try account?.save()
@@ -121,6 +125,15 @@ class AccountManager: AccountManaging {
             try account?.save()
         } catch {
             Logger.general.error("Error updating track info: \(error.localizedDescription)")
+        }
+    }
+    
+    func resetBadgeCount() {
+        account?.badgeCount = 0
+        do {
+            try account?.save()
+        } catch {
+            Logger.general.error("Error updating badge count: \(error.localizedDescription)")
         }
     }
 }

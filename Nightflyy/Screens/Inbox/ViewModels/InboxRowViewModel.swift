@@ -71,30 +71,36 @@ class InboxRowViewModel: Hashable, Identifiable {
     }
     
     func goToProfile() {
-        guard let account else { return }
-        let viewModel = ProfileViewModel(account: account)
-        Router.shared.navigateTo(.Profile(viewModel))
+        Router.shared.navigateToProfile(account: account)
     }
     
     func fetchMessages() async {
+        guard let chatId = chat.id else { return }
+
         if !messagesFetched {
             messagesFetched = true
-            guard let chatId = chat.id else { return }
 
             // Load cached messages for instant display
             messages = loadMessagesFromCache(chatId: chatId)
             if !messages.isEmpty {
                 shouldScrollToBottom = true
             }
+        }
 
-            // Start listener for new messages only
-            let latestDate = messages.last?.date
-            ChatsManager.shared.createMessagesListener(uid: chatId, sinceDate: latestDate) { [weak self] newMessages in
-                guard let self else { return }
-                self.saveMessagesToCache(newMessages, chatId: chatId)
-                self.messages.append(contentsOf: newMessages)
-                self.shouldScrollToBottom = true
+        // The listener is removed on every disappear, so it must be
+        // recreated each time the chat is shown, not just the first time
+        let latestDate = messages.last?.date
+        ChatsManager.shared.createMessagesListener(uid: chatId, sinceDate: latestDate) { [weak self] newMessages in
+            guard let self else { return }
+            let existingIds = Set(self.messages.compactMap(\.id))
+            let uniqueMessages = newMessages.filter { message in
+                guard let id = message.id else { return true }
+                return !existingIds.contains(id)
             }
+            guard !uniqueMessages.isEmpty else { return }
+            self.saveMessagesToCache(uniqueMessages, chatId: chatId)
+            self.messages.append(contentsOf: uniqueMessages)
+            self.shouldScrollToBottom = true
         }
     }
 
@@ -142,10 +148,10 @@ class InboxRowViewModel: Hashable, Identifiable {
     }
     
     func sendMessage() {
-        guard let sender = AccountManager.shared.account?.uid else { return }
+        guard let sender = AccountManager.shared.account else { return }
         guard let recipient = account?.uid else { return }
         do {
-            let message = Message(sender: sender, recipient: recipient, date: Date(), type: .text, messageData: MessageData(message: messageText))
+            let message = Message(sender: sender.uid, senderName: sender.username ?? "Nightflyy", recipient: recipient, date: Date(), type: .text, messageData: MessageData(message: messageText))
             if chat.lastUpdated == nil {
                 try ChatsManager.updateChat(&chat, with: message) //MARK: Create new chat if it doesn't exist.
             }

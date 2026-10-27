@@ -30,8 +30,17 @@ class EventCommentViewModel: Hashable {
         self.event = event
     }
     
+    var isOwner: Bool {
+        return AccountManager.shared.account?.uid == event.createdBy
+    }
+    
     var numberOfLikes: String {
         return comment.likes.isEmpty ? "" : "\(comment.likes.count)"
+    }
+    
+    var shouldHighlight: Bool {
+        guard let lastCheck = event.lastCommentsCheck else { return false }
+        return comment.date > lastCheck && isOwner
     }
     
     var haveLiked: Bool {

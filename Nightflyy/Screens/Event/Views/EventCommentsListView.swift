@@ -21,6 +21,7 @@ struct EventCommentsListView: View {
                 ForEach(viewModel.commentsViewModels, id: \.self) { viewModel in
                     LazyVStack {
                         EventCommentView(viewModel: viewModel)
+                            .padding(.bottom, 4)
                             .task {
                                 await viewModel.fetchAccount()
                             }
@@ -53,10 +54,8 @@ struct EventCommentsListView: View {
         .backgroundImage("slyde_background")
         .background(.backgroundBlack)
         .scrollIndicators(.hidden)
-//        .errorAlert(error: $viewModel.error, buttonTitle: "OK")
+        
     }
 }
 
-//#Preview {
-//    EventCommentsView(viewModel: .constant(EventViewModel(event: Event())))
-//}
+
