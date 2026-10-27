@@ -9,16 +9,15 @@ import Foundation
 import FirebaseFirestore
 
 struct AppNotification: Identifiable, Codable {
-    
+
     @DocumentID var id = UUID().uuidString
     var sender: String
     var date: Date
     var type: AppNotificationType
     var notificationData: NotificationData
-    
+
     var isSelected: Bool = false
-    
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case sender
@@ -28,7 +27,6 @@ struct AppNotification: Identifiable, Codable {
     }
 
 }
-
 
 struct NotificationData: Codable {
     var event_flyer_url: String?

@@ -9,14 +9,14 @@ import Foundation
 import FirebaseFirestore
 
 struct Report: Identifiable, Codable {
-    
+
     @DocumentID var id = UUID().uuidString
     var reason: String
     var accountReported: String
     var reportedBy: String
     var notes: String?
     var date: Date
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case reason

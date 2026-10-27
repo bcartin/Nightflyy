@@ -10,29 +10,28 @@ import Combine
 
 @Observable
 class VenueSearchViewModel {
-    
+
     @ObservationIgnored
     @Published var searchText: String = ""
     private(set) var venueSearchResults: [Account] = .init()
-    
+
     private var venueSearchCancellable: AnyCancellable?
-    
+
     init() {
         SearchManager.shared.reloadClient()
-        
+
         venueSearchCancellable = $searchText
             .receive(on: DispatchQueue.main)
             .debounce(for: .seconds(1), scheduler: RunLoop.main)
             .sink(receiveValue: { [weak self] fragment in
                 if !fragment.isEmpty {
                     self?.searchVenues(searchText: fragment)
-                }
-                else {
+                } else {
                     self?.venueSearchResults = []
                 }
             })
     }
-    
+
     private func searchVenues(searchText: String) {
         self.venueSearchResults.removeAll()
         let results = SearchManager.shared.performSearch(searchText: searchText)

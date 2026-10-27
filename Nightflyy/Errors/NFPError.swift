@@ -12,10 +12,10 @@ enum NFPError: Error {
 }
 
 extension NFPError: LocalizedError {
-    
+
     public var errorDescription: String? {
         switch self {
-            
+
         case .invalidCode:
             "Invalid Promo Code. Please Try Again."
         }

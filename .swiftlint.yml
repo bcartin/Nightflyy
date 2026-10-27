@@ -1,0 +1,8 @@
+# Only lint the app's own source; skips graphify-out, Release, Mock Images, packages.
+included:
+  - Nightflyy
+
+# SwiftUI modifier chains run long; 120 is too tight for them.
+line_length:
+  warning: 150
+  error: 200

@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct RatingStarsView: View {
-    
+
     var rating: Float
-    
+
     var body: some View {
         HStack(spacing: 0) {
             ForEach(1..<6, id: \.self) { number in
@@ -19,13 +19,12 @@ struct RatingStarsView: View {
             }
         }
     }
-    
+
     func image(for number: Int) -> String {
         let dNumber = Float(number)
         return dNumber > rating ? dNumber - 1 >= rating ? "star" : "star.leadinghalf.filled" : "star.fill"
     }
-    
-    
+
 }
 
 #Preview {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum UserDefaultsKeys :String {
+enum UserDefaultsKeys: String {
     case hideSwipeForActionsPrompt
     case bonusCredit
     case nfpReferred
@@ -30,11 +30,11 @@ enum UserDefaultsKeys :String {
         }
 
     }
-    
+
     func setValue<T>(_ value: T) {
         UserDefaults.standard.set(value, forKey: rawValue)
     }
-    
+
     func removeValue() {
         UserDefaults.standard.removeObject(forKey: rawValue)
     }

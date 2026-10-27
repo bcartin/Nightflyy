@@ -9,25 +9,25 @@ import SwiftUI
 import StoreKit
 
 struct SideBarMenuView: View {
-    
+
     @Environment(\.requestReview) var requestReview
     @Environment(AccountManager.self) private var accountManager
     @Environment(Router.self) private var router
     @Binding var showMenu: Bool
     var safeArea: UIEdgeInsets
     @Binding var viewModel: SideBarMenuViewModel
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                
+
                 UserImageRound(imageUrl: accountManager.account?.profileImageUrl, size: 72)
                     .padding(.leading)
-                
+
                 VStack(alignment: .center) {
                     Text(accountManager.account?.username ?? "")
                         .font(.system(size: 24))
-                    
+
                     Button {
                         showMenu = false
                         viewModel.navigateToProfile()
@@ -38,9 +38,9 @@ struct SideBarMenuView: View {
                     }
                 }
                 .padding(.horizontal, 24)
-                
+
             }
-            
+
             Button {
                 NFPManager.shared.showNFPView = true
                 showMenu = false
@@ -50,7 +50,7 @@ struct SideBarMenuView: View {
                         .foregroundStyle(.white)
                         .font(.custom("NeuropolXRg-Regular", size: 17))
                         .padding()
-                    
+
                     Spacer()
                 }
                 .background(
@@ -58,57 +58,56 @@ struct SideBarMenuView: View {
                 )
             }
 
-            
             SideBarHeader(title: "ACCOUNT")
-                
+
             SideBarButton(.accountInfo(type: AccountManager.shared.account?.accountType ?? .personal)) {
                 viewModel.selectMenuItem(.accountInfo(type: AccountManager.shared.account?.accountType ?? .personal))
                 showMenu = false
             }
-            
+
             SideBarButton(.eventPreferences) {
                 viewModel.selectMenuItem(.eventPreferences)
                 showMenu = false
             }
-            
+
             SideBarHeader(title: "SETTINGS")
-            
-            SideBarButton(.privacy){
+
+            SideBarButton(.privacy) {
                 viewModel.selectMenuItem(.privacy)
                 showMenu = false
             }
-            
+
             SideBarButton(.pushNotifications) {
                 viewModel.selectMenuItem(.pushNotifications)
                 showMenu = false
             }
-            
+
             SideBarHeader(title: "ABOUT")
-            
-            SideBarButton(.termsOfService){
+
+            SideBarButton(.termsOfService) {
                 viewModel.selectMenuItem(.termsOfService)
                 showMenu = false
             }
-            
-            SideBarButton(.privacyPolicy){
+
+            SideBarButton(.privacyPolicy) {
                 viewModel.selectMenuItem(.privacyPolicy)
                 showMenu = false
             }
-            
-            SideBarButton(.helpUs){
+
+            SideBarButton(.helpUs) {
                 viewModel.selectMenuItem(.helpUs)
                 showMenu = false
             }
-            
+
             SideBarButton(.rateUs) {
                 requestReview()
             }
-            
+
             ShareLink(item: URL(string: "https://apps.apple.com/us/app/id1487722727")!, message: Text("You have been invited to join the exclusive nightlife community! Download Nightflyy now.")) {
                 HStack(spacing: 12) {
                     Text("Share")
                         .font(.system(size: 17))
-                        
+
                     Spacer(minLength: 0)
                 }
                 .foregroundStyle(.white)
@@ -117,16 +116,16 @@ struct SideBarMenuView: View {
                 .contentShape(.rect)
                 .foregroundStyle(.primary)
             }
-            
+
             HStack {
                 SideBarButton(.logout) {
                     showMenu = false
                     ChatsManager.shared.stopChatsListener()
                     try? AuthenticationManager.shared.logOut()
                 }
-                
+
                 Spacer()
-                
+
                 Text("version \(UIApplication.appVersion)")
                     .foregroundStyle(.gray)
                     .font(.system(size: 12))
@@ -140,7 +139,7 @@ struct SideBarMenuView: View {
         .environment(\.colorScheme, .dark)
         .background(.backgroundBlack)
     }
-    
+
     @ViewBuilder
     func SideBarHeader(title: String) -> some View {
         Text(title)
@@ -152,9 +151,9 @@ struct SideBarMenuView: View {
             .fontWeight(.medium)
             .background(.black)
     }
-    
+
     @ViewBuilder
-    func SideBarButton(_ tab: MenuItem, onTap: @escaping () -> () = {}) -> some View {
+    func SideBarButton(_ tab: MenuItem, onTap: @escaping () -> Void = {}) -> some View {
         Button(action:
                 onTap,
                label: {
@@ -164,7 +163,7 @@ struct SideBarMenuView: View {
                 }
                 Text(tab.title)
                     .font(.system(size: 17))
-                    
+
                 Spacer(minLength: 0)
             }
             .foregroundStyle(.white)

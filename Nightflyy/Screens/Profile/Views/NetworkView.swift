@@ -8,24 +8,24 @@
 import SwiftUI
 
 struct NetworkView: View {
-    
+
     @Environment(Router.self) private var router
     @Bindable var viewModel: NetworkViewModel
     @FocusState private var isKeyboardActive: Bool
-    
+
     var body: some View {
         VStack {
-            
+
             if #available(iOS 26.0, *) { // TODO: Remove when min version is iOS 26
                 HStack(spacing: 8) {
                     Image(systemName: "magnifyingglass")
                         .font(.callout)
                         .foregroundStyle(.white.opacity(0.5))
-                    
+
                     TextField("", text: $viewModel.searchText, prompt: Text("Search").foregroundStyle(.white.opacity(0.5)))
                         .submitLabel(.search)
                         .focused($isKeyboardActive)
-                    
+
                     if !viewModel.searchText.isEmpty {
                         Button {
                             viewModel.searchText = ""
@@ -41,17 +41,16 @@ struct NetworkView: View {
                 .glassEffect(.regular, in: .capsule)
                 .padding(.top, 8)
                 .padding(.horizontal, 16)
-            }
-            else {
+            } else {
                 HStack(spacing: 8) {
                     Image(systemName: "magnifyingglass")
                         .font(.callout)
                         .foregroundStyle(.white.opacity(0.5))
-                    
+
                     TextField("", text: $viewModel.searchText, prompt: Text("Search").foregroundStyle(.white.opacity(0.5)))
                         .submitLabel(.search)
                         .focused($isKeyboardActive)
-                    
+
                     if !viewModel.searchText.isEmpty {
                         Button {
                             viewModel.searchText = ""
@@ -68,11 +67,11 @@ struct NetworkView: View {
                 .cornerRadius(8)
                 .padding(.top, 8)
                 .padding(.horizontal, 16)
-                
+
             }
-            
+
             SegmentedView(segments: viewModel.segments, selected: $viewModel.selectedSegment)
-            
+
             ScrollView {
                 if viewModel.selectedSegment == 1 {
                     ForEach(viewModel.displayFollowers, id: \.self) { uid in
@@ -85,11 +84,10 @@ struct NetworkView: View {
                                 .onTapGesture {
                                     viewModel.goToProfile()
                                 }
-                            
+
                         }
                     }
-                }
-                else {
+                } else {
                     ForEach(viewModel.displayFollowing, id: \.self) { uid in
                         LazyVStack(spacing: 0) {
                             let viewModel = NetworkUserViewModel(selectedSegment: viewModel.selectedSegment)
@@ -100,7 +98,7 @@ struct NetworkView: View {
                                 .onTapGesture {
                                     viewModel.goToProfile()
                                 }
-                            
+
                         }
                     }
                 }
@@ -109,9 +107,9 @@ struct NetworkView: View {
         }
         .backgroundImage("slyde_background")
         .background(.backgroundBlack)
-        
+
     }
-    
+
 }
 
 #Preview {

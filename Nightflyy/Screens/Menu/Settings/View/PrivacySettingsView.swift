@@ -11,31 +11,31 @@ struct PrivacySettingsView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(ToastsManager.self) private var toastsManager
     @Bindable var viewModel: PrivacySettingsViewModel
-    
+
     var body: some View {
         @Bindable var toastsManager = toastsManager
-        
+
         NavigationStack {
-            
+
             ZStack {
                 VStack(spacing: 18) {
                     HStack {
-                        
+
                         Text("Private Account")
                             .foregroundStyle(.white)
-                        
+
                         Spacer()
-                        
+
                         Toggle(isOn: $viewModel.isPrivateAccount, label: { })
                             .tint(.mainPurple)
                             .fixedSize()
                     }
                     .padding(.horizontal)
-                    
+
                     Text("Only followers that you approve will be able to view your account content when your account is private.")
                         .foregroundStyle(.gray)
                         .font(.caption)
-                    
+
                     Spacer()
                 }
                 .padding()
@@ -52,7 +52,7 @@ struct PrivacySettingsView: View {
                                 .foregroundStyle(.white)
                         }
                     }
-                    
+
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
                             dismiss()
@@ -61,17 +61,17 @@ struct PrivacySettingsView: View {
                                 .foregroundStyle(.white)
                         }
                     }
-                    
+
                     ToolbarItem(placement: .principal) {
                         Text("Privacy Settings")
                             .foregroundStyle(.white)
                     }
                 }
-                
+
                 if viewModel.isLoading {
                     LoadingView()
                 }
-                
+
             }
             .errorAlert(error: $viewModel.error, buttonTitle: "OK")
         }

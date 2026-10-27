@@ -25,7 +25,7 @@ struct CustomSecureTextField: View {
                         .fill(Color.red.opacity(0.2))
                         .frame(height: 36)
                 }
-                
+
                 Text(placeholder)
                     .textCase(isTyping || !(value.isEmpty) ? .uppercase : .none)
                     .foregroundStyle(isTyping ? .mainPurple : .white.opacity(0.5))
@@ -39,7 +39,7 @@ struct CustomSecureTextField: View {
                                 .offset(x: 20, y: isTyping || !(value.isEmpty) ? -20 : 0)
                         }
                     })
-                
+
                 SecureField("", text: $value)
                     .frame(height: 55)
                     .focused($isFocused)
@@ -52,7 +52,7 @@ struct CustomSecureTextField: View {
                     .frame(height: 1)
                     .offset(y: -10)
             })
-            .onChange(of: isFocused) { oldValue, newValue in
+            .onChange(of: isFocused) { _, newValue in
                 withAnimation {
                     isTyping = newValue
                 }

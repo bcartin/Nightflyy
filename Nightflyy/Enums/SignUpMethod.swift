@@ -8,7 +8,7 @@
 import Foundation
 
 enum SignUpMethod {
-    
+
     case nightflyy
     case apple
 }

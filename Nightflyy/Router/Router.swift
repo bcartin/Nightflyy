@@ -10,11 +10,11 @@ import SwiftUI
 
 @Observable @MainActor
 class Router {
-    
+
     static var shared = Router()
-    
+
     private init() {}
-    
+
     enum Route: Hashable {
         case Profile(ProfileViewModel)
         case Event(EventViewModel)
@@ -28,9 +28,9 @@ class Router {
         case SendObjectAsMessage(SendObjectAsMessageViewModel)
         case NotFound(NotFoundView.ContentType)
     }
-    
+
     var path: NavigationPath = NavigationPath()
-    
+
     @ViewBuilder
     func view(for route: Route) -> some View {
         switch route {
@@ -38,12 +38,11 @@ class Router {
             GeometryReader {
                 let safeArea = $0.safeAreaInsets
                 let size = $0.size
-                
+
                 if viewModel.isPersonalAccount {
                     ProfileView(viewModel: viewModel, safeArea: safeArea, size: size)
                         .ignoresSafeArea(.container, edges: .top)
-                }
-                else {
+                } else {
                     VenueProfileView(viewModel: viewModel, safeArea: safeArea, size: size)
                         .ignoresSafeArea(.container, edges: .top)
                 }
@@ -52,7 +51,7 @@ class Router {
             GeometryReader {
                 let safeArea = $0.safeAreaInsets
                 let size = $0.size
-                
+
                 EventView(viewModel: viewModel, safeArea: safeArea, size: size)
                     .ignoresSafeArea(.container, edges: .top)
             }
@@ -75,28 +74,28 @@ class Router {
         case .NotFound(let type):
             NotFoundView(contentType: type)
         }
-    
+
     }
-    
+
     func navigateTo(_ appRoute: Route) {
         withAnimation {
             path.append(appRoute)
         }
     }
-    
+
     func navigateBack() {
         if path.count == 0 { return }
         withAnimation {
             path.removeLast()
         }
     }
-    
+
     func popToRoot() {
         withAnimation {
             path.removeLast(path.count)
         }
     }
-    
+
     func popLast(numberOfViews: Int) {
         withAnimation {
             for _ in 1...numberOfViews {
@@ -104,11 +103,11 @@ class Router {
             }
         }
     }
-    
+
 }
 
 extension Router {
-    
+
     func navigateToProfile(account: Account?) {
         guard let account else {
             self.navigateTo(.NotFound(.profile))
@@ -117,7 +116,7 @@ extension Router {
         let viewModel = ProfileViewModel(account: account)
         self.navigateTo(.Profile(viewModel))
     }
-    
+
     func navigateToEvent(event: Event?, eventOwner: Account? = nil) {
         guard let event else {
             self.navigateTo(.NotFound(.event))
@@ -126,5 +125,5 @@ extension Router {
         let viewModel = EventViewModel(event: event, eventOwner: eventOwner)
         self.navigateTo(.Event(viewModel))
     }
-    
+
 }

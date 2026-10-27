@@ -12,15 +12,15 @@ import FirebaseAuth
 
 @Observable @MainActor
 class LoginViewModel {
-    
+
     var email: String = ""
     var password: String = ""
     var nonce: String = AuthenticationManager.shared.randomNonceString()
     var appleIDCredential: ASAuthorizationAppleIDCredential?
     var presentEmailSentAlert: Bool = false
-    
+
     var error: Error?
-    
+
     func logInWithEmail() {
         Task {
             AuthenticationManager.shared.isSigningUp = false
@@ -38,32 +38,31 @@ class LoginViewModel {
             }
         }
     }
-    
+
     func signInWithApple() async {
         AuthenticationManager.shared.isSigningUp = false
         guard let appleIDToken = appleIDCredential?.identityToken else {
             error = SignupError.cannotProcessRequest
             return
         }
-        
+
         guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
             error = SignupError.cannotProcessRequest
             return
         }
-        
+
         let credential = OAuthProvider.appleCredential(withIDToken: idTokenString, rawNonce: nonce, fullName: appleIDCredential?.fullName)
-        
+
         do {
             _ = try await AuthenticationManager.shared.signIn(with: credential)
             MainCoordinator().initialAppSetup()
             try await PushNotificationsManager.shared.requestPermission()
-        }
-        catch {
+        } catch {
             Logger.auth.error("Error signing in with Apple: \(error.localizedDescription)")
             self.error = error
         }
     }
-    
+
     func handleForgotPassword() {
         if email.isEmpty {
             error = AccountError.invalidEmail
@@ -73,8 +72,7 @@ class LoginViewModel {
             do {
                 try await AuthenticationManager.shared.forgotPassword(email: email)
                 presentEmailSentAlert = true
-            }
-            catch {
+            } catch {
                 self.error = error
             }
         }

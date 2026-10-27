@@ -13,9 +13,8 @@ struct ChipsView<Content: View, Tag: Equatable>: View where Tag: Hashable {
     var tags: [Tag]
     @Binding var selectedTags: [Tag]
     @ViewBuilder var content: (Tag, Bool) -> Content
-    var didChangeSelection: ([Tag]) -> ()
-    
-    
+    var didChangeSelection: ([Tag]) -> Void
+
     var body: some View {
         CustomChipLayout(spacing: spacing) {
             ForEach(tags, id: \.self) { tag in
@@ -25,12 +24,11 @@ struct ChipsView<Content: View, Tag: Equatable>: View where Tag: Hashable {
                         withAnimation {
                             if selectedTags.contains(tag) {
                                 selectedTags.removeAll { $0 == tag }
-                            }
-                            else {
+                            } else {
                                 selectedTags.append(tag)
                             }
                         }
-                        
+
                         didChangeSelection(selectedTags)
                     }
             }
@@ -38,57 +36,55 @@ struct ChipsView<Content: View, Tag: Equatable>: View where Tag: Hashable {
     }
 }
 
-fileprivate struct CustomChipLayout: Layout {
+private struct CustomChipLayout: Layout {
     var spacing: CGFloat
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
         let width = proposal.width ?? 0
         return .init(width: width, height: maxHeight(proposal: proposal, subviews: subviews))
     }
-    
+
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
         var origin = bounds.origin
-        
+
         for subview in subviews {
             let fitSize = subview.sizeThatFits(proposal)
-            
+
             if (origin.x + fitSize.width) > bounds.maxX {
                 origin.x = bounds.minX
                 origin.y += fitSize.height + spacing
-                
+
                 subview.place(at: origin, proposal: proposal)
                 origin.x += fitSize.width + spacing
-            }
-            else {
+            } else {
                 subview.place(at: origin, proposal: proposal)
                 origin.x += fitSize.width + spacing
             }
         }
     }
-    
+
     private func maxHeight(proposal: ProposedViewSize, subviews: Subviews) -> CGFloat {
         var origin: CGPoint = .zero
-        
+
         for subview in subviews {
             let fitSize = subview.sizeThatFits(proposal)
-            
+
             if (origin.x + fitSize.width) > (proposal.width ?? 0) {
                 origin.x = 0
                 origin.y += fitSize.height + spacing
-                
+
+                origin.x += fitSize.width + spacing
+            } else {
                 origin.x += fitSize.width + spacing
             }
-            else {
-                origin.x += fitSize.width + spacing
-            }
-            
+
             if subview == subviews.last {
                 origin.y += fitSize.height
             }
         }
-        
+
         return origin.y
     }
-    
+
 }
 
 #Preview {

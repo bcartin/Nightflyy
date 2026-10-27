@@ -20,7 +20,7 @@ enum MenuItem {
     case rateUs
     case shareApp
     case logout
-    
+
     var title: String {
         switch self {
         case .accountInfo:
@@ -45,7 +45,7 @@ enum MenuItem {
             return "Logout"
         }
     }
-    
+
     var image: String? {
         switch self {
         case .logout:
@@ -54,7 +54,7 @@ enum MenuItem {
             return nil
         }
     }
-    
+
     @ViewBuilder var associatedView: some View {
         switch self {
         case .accountInfo(let type):
@@ -64,7 +64,7 @@ enum MenuItem {
             case .venue:
                 EditVenueProfileView(viewModel: EditVenueProfileViewModel())
             }
-            
+
         case .eventPreferences:
             EventPreferencesView(viewModel: EventPreferencesViewModel())
         case .privacy:
@@ -77,8 +77,7 @@ enum MenuItem {
             WebView(url: "https://e97102b0-88c2-4ee4-904c-69691920f0d7.usrfiles.com/ugd/e97102_fb276717b86c41f7b3688c3d3a180c36.pdf", title: "Privacy Policy")
         case .helpUs:
             WebView(url: "https://docs.google.com/forms/d/e/1FAIpQLSfbmYUnsSO0WXux5ePm9xa795kjgSCEfME0pjJuqp9nZixVXg/viewform?embedded=true", title: "Help Us Improve")
-            
-        
+
         default:
             EmptyView()
         }

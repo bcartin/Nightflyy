@@ -9,9 +9,9 @@ import SwiftUI
 import FirebaseRemoteConfig
 
 struct SplashScreenView: View {
-    
+
     @State var scale: CGSize = CGSize(width: 1.0, height: 1.0)
-    
+
     var body: some View {
         ZStack {
             Image("slyde_fly")
@@ -23,7 +23,7 @@ struct SplashScreenView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .backgroundImage("slyde_background")
         .background(.backgroundBlack)
-        .onAppear{
+        .onAppear {
             withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) {
                 scale = CGSize(width: 1.2, height: 1.2)
             }

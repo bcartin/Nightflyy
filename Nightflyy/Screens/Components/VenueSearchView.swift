@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct VenueSearchView: View {
-    
+
     @Binding var selectedVenueString: String
     @Binding var selectedVenue: Account?
     @State var isTyping: Bool = false
     @Environment(\.dismiss) var dismiss
     @FocusState private var isFieldFocused: Bool
-    
+
     @State var viewModel: VenueSearchViewModel
-    
+
     var body: some View {
             VStack(spacing: 20) {
-                
+
                 TextField("", text: $viewModel.searchText, prompt: Text("Venue").foregroundStyle(.white.opacity(0.5)))
                     .foregroundStyle(.white)
                     .padding(8)
@@ -36,7 +36,7 @@ struct VenueSearchView: View {
                                 .foregroundStyle(.white.opacity(0.5))
                                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                                 .padding(.leading, 8)
-                            
+
                             if isTyping {
                                 Button(action: {
                                     viewModel.searchText = ""
@@ -48,14 +48,14 @@ struct VenueSearchView: View {
                             }
                         }
                     }
-                
+
                 if !viewModel.searchText.isEmpty {
                     HStack {
                         (Text("Use: ") + Text(viewModel.searchText))
                             .font(.headline)
                             .fontWeight(.medium)
                             .foregroundStyle(.white)
-                        
+
                         Spacer()
                     }
                     .onTapGesture {
@@ -63,8 +63,7 @@ struct VenueSearchView: View {
                         dismiss()
                     }
                 }
-                
-                
+
                 ScrollView(.vertical) {
                     VStack {
                         ForEach(viewModel.venueSearchResults) { venue in
@@ -80,7 +79,7 @@ struct VenueSearchView: View {
                 .padding(.top)
                 .scrollIndicators(.hidden)
                 .scrollDismissesKeyboard(.interactively)
-                
+
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)

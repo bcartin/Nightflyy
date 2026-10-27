@@ -8,7 +8,7 @@
 import Foundation
 
 enum AccountError: Error {
-    
+
     case invalidUsername
     case usernameTaken
     case missingRequiredFields
@@ -21,10 +21,10 @@ enum AccountError: Error {
 }
 
 extension AccountError: LocalizedError {
-    
+
     public var errorDescription: String? {
         switch self {
-            
+
         case .invalidUsername:
             "Invalid Username"
         case .usernameTaken:
@@ -43,5 +43,5 @@ extension AccountError: LocalizedError {
             "Invalid email address"
         }
     }
-    
+
 }

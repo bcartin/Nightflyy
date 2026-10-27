@@ -18,17 +18,16 @@ extension View {
     }
 }
 
-
 /// Helper Modifier
-fileprivate struct CustomAlertModifier<AlertContent: View, Background: View>: ViewModifier {
+private struct CustomAlertModifier<AlertContent: View, Background: View>: ViewModifier {
     @Binding var isPresented: Bool
     @ViewBuilder var alertContent: AlertContent
     @ViewBuilder var background: Background
-    
+
     @State private var showFullScreenCover: Bool = false
     @State private var animatedValue: Bool = false
     @State private var allowsInteractions: Bool = false
-    
+
     func body(content: Content) -> some View {
         content
             .fullScreenCover(isPresented: $showFullScreenCover) {
@@ -48,21 +47,20 @@ fileprivate struct CustomAlertModifier<AlertContent: View, Background: View>: Vi
                     withAnimation(.easeInOut(duration: 0.3)) {
                         animatedValue = true
                     }
-                    
+
                     try? await Task.sleep(for: .seconds(0.3))
                     allowsInteractions = true
                 }
             }
-            .onChange(of: isPresented) { oldValue, newValue in
+            .onChange(of: isPresented) { _, newValue in
                 var transaction = Transaction()
                 transaction.disablesAnimations = true
-                
+
                 if newValue {
                     withTransaction(transaction) {
                         showFullScreenCover = true
                     }
-                }
-                else {
+                } else {
                     allowsInteractions = false
                     withAnimation(.easeInOut(duration: 0.3), completionCriteria: .removed) {
                         animatedValue = false

@@ -11,52 +11,50 @@ import OSLog
 
 @Observable @MainActor
 class ChatsManager {
-    
+
     static let shared = ChatsManager()
-    
+
     private let accountManager: any AccountManaging
-    
+
     private init(
         accountManager: (any AccountManaging)? = nil
     ) {
         self.accountManager = accountManager ?? AccountManager.shared
     }
-    
+
     var viewModels: [InboxRowViewModel] = []
     private var listener: ListenerRegistration?
     private var messagesListener: ListenerRegistration?
     var hasNewChats: Bool {
         viewModels.contains { $0.shouldHighlight == true }
     }
-    
+
     var newChatsCount: Int {
         viewModels.count { $0.shouldHighlight == true
         }
     }
-    
+
     func initChatsListener(uid: String) async {
         self.createChatsListenerChats(uid: uid) { [weak self] chats in
             guard let self = self else {return}
             if self.viewModels.isEmpty {
-                self.viewModels = chats.map{InboxRowViewModel(chat: $0)}
-            }
-            else {
+                self.viewModels = chats.map {InboxRowViewModel(chat: $0)}
+            } else {
                 chats.forEach { chat in
                     if let index = self.viewModels.firstIndex(where: { oldViewModel in
                         return oldViewModel.chatID == chat.id
                     }) {
                         self.viewModels[index].chat = chat
-                    }
-                    else {
+                    } else {
                         self.viewModels.append(InboxRowViewModel(chat: chat))
                     }
                 }
             }
-            self.viewModels.sort{$0.lastUpdated > $1.lastUpdated}
-                
+            self.viewModels.sort {$0.lastUpdated > $1.lastUpdated}
+
         }
     }
-    
+
     func removeChat(chatId: String) {
         if let index = self.viewModels.firstIndex(where: { oldViewModel in
             return oldViewModel.chatID == chatId
@@ -64,13 +62,13 @@ class ChatsManager {
             self.viewModels.remove(at: index)
         }
     }
-    
+
     func createChatsListenerChats(uid: String, completion: @escaping ([Chat]) -> Void) {
         var chats = [Chat]()
         listener?.remove()
         let db = FirebaseManager.shared.db
         let query = db.collection(FirestoreCollections.Chats.value).whereField(FirestoreCollections.Chats.members, arrayContainsAny: [uid])
-        listener = query.addSnapshotListener { [weak self] snapshot, error in
+        listener = query.addSnapshotListener { [weak self] snapshot, _ in
             snapshot?.documentChanges.forEach { change in
                 guard let chat = try? change.document.data(as: Chat.self) else { return }
                 switch change.type {
@@ -87,7 +85,7 @@ class ChatsManager {
             completion(chats)
         }
     }
-    
+
     func createMessagesListener(uid: String, sinceDate: Date?, completion: @escaping ([Message]) -> Void) {
         messagesListener?.remove()
         let db = FirebaseManager.shared.db
@@ -98,7 +96,7 @@ class ChatsManager {
                 .whereField(FirestoreCollections.Messages.date, isGreaterThan: sinceDate)
                 .order(by: FirestoreCollections.Messages.date, descending: false)
         }
-        messagesListener = query.addSnapshotListener { snapshot, error in
+        messagesListener = query.addSnapshotListener { snapshot, _ in
             var newMessages = [Message]()
             snapshot?.documentChanges.forEach { change in
                 if change.type == .added {
@@ -125,20 +123,19 @@ class ChatsManager {
         stopMessagesListener()
         viewModels = []
     }
-    
+
     func getChat(with accountId: String) throws -> Chat {
         let chat = viewModels.first { $0.chat.members.contains(accountId) }?.chat
         if let chat {
             return chat
-        }
-        else {
+        } else {
             let uid = accountManager.account?.uid ?? ""
             let newChat = Chat(id: UUID().uuidString, members: [accountId, uid])
             try newChat.save()
             return newChat
         }
     }
-    
+
     static func fetchChat(members: [String]) async -> Chat? {
         do {
             let db = FirebaseManager.shared.db
@@ -149,18 +146,17 @@ class ChatsManager {
                 return try document.data(as: Chat.self)
             })
             return chats.first
-        }
-        catch {
+        } catch {
             Logger.network.error("Error fetching chat: \(error.localizedDescription)")
             return nil
         }
     }
-    
+
     static func sendMessage(chatId: String, message: Message) throws {
         let db = FirebaseManager.shared.db
         try db.collection(FirestoreCollections.Chats.value).document(chatId).collection(FirestoreCollections.Messages.value).addDocument(from: message)
     }
-    
+
     static func updateChat(_ chat: inout Chat, with message: Message) throws {
         chat.isNew = true
         switch message.type {
@@ -175,7 +171,7 @@ class ChatsManager {
         chat.lastUpdated = Date()
         try chat.save()
     }
-    
+
     static func deleteChat(chatId: String) async throws {
         let db = FirebaseManager.shared.db
         try await db.collection(FirestoreCollections.Chats.value).document(chatId).delete()

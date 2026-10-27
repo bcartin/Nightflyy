@@ -12,17 +12,17 @@ import OSLog
 
 @Observable @MainActor
 class InboxRowViewModel: Hashable, Identifiable {
-    
+
     nonisolated let id: String
-    
+
     nonisolated static func == (lhs: InboxRowViewModel, rhs: InboxRowViewModel) -> Bool {
         lhs.id == rhs.id
     }
-    
+
     nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
+
     var chat: Chat
     var account: Account?
     var defaultUserImage: UIImage = UIImage(systemName: "person.circle")!.withRenderingMode(.alwaysTemplate)
@@ -39,41 +39,41 @@ class InboxRowViewModel: Hashable, Identifiable {
         self.fetchAccount()
         print(chat.id!)
     }
-    
+
     var chatID: String {
         "\(chat.id ?? "")"
     }
-    
+
     var userName: String {
         account?.username ?? ""
     }
-    
+
     var profileImageUrl: String {
         account?.profileImageUrl ?? ""
     }
-    
+
     var lastUpdated: Date {
         chat.lastUpdated ?? .init()
     }
-    
+
     var shouldHighlight: Bool {
         (chat.isNew ?? true) && chat.lastMessageSender == account?.uid
     }
-    
+
     func fetchAccount() {
         Task {
             guard let accountID = chat.members.first(where: { uid in
                 return uid != AccountManager.shared.account?.uid ?? ""
             }) else { return }
-            
+
             account = await AccountClient.fetchAccount(accountId: accountID)
         }
     }
-    
+
     func goToProfile() {
         Router.shared.navigateToProfile(account: account)
     }
-    
+
     func fetchMessages() async {
         guard let chatId = chat.id else { return }
 
@@ -117,8 +117,7 @@ class InboxRowViewModel: Hashable, Identifiable {
         do {
             let cached = try viewContext.fetch(request)
             return cached.compactMap { Message.from($0) }
-        }
-        catch {
+        } catch {
             Logger.general.error("Error loading messages from cache: \(error.localizedDescription)")
             return []
         }
@@ -134,43 +133,39 @@ class InboxRowViewModel: Hashable, Identifiable {
                 let entity = existing ?? CachedMessage(context: viewContext)
                 message.populate(entity)
                 entity.chatId = chatId
-            }
-            catch {
+            } catch {
                 Logger.general.error("Error upserting message to cache: \(error.localizedDescription)")
             }
         }
         do {
             try viewContext.save()
-        }
-        catch {
+        } catch {
             Logger.general.error("Error saving message cache: \(error.localizedDescription)")
         }
     }
-    
+
     func sendMessage() {
         guard let sender = AccountManager.shared.account else { return }
         guard let recipient = account?.uid else { return }
         do {
             let message = Message(sender: sender.uid, senderName: sender.username ?? "Nightflyy", recipient: recipient, date: Date(), type: .text, messageData: MessageData(message: messageText))
             if chat.lastUpdated == nil {
-                try ChatsManager.updateChat(&chat, with: message) //MARK: Create new chat if it doesn't exist.
+                try ChatsManager.updateChat(&chat, with: message) // MARK: Create new chat if it doesn't exist.
             }
             try ChatsManager.sendMessage(chatId: chat.uid, message: message)
             self.messageText = ""
             self.shouldScrollToBottom = true
-        }
-        catch {
+        } catch {
             self.error = error
         }
     }
-    
+
     func deleteChat() {
         Task {
             do {
                 try await ChatsManager.deleteChat(chatId: chatID)
                 ChatsManager.shared.removeChat(chatId: chatID)
-            }
-            catch {
+            } catch {
                 self.error = error
             }
         }

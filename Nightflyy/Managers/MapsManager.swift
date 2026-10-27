@@ -9,16 +9,16 @@ import CoreLocation
 import UIKit
 
 class MapsManager {
-    
+
     static func getLocation(from address: String ) async -> CLLocation? {
         return try? await CLGeocoder().geocodeAddressString(address).first?.location
     }
-    
+
     static func getCityAndState(from location: CLLocation) async -> String {
         let placemark = try? await CLGeocoder().reverseGeocodeLocation(location).first
         return "\(placemark?.locality ?? "City"), \(placemark?.administrativeArea ?? "ST")"
     }
-    
+
     static func openMapsWithAddress(_ address: String) async {
         let location = await getLocation(from: address)
         if let coordinate = location?.coordinate {
@@ -30,5 +30,5 @@ class MapsManager {
             }
         }
     }
-    
+
 }

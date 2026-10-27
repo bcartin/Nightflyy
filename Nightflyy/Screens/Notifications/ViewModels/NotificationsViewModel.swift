@@ -10,17 +10,16 @@ import SwiftUI
 
 @Observable @MainActor
 class NotificationsViewModel {
-    
+
     init() {
         hideSwipeForActionPrompt = UserDefaultsKeys.hideSwipeForActionsPrompt.getValue() ?? false
     }
-    
+
     var hideSwipeForActionPrompt: Bool = false
-    
-    
+
     func setHideSwipeForActionPrompt(_ value: Bool) {
         UserDefaultsKeys.hideSwipeForActionsPrompt.setValue(value)
         withAnimation { self.hideSwipeForActionPrompt = value }
-        
+
     }
 }

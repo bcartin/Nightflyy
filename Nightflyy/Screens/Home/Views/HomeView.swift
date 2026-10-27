@@ -8,33 +8,31 @@
 import SwiftUI
 
 struct HomeView: View {
-    
+
     @Environment(LocationManager.self) private var locationManager
     @Environment(ToastsManager.self) private var toastsManager
     @Binding var showMenu: Bool
     @State var isFilterViewShowing: Bool = false
     @State var viewModel: HomeViewModel
-    
+
     var body: some View {
         @Bindable var toastsManager = toastsManager
-        
+
         RouterView {
             VStack {
                 Spacer()
                     .frame(height: 24)
-                
+
                 if !locationManager.permissionGranted && viewModel.selectedFiler == .nearby {
                     NoPermissionsView()
-                }
-                else if viewModel.displayEvents.isEmpty {
+                } else if viewModel.displayEvents.isEmpty {
                     NoResultsView()
-                }
-                else {
-                    
+                } else {
+
                     GeometryReader {
                         let size = $0.size
                         let cardWidth = size.width - 86
-                        
+
                         ScrollView(.horizontal) {
                             LazyHStack(spacing: 0) {
                                 ForEach(viewModel.displayEvents) { event in
@@ -44,7 +42,7 @@ struct HomeView: View {
                                                 .scaleEffect(phase == .identity ? 1 : 0.9, anchor: .center)
                                         }
                                 }
-                                
+
                             }
                             .scrollTargetLayout()
                         }
@@ -55,10 +53,9 @@ struct HomeView: View {
                     }
                     .padding(.bottom, 112)
                 }
-                
+
                 Spacer()
-                
-                
+
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(.backgroundBlack)
@@ -67,7 +64,7 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Button(action: {
-                        
+
                     }, label: {
                         HStack {
                             Text(viewModel.headerText)
@@ -83,10 +80,9 @@ struct HomeView: View {
                             EventsFilterView(viewModel: $viewModel.filterViewModel)
                         }
                     })
-                    
-                    
+
                 }
-                
+
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: {
                         showMenu.toggle()
@@ -96,7 +92,7 @@ struct HomeView: View {
                             .contentTransition(.symbolEffect)
                     })
                 }
-                
+
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
                         viewModel.navigateToCreateNewEvent()
@@ -119,7 +115,7 @@ struct HomeView: View {
             .interactiveToast($toastsManager.toasts)
         }
     }
-    
+
     @ViewBuilder
     func NoPermissionsView() -> some View {
         VStack(alignment: .center, spacing: 24) {
@@ -127,13 +123,13 @@ struct HomeView: View {
                 .resizable()
                 .frame(width: 44, height: 44)
                 .foregroundColor(.mainPurple)
-            
+
             Text("You did not grant location permissions. Allow Nightflyy to access your location to see nearby events.")
                 .font(.subheadline)
                 .foregroundColor(.gray)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 24)
-            
+
             Button {
                 viewModel.openSettings()
             } label: {
@@ -145,22 +141,21 @@ struct HomeView: View {
         .padding()
         .offset(y: 120)
     }
-    
+
     @ViewBuilder
     func NoResultsView() -> some View {
         VStack {
             Spacer()
-            
+
             Image("no_results")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
+                .resizable().scaledToFit()
                 .offset(y: -100)
-            
+
             Text("No events found.")
                 .foregroundStyle(.white)
                 .font(.title3)
                 .offset(y: -130)
-            
+
             Spacer()
         }
     }

@@ -8,23 +8,21 @@
 import SwiftUI
 
 struct HubView: View {
-    
+
     @Binding var showMenu: Bool
     @Bindable var viewModel: HubViewModel
-    
+
     var body: some View {
         RouterView {
             VStack(alignment: .leading) {
-                
+
                 SegmentedView(segments: viewModel.segments, selected: $viewModel.selectedSegment)
-                
+
                 if viewModel.selectedSegment == 1 {
                     UpcomingView()
-                }
-                else if viewModel.selectedSegment == 2 {
+                } else if viewModel.selectedSegment == 2 {
                     HostingView()
-                }
-                else if viewModel.selectedSegment == 3 {
+                } else if viewModel.selectedSegment == 3 {
                     CalendarView()
                 }
             }
@@ -52,7 +50,7 @@ struct HubView: View {
                     Button(action: {
                         viewModel.navigateToCreateNewEvent()
                     }, label: {
-                        Image(systemName:"plus")
+                        Image(systemName: "plus")
                             .foregroundStyle(.white)
                     })
                 }

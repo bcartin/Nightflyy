@@ -11,7 +11,7 @@ import OSLog
 
 @Observable
 class EventsManager: EventsManaging {
-    
+
     static let shared = EventsManager()
     var nearbyEvents: [Event] = []
     var locationEvents: [Event] = []
@@ -21,11 +21,11 @@ class EventsManager: EventsManaging {
     var interestedEvents: [Event] = []
     var hostingEvents: [Event] = []
     var locationVenues: [Account] = []
-    
+
     private let eventClient: any EventClientProtocol
     private let geoClient: any GeoqueriesClientProtocol
     private let accountManager: any AccountManaging
-    
+
     private init(
         eventClient: any EventClientProtocol = EventClient.shared,
         geoClient: any GeoqueriesClientProtocol = GeoqueriesClient.shared,
@@ -35,26 +35,24 @@ class EventsManager: EventsManaging {
         self.geoClient = geoClient
         self.accountManager = accountManager
     }
-    
+
     func fetchNearbyEvents(for location: CLLocation) async {
         do {
             nearbyEvents = try await geoClient.fetchEventsForLocation(location)
-        }
-        catch {
+        } catch {
             Logger.general.error("Error fetching nearby events: \(error.localizedDescription)")
         }
     }
-    
+
     func fetchNearbyVenues(for location: CLLocation) async {
         do {
             locationVenues.removeAll()
             locationVenues = try await geoClient.fetchVenuesForLocation(location)
-        }
-        catch {
+        } catch {
             Logger.general.error("Error fetching nearby venues: \(error.localizedDescription)")
         }
     }
-    
+
     func updateEventLocations() {
         Task {
             let snapshot = try? await FirebaseManager.shared.db.collection(FirestoreCollections.Events.value).whereField("end_date", isGreaterThan: Date()).getDocuments()
@@ -69,30 +67,28 @@ class EventsManager: EventsManaging {
             })
         }
     }
-    
+
     func setLocationEvents(_ location: CLLocation) {
         Task {
             do {
                 self.locationEvents = try await geoClient.fetchEventsForLocation(location)
-            }
-            catch {
+            } catch {
                 Logger.general.error("Error setting location events: \(error.localizedDescription)")
             }
         }
     }
-    
+
     func setLocationVenues(_ location: CLLocation) {
         Task {
             do {
                 locationVenues.removeAll()
                 self.locationVenues = try await geoClient.fetchVenuesForLocation(location)
-            }
-            catch {
+            } catch {
                 Logger.general.error("Error setting location venues: \(error.localizedDescription)")
             }
         }
     }
-    
+
     func fetchFollowingEvents(account: Account) async {
         guard let followingIDs = account.following else { return }
         var events: [Event] = []
@@ -111,41 +107,41 @@ class EventsManager: EventsManaging {
         events.sort(by: { $0.startDate ?? .init() < $1.startDate ?? .init()})
         self.followingEvents = events
     }
-    
+
     func fetchHubEvents(refetch: Bool = false) async {
         await fetchAttendingEvents(refetch: refetch)
         await fetchInvitedEvents(refetch: refetch)
         await fetchInterestedEvents(refetch: refetch)
     }
-    
+
     func fetchHostingEvents(refetch: Bool = false) async {
         guard let account = accountManager.account else { return }
         if hostingEvents.isEmpty || refetch {
             hostingEvents = await eventClient.fetchEventsHostedBy(uid: account.uid)
         }
     }
-    
+
     func fetchAttendingEvents(refetch: Bool = false) async {
         guard let account = accountManager.account else { return }
         if attendingEvents.isEmpty || refetch {
             attendingEvents = await eventClient.fetchEventsAttending(uid: account.uid)
         }
     }
-    
+
     func fetchInvitedEvents(refetch: Bool = false) async {
         guard let account = accountManager.account else { return }
         if invitedEvents.isEmpty || refetch {
             invitedEvents = await eventClient.fetchEventsInvited(uid: account.uid)
         }
     }
-    
+
     func fetchInterestedEvents(refetch: Bool = false) async {
         guard let account = accountManager.account else { return }
         if interestedEvents.isEmpty || refetch {
             interestedEvents = await eventClient.fetchEventsInterested(uid: account.uid)
         }
     }
-    
+
     func updateEventLists(with event: Event) {
         updateEventList(with: event, list: &nearbyEvents)
         updateEventList(with: event, list: &locationEvents)
@@ -154,7 +150,7 @@ class EventsManager: EventsManaging {
         updateEventList(with: event, list: &invitedEvents)
         updateEventList(with: event, list: &interestedEvents)
     }
-    
+
     func updateEventList(with event: Event, list: inout [Event]) {
         if let index = list.firstIndex(where: {$0.uid == event.uid}) {
             list[index] = event

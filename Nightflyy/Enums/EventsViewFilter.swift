@@ -8,11 +8,9 @@
 import Foundation
 
 enum EventsViewFilter: Equatable {
-    
+
     case nearby
     case following
     case location(City)
-    
+
 }
-
-

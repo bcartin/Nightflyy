@@ -7,22 +7,22 @@
 
 import Foundation
 import FirebaseFirestore
-//import FirebaseFirestoreSwift
+// import FirebaseFirestoreSwift
 
 struct Chat: Codable, Identifiable, Savable {
     static var collection: String = FirestoreCollections.Chats.value
-    
+
     @DocumentID var id = UUID().uuidString
     var lastMessage: String?
     var lastUpdated: Date?
     var isNew: Bool?
     var lastMessageSender: String?
     var members: [String]
-    
+
     var uid: String {
         return self.id ?? ""
     }
-        
+
     enum CodingKeys: String, CodingKey {
         case id
         case isNew = "is_new"
@@ -34,7 +34,7 @@ struct Chat: Codable, Identifiable, Savable {
 }
 
 extension Chat {
-    
+
     func save() throws {
         try FirebaseManager.shared.db.collection(Chat.collection).document(id!).setData(from: self, merge: true)
     }

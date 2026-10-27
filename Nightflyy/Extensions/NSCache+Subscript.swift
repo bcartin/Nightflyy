@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 extension NSCache where KeyType == NSString, ObjectType == CacheEntryObject {
     subscript(_ key: String) -> CacheEntry? {
         get {

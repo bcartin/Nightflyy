@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct MessageView: View {
-    
+
     var viewModel: MessageViewModel
-    
+
     var body: some View {
         switch viewModel.message.type {
         case .text:
@@ -19,7 +19,7 @@ struct MessageView: View {
             ImageMessageView()
         }
     }
-    
+
     @ViewBuilder
     func TextMessageView() -> some View {
         ZStack(alignment: .bottom) {
@@ -27,7 +27,7 @@ struct MessageView: View {
                 .fill(viewModel.isSender ? .mainPurple : .white)
                 .frame(width: 20, height: 20, alignment: viewModel.isSender ? .trailing : .leading)
                 .frame(maxWidth: .infinity, alignment: viewModel.isSender ? .trailing : .leading)
-            
+
             Text(viewModel.messageText)
                 .padding(10)
                 .foregroundStyle(viewModel.isSender ? .white : .black)
@@ -39,7 +39,7 @@ struct MessageView: View {
                 .frame(maxWidth: .infinity, alignment: viewModel.isSender ? .trailing : .leading)
         }
     }
-    
+
     @ViewBuilder
     func ImageMessageView() -> some View {
         ZStack(alignment: .bottom) {
@@ -49,7 +49,7 @@ struct MessageView: View {
                         .stroke(viewModel.isSender ? .mainPurple : .white, lineWidth: 1)
                 }
                 .cornerRadius(15, corners: .allCorners)
-               
+
             Text(viewModel.messageText)
                 .foregroundStyle(viewModel.isSender ? .white : .black)
                 .font(.system(size: 13, weight: .semibold))

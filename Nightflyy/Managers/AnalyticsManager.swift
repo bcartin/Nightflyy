@@ -8,11 +8,11 @@
 import Mixpanel
 
 class AnalyticsManager {
-    
+
     static func setUserID(value: String?) {
         #if RELEASE
         Mixpanel.mainInstance().identify(distinctId: value ?? "Unknown")
         #endif
     }
-    
+
 }

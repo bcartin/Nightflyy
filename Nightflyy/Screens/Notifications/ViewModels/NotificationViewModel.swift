@@ -10,43 +10,43 @@ import SwiftUI
 
 @Observable @MainActor
 class NotificationViewModel {
-    
+
     var notification: AppNotification
     var error: Error?
-    
+
     init(notification: AppNotification) {
         self.notification = notification
     }
-    
+
     var userImageUrl: String {
         return notification.notificationData.profile_image_url ?? ""
     }
-    
+
     var eventFlyerUrl: String? {
         return notification.notificationData.event_flyer_url
     }
-    
+
     var timeReceived: String {
         return notification.date.timeAgo()
     }
-    
+
     var notificationType: AppNotificationType {
         return notification.type
     }
-    
+
     var hasUser: Bool {
         return notificationType != .event_assigned
     }
-    
+
     var hasEvent: Bool {
         return notification.notificationData.event_id != nil
     }
-    
+
     func buildMainLabel() -> Text {
         let username: String = notification.notificationData.username ?? ""
         return Text("\(Text(username).foregroundStyle(.white))\(hasUser ? " " : "")\(Text(notificationType.mainLabelText).foregroundStyle(.gray))")
     }
-    
+
     @ViewBuilder
     func actionsView() -> some View {
         switch self.notificationType {
@@ -58,7 +58,7 @@ class NotificationViewModel {
                 Text("Accept")
             }
             .tint(.mainPurple)
-            
+
             Button { [weak self] in
                 self?.deleteNotification()
             } label: {
@@ -77,7 +77,7 @@ class NotificationViewModel {
                 Text("Going")
             }
             .tint(.mainPurple)
-            
+
             Button { [weak self] in
                 self?.markAsInterested()
                 self?.deleteNotification()
@@ -85,7 +85,7 @@ class NotificationViewModel {
                 Text("Interested")
             }
             .tint(.onlineBlue)
-            
+
             Button { [weak self] in
                 self?.deleteNotification()
             } label: {
@@ -100,7 +100,7 @@ class NotificationViewModel {
                 Text("Accept")
             }
             .tint(.mainPurple)
-            
+
             Button { [weak self] in
                 self?.goToEvent()
             } label: {
@@ -111,7 +111,7 @@ class NotificationViewModel {
             deleteAction()
         }
     }
-    
+
     @ViewBuilder
     func deleteAction() -> some View {
         Button { [weak self] in
@@ -121,21 +121,21 @@ class NotificationViewModel {
         }
         .tint(.red)
     }
-    
+
     func deleteNotification() {
         guard let notificationId = notification.id else {return}
         withAnimation {
             AppNotificationsManager.shared.deleteNotification(withId: notificationId)
         }
     }
-    
+
     func goToProfile() {
         Task {
             let account = await AccountClient.fetchAccount(accountId: notification.sender)
             Router.shared.navigateToProfile(account: account)
         }
     }
-    
+
     func goToEvent() {
         guard let eventId = notification.notificationData.event_id else {
             Router.shared.navigateTo(.NotFound(.event))
@@ -146,7 +146,7 @@ class NotificationViewModel {
             Router.shared.navigateToEvent(event: event)
         }
     }
-    
+
     func markAsInterested() {
         guard let uid = AccountManager.shared.account?.uid, let eventId =  notification.notificationData.event_id else { return }
         Task {
@@ -154,39 +154,36 @@ class NotificationViewModel {
                 try await EventClient.addUserToInterested(eventId: eventId, uid: uid)
                 try await EventClient.removeUserFromAttending(eventId: eventId, uid: uid)
                 deleteNotification()
-            }
-            catch {
+            } catch {
                 self.error = error
             }
         }
     }
-    
+
     func markAsAttenging() {
         guard let eventId =  notification.notificationData.event_id else { return }
         Task {
             do {
                 guard var event = await EventClient.fetchEvent(eventId: eventId) else { return }
                 try await EventAttendanceManager.shared.markAsAttending(event: &event)
-            }
-            catch {
+            } catch {
                 self.error = error
             }
         }
     }
-    
+
     func acceptFollowRequest() {
         Task {
             do {
                 guard let newFollower = await AccountClient.fetchAccount(accountId: notification.sender) else { return }
                 try await AccountManager.shared.acceptFollowRequest(from: newFollower)
-            }
-            catch {
+            } catch {
                 self.error = error
             }
-            
+
         }
     }
-    
+
     func acceptEventAssigned() {
         guard let uid = AccountManager.shared.account?.uid, let eventId =  notification.notificationData.event_id else { return }
         Task {
@@ -195,8 +192,7 @@ class NotificationViewModel {
                 if let event = await EventClient.fetchEvent(eventId: eventId) {
                     EventsManager.shared.updateEventLists(with: event)
                 }
-            }
-            catch {
+            } catch {
                 self.error = error
             }
         }

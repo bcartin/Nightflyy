@@ -12,13 +12,13 @@ struct ContactResponse: Codable {
 }
 
 struct ContactRequestBody: Codable {
-    
+
     let list_ids: [String]?
     let contacts: [Contact]?
 }
 
 struct Contact: Codable {
-    
+
     let email: String?
     let external_id: String?
     let first_name: String?
@@ -26,8 +26,7 @@ struct Contact: Codable {
 }
 
 struct CustomFields: Codable {
-    
+
     let username: String?
     let dob: String?
 }
-

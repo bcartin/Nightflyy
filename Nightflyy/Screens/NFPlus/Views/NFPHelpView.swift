@@ -10,7 +10,7 @@ import SwiftUI
 struct NFPHelpView: View {
     @Binding var viewModel: NFPRedeemViewModel
     @Environment(\.openURL) private var openURL
-    
+
     var body: some View {
         VStack(spacing: 8) {
             Text("How can we help you?")
@@ -18,7 +18,7 @@ struct NFPHelpView: View {
                 .padding(.top, 24)
                 .multilineTextAlignment(.center)
                 .padding(24)
-            
+
             ScrollView(.vertical) {
                 ForEach(viewModel.helpOptions, id: \.self) { option in
                     HStack {

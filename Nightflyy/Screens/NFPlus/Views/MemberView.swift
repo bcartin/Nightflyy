@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct MemberView: View {
-    
+
     @Environment(\.dismiss) var dismiss
     @State var viewModel: NFPRedeemViewModel = .init()
-    
+
     var body: some View {
         VStack {
-            
+
             switch viewModel.displayView {
             case .noCredits:
                 NoCreditsView(viewModel: $viewModel)
@@ -41,7 +41,7 @@ struct MemberView: View {
         .foregroundStyle(.white)
         .gesture(
             DragGesture()
-                .onChanged({ value in
+                .onChanged({ _ in
                 }).onEnded({ value in
                     if value.location.y - value.startLocation.y > 150 {
                         dismiss()
@@ -63,15 +63,15 @@ struct MemberView: View {
                         .foregroundStyle(.gray)
                         .font(.system(size: 24))
                 }
-                
+
                 Spacer()
-                
+
                 RoundedRectangle(cornerRadius: 3)
                     .fill(.gray.opacity(0.9))
                     .frame(width: 86, height: 6)
-                
+
                 Spacer()
-                
+
                 Button {
                     viewModel.changeView(to: .help)
                 } label: {
@@ -81,7 +81,7 @@ struct MemberView: View {
                 }
             }
             .padding()
-            
+
         }
         .overlay(alignment: .bottom, content: {
             Button("See All Nightflyy+ Venues") {

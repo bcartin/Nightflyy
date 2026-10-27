@@ -8,26 +8,26 @@
 import SwiftUI
 
 struct ConfirmNFPView: View {
-    
+
     @Environment(\.dismiss) var dismiss
     @Binding var viewModel: NFPSignUpViewModel
-    
+
     var body: some View {
         VStack(spacing: 44) {
-            
+
             Text("🥂 Welcome to Nightflyy Plus!")
                 .font(.system(size: 20))
                 .multilineTextAlignment(.center)
-            
+
             UserImageRound(imageUrl: viewModel.referralVenue?.profileImageUrl, size: 150)
-            
+
             Text("\(viewModel.referralVenue?.username ?? "") is letting you in the club!")
                 .font(.system(size: 15))
                 .multilineTextAlignment(.center)
-            
+
             Spacer()
                 .frame(height: 64)
-            
+
             let config = SlideToConfirm.Config(
                 idleText: "Swipe to get in",
                 onSwipeText: "Let's go!",
@@ -35,17 +35,17 @@ struct ConfirmNFPView: View {
                 tint: .mainPurple,
                 foregorundColor: .white
             )
-            
+
             SlideToConfirm(config: config) {
                 viewModel.purchaseNightFlyyPlus()
             }
-            
+
             Button("Maybe Later") {
                 dismiss()
             }
             .foregroundStyle(.mainPurple)
             .font(.system(size: 14))
-            
+
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .backgroundImage("slyde_background")
@@ -53,7 +53,7 @@ struct ConfirmNFPView: View {
         .foregroundStyle(.white)
         .gesture(
             DragGesture()
-                .onChanged({ value in
+                .onChanged({ _ in
                 }).onEnded({ value in
                     if value.location.y - value.startLocation.y > 150 {
                         dismiss()

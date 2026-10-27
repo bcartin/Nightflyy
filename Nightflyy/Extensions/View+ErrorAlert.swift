@@ -20,7 +20,7 @@ extension View {
     }
 }
 
-//struct LocalizedAlertError: LocalizedError {
+// struct LocalizedAlertError: LocalizedError {
 //    let underlyingError: LocalizedError
 //    var errorDescription: String? {
 //        underlyingError.errorDescription
@@ -33,4 +33,4 @@ extension View {
 //        guard let localizedError = error as? LocalizedError else { return nil }
 //        underlyingError = localizedError
 //    }
-//}
+// }

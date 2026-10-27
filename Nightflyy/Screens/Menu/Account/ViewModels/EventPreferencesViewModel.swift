@@ -9,18 +9,18 @@ import SwiftUI
 
 @Observable @MainActor
 class EventPreferencesViewModel {
-    
+
     var selectedSegment: Int = 1
     let segments = [SegmentedViewOption(id: 1, title: "Music"), SegmentedViewOption(id: 2, title: "Crowds"), SegmentedViewOption(id: 3, title: "Venues")]
     var error: Error?
 
     var account: Account
     var isLoading: Bool = false
-    
+
     init() {
         self.account =  AccountManager.shared.account ?? Account()
     }
-    
+
     var selectedMusic: [String] {
         get {
             return account.music ?? []
@@ -29,7 +29,7 @@ class EventPreferencesViewModel {
             account.music = newValue
         }
     }
-    
+
     var selectedVenues: [String] {
         get {
             return account.venues ?? []
@@ -38,7 +38,7 @@ class EventPreferencesViewModel {
             account.venues = newValue
         }
     }
-    
+
     var selectedClientele: [String] {
         get {
             return account.clientele ?? []
@@ -47,7 +47,7 @@ class EventPreferencesViewModel {
             account.clientele = newValue
         }
     }
-    
+
     func saveChanges() {
         Task {
                 self.isLoading = true
@@ -57,12 +57,10 @@ class EventPreferencesViewModel {
                     isLoading = false
                     AccountManager.shared.account = self.account
                     General.showSavedMessage()
-                }
-                catch {
+                } catch {
                     self.error = error
                 }
             }
     }
-    
-}
 
+}

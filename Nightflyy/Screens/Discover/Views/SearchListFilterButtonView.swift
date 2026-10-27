@@ -8,30 +8,29 @@
 import SwiftUI
 
 struct SearchListFilterButtonView: View {
-    
+
     var value: String
     @Binding var selectedValues: [String]
-    
+
     var isSelected: Bool {
         selectedValues.contains(value)
     }
-    
+
     var body: some View {
         HStack {
             Text(value)
                 .foregroundStyle(.white)
                 .fontWeight(.medium)
-            
+
             Spacer()
-            
+
             Image(systemName: isSelected ? "checkmark.square.fill" : "square")
                 .foregroundStyle(.mainPurple)
                 .font(.title)
                 .onTapGesture {
                     if isSelected {
-                        selectedValues.removeAll{$0 == value}
-                    }
-                    else {
+                        selectedValues.removeAll {$0 == value}
+                    } else {
                         selectedValues.append(value)
                     }
                 }

@@ -9,44 +9,44 @@ import Foundation
 
 @Observable @MainActor
 class ReviewVenueViewModel: Hashable {
-    
+
     nonisolated let id: String
-    
+
     nonisolated static func == (lhs: ReviewVenueViewModel, rhs: ReviewVenueViewModel) -> Bool {
         lhs.id == rhs.id
     }
-    
+
     nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
+
     var rating: Int = 0
     var likes: [String] = []
     var dislikes: [String] = []
     var account: Account
     var error: Error?
-    
+
     init(account: Account) {
         self.id = account.uid
         self.account = account
     }
-    
+
     var showPickers: Bool {
         return rating > 0
     }
-    
+
     var didLike: Bool {
         return rating > 3
     }
-    
+
     var pickersHeader: String {
         return didLike ? "What did you like?" : "What didn't you like?"
     }
-    
+
     var pickersList: [String] {
         return didLike ? listOfLikes : listOfDislikes
     }
-    
+
     var listOfLikes = ["Speedy Entry Line",
                        "Location",
                        "Atmosphere",
@@ -59,7 +59,7 @@ class ReviewVenueViewModel: Hashable {
                        "Great Events",
                        "Good Bartending/Service",
                        "Prices"]
-    
+
     var listOfDislikes = ["Expensive Cover",
                           "Security",
                           "Long Line",
@@ -72,15 +72,15 @@ class ReviewVenueViewModel: Hashable {
                           "Bad Events",
                           "Poor Bartending/Service",
                           "Crowd"]
-    
+
     func getButtonImage(for value: Int) -> String {
         return value <= rating ? "star.fill" : "star"
     }
-    
+
     func setRating(value: Int) {
         rating = value
     }
-    
+
     func submitReview() {
         do {
             guard let uid = AccountManager.shared.account?.uid else { return }
@@ -93,12 +93,11 @@ class ReviewVenueViewModel: Hashable {
             try saveReviewNotification()
             General.showSuccessMessage(message: "Review Submitted")
             Router.shared.navigateBack()
-        }
-        catch {
+        } catch {
             self.error = error
         }
     }
-    
+
     func saveReviewNotification() throws {
         guard let myAccount = AccountManager.shared.account else { return }
         let notification = AppNotification(sender: myAccount.uid, date: Date(), type: .review_submitted, notificationData: NotificationData(profile_image_url: myAccount.profileImageUrl, username: myAccount.username))

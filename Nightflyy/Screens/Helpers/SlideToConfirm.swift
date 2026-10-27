@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SlideToConfirm: View {
     var config: Config
-    var onSwiped: () -> ()
+    var onSwiped: () -> Void
     /// View Properties
     @State private var animateText: Bool = false
     @State private var offsetX: CGFloat = 0
@@ -20,27 +20,27 @@ struct SlideToConfirm: View {
             let knobSize = size.height
             let maxLimit = size.width - knobSize
             let progress: CGFloat = isCompleted ? 1 : (offsetX / maxLimit)
-            
+
             ZStack(alignment: .leading) {
                 Capsule()
                     .fill(
                         .gray.opacity(0.25)
                         .shadow(.inner(color: .black.opacity(0.2), radius: 10))
                     )
-                
+
                 /// Tint Capsule
                 let extraCapsuleWidth = (size.width - knobSize) * progress
-                
+
                 Capsule()
                     .fill(config.tint.gradient)
                     .frame(width: knobSize + extraCapsuleWidth, height: knobSize)
-                
+
                 LeadingTextView(size, progress: progress)
-                
+
                 HStack(spacing: 0) {
                     KnobView(size, progress: progress, maxLimit: maxLimit)
                         .zIndex(1)
-                    
+
                     ShimmerTextView(size, progress: progress)
                 }
             }
@@ -55,7 +55,7 @@ struct SlideToConfirm: View {
         /// Disabling User Interaction When swipe confirmed
         .allowsHitTesting(!isCompleted)
     }
-    
+
     /// Knob View
     func KnobView(_ size: CGSize, progress: CGFloat, maxLimit: CGFloat) -> some View {
         Circle()
@@ -67,7 +67,7 @@ struct SlideToConfirm: View {
                     Image(systemName: "chevron.right")
                         .opacity(1 - progress)
                         .blur(radius: progress * 10)
-                    
+
                     Image(systemName: "checkmark")
                         .opacity(progress)
                         .blur(radius: (1 - progress) * 10)
@@ -82,12 +82,12 @@ struct SlideToConfirm: View {
                 DragGesture()
                     .onChanged({ value in
                         offsetX = min(max(value.translation.width, 0), maxLimit)
-                    }).onEnded({ value in
+                    }).onEnded({ _ in
                         if offsetX == maxLimit {
                             onSwiped()
                             /// Stopping Shimmer Effect
                             animateText = false
-                            
+
                             withAnimation(.smooth) {
                                 isCompleted = true
                             }
@@ -99,7 +99,7 @@ struct SlideToConfirm: View {
                     })
             )
     }
-    
+
     /// Shimmer Text View
     func ShimmerTextView(_ size: CGSize, progress: CGFloat) -> some View {
         Text(isCompleted ? config.confirmationText : config.idleText)
@@ -131,21 +131,21 @@ struct SlideToConfirm: View {
             .frame(height: size.height)
             .task {
                 guard !isCompleted && !animateText else { return }
-                
+
                 try? await Task.sleep(for: .seconds(0))
                 withAnimation(.linear(duration: 2.5).repeatForever(autoreverses: false)) {
                     animateText = true
                 }
             }
     }
-    
+
     /// OnSwipe/Confirmation Text View
     func LeadingTextView(_ size: CGSize, progress: CGFloat) -> some View {
         ZStack {
             Text(config.onSwipeText)
                 .opacity(isCompleted ? 0 : 1)
                 .blur(radius: isCompleted ? 10 : 0)
-            
+
             Text(config.confirmationText)
                 .opacity(!isCompleted ? 0 : 1)
                 .blur(radius: !isCompleted ? 10 : 0)
@@ -161,7 +161,7 @@ struct SlideToConfirm: View {
                 .scale(x: progress, anchor: .leading)
         }
     }
-    
+
     struct Config {
         var idleText: String
         var onSwipeText: String

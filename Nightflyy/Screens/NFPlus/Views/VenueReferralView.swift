@@ -11,7 +11,7 @@ struct VenueReferralView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var viewModel: NFPSignUpViewModel
     @State var isTyping: Bool = false
-    
+
     var body: some View {
         VStack(spacing: 8) {
             Text("Who brought you to the Nightflyy+ club?")
@@ -19,7 +19,7 @@ struct VenueReferralView: View {
                 .padding(.top, 24)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
-                
+
                 TextField("", text: $viewModel.venueSearchText, prompt: Text("Search").foregroundStyle(.white.opacity(0.5)))
                     .foregroundStyle(.white)
                     .padding(8)
@@ -35,7 +35,7 @@ struct VenueReferralView: View {
                                 .foregroundStyle(.white.opacity(0.5))
                                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                                 .padding(.leading, 8)
-                            
+
                             if isTyping {
                                 Button(action: {
                                     viewModel.venueSearchText = ""
@@ -49,7 +49,7 @@ struct VenueReferralView: View {
                     }
                     .padding(.horizontal)
                     .padding(.vertical, 12)
-            
+
             ScrollView(.vertical) {
                 ForEach(viewModel.filteredNFPProviders) { account in
                     switch account.accountType {
@@ -80,9 +80,9 @@ struct VenueReferralView: View {
                     }
                 }
             }
-            
+
             Spacer()
-            
+
             Button("Continue") {
                 viewModel.validateReferral()
             }
@@ -95,7 +95,7 @@ struct VenueReferralView: View {
         .foregroundStyle(.white)
         .gesture(
             DragGesture()
-                .onChanged({ value in
+                .onChanged({ _ in
                 }).onEnded({ value in
                     if value.location.y - value.startLocation.y > 150 {
                         dismiss()

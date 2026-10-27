@@ -8,19 +8,19 @@
 import SwiftUI
 
 struct SelectGenderTrayView: View {
-    
+
     @Binding var selectedGender: String
     @Binding var showSelectGenderView: Bool
-    
+
     var body: some View {
         VStack(spacing: 12) {
             HStack {
                 Text("Select your gender")
                     .font(.title2)
                     .fontWeight(.semibold)
-                
+
                 Spacer(minLength: 0)
-                
+
                 Button {
                     showSelectGenderView = false
                 } label: {
@@ -29,15 +29,15 @@ struct SelectGenderTrayView: View {
                         .foregroundStyle(.gray, .primary.opacity(0.1))
                 }
             }
-            
+
             ForEach(Gender.allCases, id: \.self) { gender in
                 let isSelected: Bool = selectedGender == gender.rawValue
                 HStack {
                     Text(gender.rawValue)
                         .fontWeight(.semibold)
-                    
+
                     Spacer(minLength: 0)
-                    
+
                     Image(systemName: isSelected ? "checkmark.circle.fill" : "circle.fill")
                         .font(.title)
                         .contentTransition(.symbolEffect)

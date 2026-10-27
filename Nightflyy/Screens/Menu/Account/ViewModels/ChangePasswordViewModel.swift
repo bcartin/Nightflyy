@@ -10,13 +10,12 @@ import SwiftUI
 
 @Observable @MainActor
 class ChangePasswordViewModel {
-    
+
     var currentPassword: String = ""
     var newPassword: String = ""
     var confirmNewPassword: String = ""
     var error: Error?
-    
-    
+
     func changePassword() {
         if validatePasswords() {
             if let email = AuthenticationManager.shared.currentUser?.email {
@@ -32,24 +31,24 @@ class ChangePasswordViewModel {
             }
         }
     }
-    
+
     func validatePasswords() -> Bool {
         if currentPassword.isEmpty || newPassword.isEmpty || confirmNewPassword.isEmpty {
             error = AccountError.passwordsDontMatch
             return false
         }
-        
+
         if newPassword != confirmNewPassword {
             error = AccountError.passwordsDontMatch
             return false
         }
-        
+
         if newPassword.count < 8 {
             error = AccountError.passwordTooShort
             return false
         }
-        
+
         return true
     }
-    
+
 }

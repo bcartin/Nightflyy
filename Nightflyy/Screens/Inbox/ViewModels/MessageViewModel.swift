@@ -10,21 +10,21 @@ import SwiftUI
 
 @Observable
 class MessageViewModel: Identifiable {
-    
+
     var message: Message
-    
+
     init(message: Message) {
         self.message = message
     }
-    
+
     var id: String {
         "\(message.id ?? "")"
     }
-    
+
     var isSender: Bool {
         AccountManager.shared.account?.id == message.sender
     }
-    
+
     var messageImageUrl: String? {
         switch message.type {
         case .text:
@@ -33,10 +33,10 @@ class MessageViewModel: Identifiable {
             return message.messageData.profile_image_url
         case .event:
             return message.messageData.event_flyer_url
-            
+
         }
     }
-    
+
     var messageText: String {
         switch message.type {
         case .text:
@@ -45,10 +45,10 @@ class MessageViewModel: Identifiable {
             return message.messageData.username ?? ""
         case .event:
             return message.messageData.event_name ?? ""
-            
+
         }
     }
-    
+
     var imagePlaceholder: String {
         switch message.type {
         case .text:
@@ -59,7 +59,7 @@ class MessageViewModel: Identifiable {
             return "questionmark.square.dashed"
         }
     }
-    
+
     func navigateTo() {
         switch message.type {
         case .text:
@@ -70,7 +70,7 @@ class MessageViewModel: Identifiable {
             navigateToEvent()
         }
     }
-    
+
     private func navigateToAccount() {
         Task {
             guard let uid = message.messageData.uid else {
@@ -81,7 +81,7 @@ class MessageViewModel: Identifiable {
             await Router.shared.navigateToProfile(account: account)
         }
     }
-    
+
     private func navigateToEvent() {
         Task {
             guard let eventId = message.messageData.event_id else {
@@ -92,5 +92,5 @@ class MessageViewModel: Identifiable {
             await Router.shared.navigateToEvent(event: event)
         }
     }
-    
+
 }

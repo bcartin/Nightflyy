@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct TagSelectView: View {
-    
+
     var tags: [String]
     @Binding var selectedTags: [String]
-    
+
     var body: some View {
         VStack {
             ChipsView(tags: tags, selectedTags: $selectedTags) { tag, isSelected in
@@ -21,13 +21,12 @@ struct TagSelectView: View {
             }
             .padding(.horizontal, 24)
             .padding(.vertical, 4)
-            
+
             Spacer()
         }
-        
+
     }
-    
-   
+
 }
 
 #Preview {
