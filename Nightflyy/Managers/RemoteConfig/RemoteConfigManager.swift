@@ -10,8 +10,8 @@ import OSLog
 
 enum RemoteConfigParameter: String {
 
-    case force_update
-    case latest_app_version
+    case forceUpdate = "force_update"
+    case latestAppVersion = "latest_app_version"
 
 }
 

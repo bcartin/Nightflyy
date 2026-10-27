@@ -8,7 +8,7 @@
 import Foundation
 
 enum MessageType: String, Codable {
-    case text = "text"
-    case event = "event"
-    case account = "account"
+    case text
+    case event
+    case account
 }

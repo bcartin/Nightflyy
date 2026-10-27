@@ -190,7 +190,7 @@ class EventClient {
         try await FirebaseManager.shared.db
             .collection(FirestoreCollections.Events.value)
             .document(eventId)
-            .updateData([FirestoreCollections.Events.assigned_to: ""])
+            .updateData([FirestoreCollections.Events.assignedTo: ""])
     }
 
     static func fetchEventByRedemptionCode(code: String) async throws -> Event? {

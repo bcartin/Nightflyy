@@ -157,7 +157,7 @@ class AccountClient {
         var accounts: [Account] = .init()
         do {
             let dbRef = FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value)
-                .whereField(FirestoreCollections.Accounts.plus_member, isEqualTo: true)
+                .whereField(FirestoreCollections.Accounts.plusMember, isEqualTo: true)
             let snapshot = try await dbRef.getDocuments()
             accounts = try snapshot.documents.map({ document in
                 return try document.data(as: Account.self)

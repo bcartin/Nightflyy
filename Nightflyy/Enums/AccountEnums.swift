@@ -17,8 +17,8 @@ enum FollowingStatus {
 // ACCOUNT TYPE
 enum AccountType: String, CaseIterable, Codable {
 
-    case personal = "personal"
-    case venue = "venue"
+    case personal
+    case venue
 }
 
 // GENDER
