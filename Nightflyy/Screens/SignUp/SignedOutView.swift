@@ -32,13 +32,13 @@ struct SignedOutView: View {
             .navigationDestination(for: SignupScreen.self) { selection in
                 switch selection {
                 case .account:
-                    SU_AccountView(viewModel: $viewModel)
+                    SignUpAccountView(viewModel: $viewModel)
                 case .profile:
-                    SU_ProfileView(viewModel: $viewModel)
+                    SignUpProfileView(viewModel: $viewModel)
                 case .location:
-                    SU_LocationView(viewModel: $viewModel)
+                    SignUpLocationView(viewModel: $viewModel)
                 case .paywall:
-                    SU_Paywall(viewModel: $viewModel)
+                    SignUpPaywall(viewModel: $viewModel)
                 case .gender:
                     ListSelectView(title: "Gender", listItems: Gender.allCases.map(\.rawValue), selectedItem: $viewModel.gender)
                 case .dob:

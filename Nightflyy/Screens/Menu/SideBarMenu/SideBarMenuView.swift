@@ -54,56 +54,61 @@ struct SideBarMenuView: View {
                     Spacer()
                 }
                 .background(
-                    LinearGradient(gradient: Gradient(colors: [.backgroundBlack, .backgroundBlack, viewModel.isPlusMember ? .onlineBlue : .mainPurple]), startPoint: .leading, endPoint: .trailing)
+                    LinearGradient(gradient: Gradient(colors: [.backgroundBlack,
+                                                               .backgroundBlack,
+                                                               viewModel.isPlusMember ? .onlineBlue : .mainPurple]),
+                                   startPoint: .leading,
+                                   endPoint: .trailing)
                 )
             }
 
-            SideBarHeader(title: "ACCOUNT")
+            sideBarHeader(title: "ACCOUNT")
 
-            SideBarButton(.accountInfo(type: AccountManager.shared.account?.accountType ?? .personal)) {
+            sideBarButton(.accountInfo(type: AccountManager.shared.account?.accountType ?? .personal)) {
                 viewModel.selectMenuItem(.accountInfo(type: AccountManager.shared.account?.accountType ?? .personal))
                 showMenu = false
             }
 
-            SideBarButton(.eventPreferences) {
+            sideBarButton(.eventPreferences) {
                 viewModel.selectMenuItem(.eventPreferences)
                 showMenu = false
             }
 
-            SideBarHeader(title: "SETTINGS")
+            sideBarHeader(title: "SETTINGS")
 
-            SideBarButton(.privacy) {
+            sideBarButton(.privacy) {
                 viewModel.selectMenuItem(.privacy)
                 showMenu = false
             }
 
-            SideBarButton(.pushNotifications) {
+            sideBarButton(.pushNotifications) {
                 viewModel.selectMenuItem(.pushNotifications)
                 showMenu = false
             }
 
-            SideBarHeader(title: "ABOUT")
+            sideBarHeader(title: "ABOUT")
 
-            SideBarButton(.termsOfService) {
+            sideBarButton(.termsOfService) {
                 viewModel.selectMenuItem(.termsOfService)
                 showMenu = false
             }
 
-            SideBarButton(.privacyPolicy) {
+            sideBarButton(.privacyPolicy) {
                 viewModel.selectMenuItem(.privacyPolicy)
                 showMenu = false
             }
 
-            SideBarButton(.helpUs) {
+            sideBarButton(.helpUs) {
                 viewModel.selectMenuItem(.helpUs)
                 showMenu = false
             }
 
-            SideBarButton(.rateUs) {
+            sideBarButton(.rateUs) {
                 requestReview()
             }
 
-            ShareLink(item: URL(string: "https://apps.apple.com/us/app/id1487722727")!, message: Text("You have been invited to join the exclusive nightlife community! Download Nightflyy now.")) {
+            ShareLink(item: URL(string: "https://apps.apple.com/us/app/id1487722727")!,
+                      message: Text("You have been invited to join the exclusive nightlife community! Download Nightflyy now.")) {
                 HStack(spacing: 12) {
                     Text("Share")
                         .font(.system(size: 17))
@@ -118,7 +123,7 @@ struct SideBarMenuView: View {
             }
 
             HStack {
-                SideBarButton(.logout) {
+                sideBarButton(.logout) {
                     showMenu = false
                     ChatsManager.shared.stopChatsListener()
                     try? AuthenticationManager.shared.logOut()
@@ -141,7 +146,7 @@ struct SideBarMenuView: View {
     }
 
     @ViewBuilder
-    func SideBarHeader(title: String) -> some View {
+    func sideBarHeader(title: String) -> some View {
         Text(title)
             .padding(.horizontal)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -153,7 +158,7 @@ struct SideBarMenuView: View {
     }
 
     @ViewBuilder
-    func SideBarButton(_ tab: MenuItem, onTap: @escaping () -> Void = {}) -> some View {
+    func sideBarButton(_ tab: MenuItem, onTap: @escaping () -> Void = {}) -> some View {
         Button(action:
                 onTap,
                label: {

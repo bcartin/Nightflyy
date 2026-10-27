@@ -24,7 +24,9 @@ class NotificationsSettingsViewModel {
         get {
             PushNotificationsManager.shared.authorizationStatus == .authorized
         }
-        set(newValue) {
+        // Toggling always asks for permission or points to Settings, so the new value is not stored.
+        // swiftlint:disable:next unused_setter_value
+        set {
             Task {
                 if PushNotificationsManager.shared.authorizationStatus == .notDetermined {
                     do {

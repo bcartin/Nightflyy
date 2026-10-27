@@ -1,5 +1,5 @@
 //
-//  SU_Paywall.swift
+//  SignUpPaywall.swift
 //  Nightflyy
 //
 //  Created by Bernie Cartin on 5/22/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SU_Paywall: View {
+struct SignUpPaywall: View {
 
     @Binding var viewModel: SignupViewModel
 
@@ -19,5 +19,5 @@ struct SU_Paywall: View {
 }
 
 #Preview {
-    SU_Paywall(viewModel: .constant(SignupViewModel()))
+    SignUpPaywall(viewModel: .constant(SignupViewModel()))
 }

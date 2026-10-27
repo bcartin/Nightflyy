@@ -11,7 +11,9 @@ import SwiftUI
 class EventPreferencesViewModel {
 
     var selectedSegment: Int = 1
-    let segments = [SegmentedViewOption(id: 1, title: "Music"), SegmentedViewOption(id: 2, title: "Crowds"), SegmentedViewOption(id: 3, title: "Venues")]
+    let segments = [SegmentedViewOption(id: 1, title: "Music"),
+                    SegmentedViewOption(id: 2, title: "Crowds"),
+                    SegmentedViewOption(id: 3, title: "Venues")]
     var error: Error?
 
     var account: Account

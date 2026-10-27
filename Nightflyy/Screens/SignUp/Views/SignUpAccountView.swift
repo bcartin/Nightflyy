@@ -1,5 +1,5 @@
 //
-//  SU_AccountView.swift
+//  SignUpAccountView.swift
 //  Nightflyy
 //
 //  Created by Bernie Cartin on 5/21/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SU_AccountView: View {
+struct SignUpAccountView: View {
 
     @Binding var viewModel: SignupViewModel
 
@@ -41,5 +41,5 @@ struct SU_AccountView: View {
 }
 
 #Preview {
-    SU_AccountView(viewModel: .constant(SignupViewModel()))
+    SignUpAccountView(viewModel: .constant(SignupViewModel()))
 }

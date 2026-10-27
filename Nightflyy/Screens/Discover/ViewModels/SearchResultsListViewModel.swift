@@ -23,7 +23,9 @@ class SearchResultsListViewModel: Hashable {
 
     var selectedSegment: Int = 0
     var segments = [SegmentedViewOption(id: 0, title: "All"),
-                    SegmentedViewOption(id: 1, title: "Events"), SegmentedViewOption(id: 2, title: "Venues"), SegmentedViewOption(id: 3, title: "People")]
+                    SegmentedViewOption(id: 1, title: "Events"),
+                    SegmentedViewOption(id: 2, title: "Venues"),
+                    SegmentedViewOption(id: 3, title: "People")]
 
     var searchResults: [SearchResult] = []
     var eventResultsViewModels: [EventListItemViewModel] = .init()

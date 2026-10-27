@@ -20,24 +20,24 @@ struct NotificationsSettingsView: View {
 
             ZStack {
                 VStack(spacing: 18) {
-                    SwitchView(label: "Allow Push Notifications", value: $viewModel.allowPushNotificaitons)
+                    switchView(label: "Allow Push Notifications", value: $viewModel.allowPushNotificaitons)
 
                     if viewModel.allowPushNotificaitons {
-                        SwitchView(label: "Follow Started", value: $viewModel.followStarted)
+                        switchView(label: "Follow Started", value: $viewModel.followStarted)
 
-                        SwitchView(label: "Follow Request", value: $viewModel.followRequest)
+                        switchView(label: "Follow Request", value: $viewModel.followRequest)
 
-                        SwitchView(label: "Follow Request Accepted", value: $viewModel.followRequestAccepted)
+                        switchView(label: "Follow Request Accepted", value: $viewModel.followRequestAccepted)
 
-                        SwitchView(label: "Alerts", value: $viewModel.alert)
+                        switchView(label: "Alerts", value: $viewModel.alert)
 
-                        SwitchView(label: "Direct Message", value: $viewModel.directMessage)
+                        switchView(label: "Direct Message", value: $viewModel.directMessage)
 
-                        SwitchView(label: "Event Invite", value: $viewModel.eventInvite)
+                        switchView(label: "Event Invite", value: $viewModel.eventInvite)
 
-                        SwitchView(label: "Event RSVP'd", value: $viewModel.eventRsvp)
+                        switchView(label: "Event RSVP'd", value: $viewModel.eventRsvp)
 
-                        SwitchView(label: "Chatroom Comments", value: $viewModel.chatroomComment)
+                        switchView(label: "Chatroom Comments", value: $viewModel.chatroomComment)
                     }
 
                     Spacer()
@@ -95,7 +95,7 @@ struct NotificationsSettingsView: View {
     }
 
     @ViewBuilder
-    private func SwitchView(label: String, value: Binding<Bool>) -> some View {
+    private func switchView(label: String, value: Binding<Bool>) -> some View {
         HStack {
             Text(label)
                 .foregroundStyle(.white)

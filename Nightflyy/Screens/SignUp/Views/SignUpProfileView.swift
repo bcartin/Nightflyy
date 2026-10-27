@@ -1,5 +1,5 @@
 //
-//  SU_ProfileView.swift
+//  SignUpProfileView.swift
 //  Nightflyy
 //
 //  Created by Bernie Cartin on 5/22/25.
@@ -8,7 +8,7 @@
 import SwiftUI
 import PhotosUI
 
-struct SU_ProfileView: View {
+struct SignUpProfileView: View {
     @Binding var viewModel: SignupViewModel
     @State var imageItem: PhotosPickerItem?
 
@@ -125,5 +125,5 @@ struct SU_ProfileView: View {
 }
 
 #Preview {
-    SU_ProfileView(viewModel: .constant(SignupViewModel()))
+    SignUpProfileView(viewModel: .constant(SignupViewModel()))
 }

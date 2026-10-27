@@ -34,7 +34,16 @@ struct SignUpView: View {
                     }, label: {
                         Label(
                             title: { Text("Sign Up with Nightflyy").foregroundStyle(.white) },
-                            icon: { Image("slyde_fly").renderingMode(.template).resizable().scaledToFit().frame(width: 36, height: 36).tint(.white).padding(.vertical, -8).padding(.horizontal, -4) }
+                            icon: {
+                                Image("slyde_fly")
+                                    .renderingMode(.template)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 36, height: 36)
+                                    .tint(.white)
+                                    .padding(.vertical, -8)
+                                    .padding(.horizontal, -4)
+                            }
                         )
                         .mainButtonStyle()
                     })
