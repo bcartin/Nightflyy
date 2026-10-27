@@ -1,5 +1,5 @@
 import { onDocumentCreated, onDocumentDeleted, onDocumentUpdated } from 'firebase-functions/v2/firestore'
-import { HttpsError, onCall } from 'firebase-functions/v2/https'
+import { CallableRequest, HttpsError, onCall } from 'firebase-functions/v2/https'
 import * as admin from 'firebase-admin'
 import { FieldValue, Timestamp } from 'firebase-admin/firestore'
 
@@ -8,6 +8,18 @@ admin.initializeApp()
 const db = admin.firestore()
 
 // 2nd gen throttles CPU once a handler returns, so every write below is awaited.
+
+// Callables: admins (custom claim `admin: true`) may do anything; anyone else may only act on their own uid.
+// Pass `ownUid` for calls a user may make on themselves; omit it for admin-only calls.
+function authorize(request: CallableRequest, ownUid?: unknown) {
+    if (!request.auth) {
+        throw new HttpsError('unauthenticated', 'Sign in required.')
+    }
+    if (request.auth.token.admin === true) return
+    if (ownUid === undefined || ownUid !== request.auth.uid) {
+        throw new HttpsError('permission-denied', 'Not allowed.')
+    }
+}
 
 async function updateBadgeCount(uid: string, badgeCount: number) {
     try {
@@ -121,6 +133,7 @@ export const onNotificationCreated = onDocumentCreated(
 )
 
 export const sendNotificationToTopicHttp = onCall(async (request) => {
+    authorize(request)
     const { title, body, attachment, topic } = request.data
     await sendNotificationToTopic(title, body, attachment as { [key: string]: string }, topic)
 })
@@ -241,6 +254,7 @@ export const updateTopicPostCount = onDocumentCreated(
 )
 
 export const sendNotificationToEventAttendees = onCall(async (request) => {
+    authorize(request)
     const eventId = request.data.eventId
     const notification = request.data.notification
     notification.date = Timestamp.fromDate(new Date())
@@ -347,7 +361,8 @@ async function deleteQueryBatch(collectionPath: string, batchSize: number): Prom
     return snapshot.size
 }
 
-export const listAllUsers = onCall(async () => {
+export const listAllUsers = onCall(async (request) => {
+    authorize(request)
     try {
         const users: admin.auth.UserRecord[] = []
         let pageToken: string | undefined
@@ -373,6 +388,7 @@ export const listAllUsers = onCall(async () => {
 })
 
 export const getUser = onCall(async (request) => {
+    authorize(request)
     const uid = request.data.uid
     if (!uid) {
         throw new HttpsError('invalid-argument', 'UID is required')
@@ -390,8 +406,11 @@ export const getUser = onCall(async (request) => {
 
 export const updateUser = onCall(async (request) => {
     const { uid, info } = request.data
+    authorize(request, uid)
+    // Only the profile fields the apps send, so nobody can set email, emailVerified, password or disabled.
+    const profile = { displayName: info?.displayName, photoURL: info?.photoURL }
     try {
-        await admin.auth().updateUser(uid, info)
+        await admin.auth().updateUser(uid, profile)
         console.log(`Successfully updated user: ${uid}`)
     } catch (error: any) {
         console.error('Error updating user:', error)
@@ -401,6 +420,7 @@ export const updateUser = onCall(async (request) => {
 
 export const deleteUser = onCall(async (request) => {
     const uid = request.data.uid
+    authorize(request, uid)
     try {
         await admin.auth().deleteUser(uid)
         console.log(`Successfully deleted user: ${uid}`)
@@ -411,6 +431,7 @@ export const deleteUser = onCall(async (request) => {
 })
 
 export const updateGroupOfUsers = onCall(async (request) => {
+    authorize(request)
     const users = request.data.users as Array<{ [key: string]: string }>
 
     for (const user of users) {
