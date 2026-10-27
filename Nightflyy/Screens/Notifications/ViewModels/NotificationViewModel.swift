@@ -70,28 +70,7 @@ class NotificationViewModel {
         case .follow_start:
             deleteAction()
         case .invite_to_event:
-            Button { [weak self] in
-                self?.markAsAttenging()
-                self?.deleteNotification()
-            } label: {
-                Text("Going")
-            }
-            .tint(.mainPurple)
-
-            Button { [weak self] in
-                self?.markAsInterested()
-                self?.deleteNotification()
-            } label: {
-                Text("Interested")
-            }
-            .tint(.onlineBlue)
-
-            Button { [weak self] in
-                self?.deleteNotification()
-            } label: {
-                Text("Ignore")
-            }
-            .tint(.gray)
+            inviteToEventActions()
         case .event_assigned:
             Button { [weak self] in
                 self?.acceptEventAssigned()
@@ -110,6 +89,32 @@ class NotificationViewModel {
         case .event_going, .event_comment, .review_submitted, .event_created, .event_alert, .event_interested:
             deleteAction()
         }
+    }
+
+    @ViewBuilder
+    func inviteToEventActions() -> some View {
+        Button { [weak self] in
+            self?.markAsAttenging()
+            self?.deleteNotification()
+        } label: {
+            Text("Going")
+        }
+        .tint(.mainPurple)
+
+        Button { [weak self] in
+            self?.markAsInterested()
+            self?.deleteNotification()
+        } label: {
+            Text("Interested")
+        }
+        .tint(.onlineBlue)
+
+        Button { [weak self] in
+            self?.deleteNotification()
+        } label: {
+            Text("Ignore")
+        }
+        .tint(.gray)
     }
 
     @ViewBuilder

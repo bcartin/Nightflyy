@@ -17,3 +17,7 @@ identifier_name:
 # Named (icon, title, color) tuples are clear enough; no struct needed.
 large_tuple:
   warning: 3
+
+# A switch over every enum case is the clearest form; don't count each case as a branch.
+cyclomatic_complexity:
+  ignores_case_statements: true
