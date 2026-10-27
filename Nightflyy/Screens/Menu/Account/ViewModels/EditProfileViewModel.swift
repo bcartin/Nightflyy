@@ -166,7 +166,11 @@ class EditProfileViewModel {
 
     func updateSearchIndex() {
         if usernameDidChange {
-            try? SearchManager.shared.updateSearchIndex(objectID: account.uid, objectType: .person, name: account.name, username: username, venue: nil)
+            try? SearchManager.shared.updateSearchIndex(objectID: account.uid,
+                                                        objectType: .person,
+                                                        name: account.name,
+                                                        username: username,
+                                                        venue: nil)
         }
     }
 

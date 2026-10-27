@@ -1,5 +1,5 @@
 //
-//  SU_LocationView.swift
+//  SignUpLocationView.swift
 //  Nightflyy
 //
 //  Created by Bernie Cartin on 5/22/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SU_LocationView: View {
+struct SignUpLocationView: View {
 
     @Binding var viewModel: SignupViewModel
 
@@ -50,5 +50,5 @@ struct SU_LocationView: View {
 }
 
 #Preview {
-    SU_LocationView(viewModel: .constant(SignupViewModel()))
+    SignUpLocationView(viewModel: .constant(SignupViewModel()))
 }

@@ -11,10 +11,12 @@ struct SliderView: View {
     public let timer = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
 
     @State private var currentPage: String = ""
-    @State private var listOfPages: [SliderPageModel] = [SliderPageModel(image: "slider1", header: "Discover", subheader: "Events based on your vibe"),
-                                                         SliderPageModel(image: "slider2", header: "Connect", subheader: "With friends, promoters and venues"),
-                                                         SliderPageModel(image: "slider3", header: "Host", subheader: "Parties, Kickbacks, pre-games & more"),
-                                                         SliderPageModel(image: "slider4", header: "Rate", subheader: "Bars, clubs, lounges & more")]
+    @State private var listOfPages: [SliderPageModel] = [
+        SliderPageModel(image: "slider1", header: "Discover", subheader: "Events based on your vibe"),
+        SliderPageModel(image: "slider2", header: "Connect", subheader: "With friends, promoters and venues"),
+        SliderPageModel(image: "slider3", header: "Host", subheader: "Parties, Kickbacks, pre-games & more"),
+        SliderPageModel(image: "slider4", header: "Rate", subheader: "Bars, clubs, lounges & more")
+    ]
 
     // Infite Carousel Properties
     @State private var fakedPages: [SliderPageModel] = []
@@ -32,7 +34,9 @@ struct SliderView: View {
                                 .scaledToFill()
 
                             Rectangle()
-                                .fill(.linearGradient(colors: [.backgroundBlack, .backgroundBlack.opacity(0.3), .backgroundBlack], startPoint: .top, endPoint: .bottom))
+                                .fill(.linearGradient(colors: [.backgroundBlack, .backgroundBlack.opacity(0.3), .backgroundBlack],
+                                                      startPoint: .top,
+                                                      endPoint: .bottom))
                                 .frame(height: 500)
 
                             VStack {
@@ -92,8 +96,8 @@ struct SliderView: View {
             }
     }
 
-    func fakeIndex(_ of: SliderPageModel) -> Int {
-        return fakedPages.firstIndex(of: of) ?? 0
+    func fakeIndex(_ page: SliderPageModel) -> Int {
+        return fakedPages.firstIndex(of: page) ?? 0
     }
 }
 
