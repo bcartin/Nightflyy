@@ -7,3 +7,14 @@ CLAUDE.md
 refactoring-plan.md
 .claude/
 graphify-out/
+
+# Firebase / Cloud Functions
+node_modules/
+functions/lib/
+.firebase/
+firebase-debug*.log
+*.local
+.env*
+.runtimeconfig.json
+*-firebase-adminsdk-*.json
+service-account*.json
