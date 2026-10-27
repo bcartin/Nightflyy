@@ -1,6 +1,6 @@
 # Cloud Functions
 
-Firebase Cloud Functions for Nightflyy (TypeScript, Node 24, 1st-gen `firebase-functions/v1` API).
+Firebase Cloud Functions for Nightflyy (TypeScript, Node 22, 1st-gen `firebase-functions/v1` API).
 Moved here from the old Slyde repo. `firebase.json` and `.firebaserc` live at the repo root.
 
 ## Projects
@@ -39,3 +39,4 @@ firebase deploy --only functions -P prod
 
 - Firestore field names (`notification_type`, `event_flyer_url`, `profile_image_url`, and so on) are shared with the iOS app. Rename them only together with the app.
 - `getPathStorageFromUrl` hard-codes the prod storage bucket (`slydeapp-dc745.appspot.com`), so image cleanup on delete only works in prod.
+- 1st-gen functions don't support Node 24, so the runtime is Node 22 (deprecated 2027-04-30). Moving past it means migrating to 2nd-gen (`firebase-functions/v2`).
