@@ -12,12 +12,13 @@ struct CreateEventView: View {
     
     @Bindable var viewModel: CreateEventViewModel
     @State var imageItem: PhotosPickerItem?
-    
+    @State private var containerWidth: CGFloat = 0
+
     var body: some View {
         ZStack {
             ScrollView {
                 VStack() {
-                    let width = UIScreen.main.bounds.size.width - 48
+                    let width = max(containerWidth - 48, 0)
                     PhotosPicker(selection: $imageItem, matching: .images) {
                         if let image = viewModel.flyerImage {
                             image
@@ -284,7 +285,8 @@ struct CreateEventView: View {
                 .errorAlert(error: $viewModel.error, buttonTitle: "OK")
             }
             .scrollIndicators(.hidden)
-            
+            .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { containerWidth = $0 }
+
             if viewModel.isLoading {
                 LoadingView()
             }

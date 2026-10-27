@@ -180,6 +180,6 @@ struct EventCardView: View {
 
 #Preview {
     EventCardView(viewModel: EventCardViewModel(event: TestData.events.first!),
-                  size: CGSize(width: UIScreen.main.bounds.size.width, height: 392))
+                  size: CGSize(width: 393, height: 392))
 }
 
