@@ -55,7 +55,10 @@ class EventsManager: EventsManaging {
 
     func updateEventLocations() {
         Task {
-            let snapshot = try? await FirebaseManager.shared.db.collection(FirestoreCollections.Events.value).whereField("end_date", isGreaterThan: Date()).getDocuments()
+            let snapshot = try? await FirebaseManager.shared.db
+                .collection(FirestoreCollections.Events.value)
+                .whereField("end_date", isGreaterThan: Date())
+                .getDocuments()
             let events = try snapshot?.documents.map({ document in
                 return try document.data(as: Event.self)
             })

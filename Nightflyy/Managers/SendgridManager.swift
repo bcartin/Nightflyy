@@ -40,7 +40,10 @@ class SendgridManager {
         let dob = dateformatter.date(from: account.dob!)
         let dobString = dob?.stringValue(format: "MM/dd/yyyy")
 
-        let contact = Contact(email: account.email, external_id: account.uid, first_name: account.name, custom_fields: CustomFields(username: account.username, dob: dobString))
+        let contact = Contact(email: account.email,
+                              external_id: account.uid,
+                              first_name: account.name,
+                              custom_fields: CustomFields(username: account.username, dob: dobString))
 
         let list_ids = lists.map { $0.id }
 
@@ -49,7 +52,7 @@ class SendgridManager {
 
         guard let request = ContactRequest(body: body) else { return }
         do {
-            _ = try await AddContacts(request: request)
+            _ = try await addContacts(request: request)
         } catch {
             Logger.network.error("Error creating contact in Sendgrid: \(error.localizedDescription)")
             return
@@ -57,7 +60,7 @@ class SendgridManager {
 #endif
     }
 
-    private static func AddContacts(request: ContactRequest) async throws -> ContactResponse {
+    private static func addContacts(request: ContactRequest) async throws -> ContactResponse {
         let (data, response) = try await URLSession.shared.data(for: request.httpRequest)
         guard let httpResponse = response as? HTTPURLResponse else {
             throw ContactError.failureResponse

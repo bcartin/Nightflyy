@@ -75,12 +75,12 @@ class EventCardViewModel {
 
     func navigateToGuestList() {
         let viewModel = EventGuestListViewModel(event: event, selectedSegment: 1)
-        Router.shared.navigateTo(.EventGuestList(viewModel))
+        Router.shared.navigateTo(.eventGuestList(viewModel))
     }
 
     func navigateToSendAsMessage() {
         let viewModel = SendObjectAsMessageViewModel(event: self.event)
-        Router.shared.navigateTo(.SendObjectAsMessage(viewModel))
+        Router.shared.navigateTo(.sendObjectAsMessage(viewModel))
     }
 
     func markAsAttenging() {

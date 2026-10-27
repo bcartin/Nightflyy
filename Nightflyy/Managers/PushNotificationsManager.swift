@@ -83,7 +83,8 @@ extension PushNotificationsManager: UNUserNotificationCenterDelegate {
         handlePendingPushNotification()
     }
 
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
         // TODO: Present in app message
         return [.banner, .list, .sound]
     }

@@ -12,7 +12,8 @@ import Mixpanel
 import Airbridge
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
 
         do {
             let fileName: String = try AppConfiguration.value(for: "FB_FILEPATH_NAME")
@@ -44,7 +45,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         }
 
         // MARK: Setup Airbridge
-        if let token: String = try? AppConfiguration.value(for: "AIRBRIDGE_TOKEN"), let appname: String = try? AppConfiguration.value(for: "APPNAME") {
+        if let token: String = try? AppConfiguration.value(for: "AIRBRIDGE_TOKEN"),
+           let appname: String = try? AppConfiguration.value(for: "APPNAME") {
             let option = AirbridgeOptionBuilder(name: appname, token: token)
                 .setAutoDetermineTrackingAuthorizationTimeout(second: 0)
                 .build()

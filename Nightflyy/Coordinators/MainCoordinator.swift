@@ -13,7 +13,8 @@ class MainCoordinator {
     func initialAppSetup() {
         Task {
             AuthenticationManager.shared.checkAuthState()
-            guard let uid = AuthenticationManager.shared.currentUser?.uid else { return } // MARK: if it should do something when not logged in do it before this line
+            // MARK: if it should do something when not logged in do it before this line
+            guard let uid = AuthenticationManager.shared.currentUser?.uid else { return }
 //            let uid = "G7Mug6P8BZdpjuF2KGesIkge6Y93" //Ya2VB47Ei2QlfN4XB25BOUgoM6S2"
             AnalyticsManager.setUserID(value: uid)
             await AccountManager.shared.fetchAccount(uid: uid)

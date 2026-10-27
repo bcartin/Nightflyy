@@ -55,7 +55,7 @@ class EditProfileViewModel {
 
     var gender: String {
         get {
-            return Gender(x: account.gender)?.rawValue ?? ""
+            return Gender(index: account.gender)?.rawValue ?? ""
         }
         set(newValue) {
             account.gender = Gender(rawValue: newValue)?.intValue

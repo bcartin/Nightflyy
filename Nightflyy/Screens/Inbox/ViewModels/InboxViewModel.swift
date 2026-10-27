@@ -31,7 +31,7 @@ class InboxViewModel {
 
     func navigateToChat(viewModel: InboxRowViewModel) {
         markAsRead(chat: viewModel.chat)
-        Router.shared.navigateTo(.ChatView(viewModel))
+        Router.shared.navigateTo(.chatView(viewModel))
     }
 
 }

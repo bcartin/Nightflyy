@@ -65,7 +65,7 @@ class HomeViewModel {
 
     func navigateToCreateNewEvent() {
         let viewModel = CreateEventViewModel(event: Event())
-        Router.shared.navigateTo(.CreateEvent(viewModel))
+        Router.shared.navigateTo(.createEvent(viewModel))
     }
 
     func showNFPView() {

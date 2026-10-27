@@ -18,7 +18,10 @@ class AppNotificationClient {
             throw NetworkError.unauthorized
         }
         var notifications: [AppNotification] = .init()
-        var dbRef: Query = FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value).document(uid).collection(FirestoreCollections.Accounts.notifications)
+        var dbRef: Query = FirebaseManager.shared.db
+            .collection(FirestoreCollections.Accounts.value)
+            .document(uid)
+            .collection(FirestoreCollections.Accounts.notifications)
         if let lastUpdated {
             dbRef = dbRef.whereField("date", isGreaterThan: lastUpdated)
         }
@@ -33,13 +36,21 @@ class AppNotificationClient {
         guard let uid = AccountManager.shared.account?.uid else {
             return
         }
-        let dbRef = FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value).document(uid).collection(FirestoreCollections.Accounts.notifications).document(notificationId)
+        let dbRef = FirebaseManager.shared.db
+            .collection(FirestoreCollections.Accounts.value)
+            .document(uid)
+            .collection(FirestoreCollections.Accounts.notifications)
+            .document(notificationId)
         try await dbRef.delete()
     }
 
     static func saveNotification(for accountId: String, notification: AppNotification) throws {
         let db = FirebaseManager.shared.db
-        try db.collection(FirestoreCollections.Accounts.value).document(accountId).collection(FirestoreCollections.Notifications.value).addDocument(from: notification)
+        try db
+            .collection(FirestoreCollections.Accounts.value)
+            .document(accountId)
+            .collection(FirestoreCollections.Notifications.value)
+            .addDocument(from: notification)
     }
 }
 

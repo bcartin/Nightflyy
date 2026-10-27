@@ -189,7 +189,7 @@ class ProfileViewModel: Hashable {
         do {
             let chat = try ChatsManager.shared.getChat(with: account.uid)
             let viewModel = InboxRowViewModel(chat: chat)
-            Router.shared.navigateTo(.ChatView(viewModel))
+            Router.shared.navigateTo(.chatView(viewModel))
         } catch {
             print(error.localizedDescription)
         }
@@ -216,7 +216,7 @@ class ProfileViewModel: Hashable {
 
     func navigateToSendAsMessage() {
         let viewModel = SendObjectAsMessageViewModel(account: self.account)
-        Router.shared.navigateTo(.SendObjectAsMessage(viewModel))
+        Router.shared.navigateTo(.sendObjectAsMessage(viewModel))
     }
 
 }
@@ -273,6 +273,6 @@ extension ProfileViewModel { // VENUE SPECIFIC FIELDS & FUNCTIONS
 
     func goToReviewScreen() {
         let viewModel = ReviewVenueViewModel(account: account)
-        Router.shared.navigateTo(.ReviewVenueView(viewModel))
+        Router.shared.navigateTo(.reviewVenueView(viewModel))
     }
 }

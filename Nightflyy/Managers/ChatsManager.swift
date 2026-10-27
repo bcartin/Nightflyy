@@ -154,7 +154,11 @@ class ChatsManager {
 
     static func sendMessage(chatId: String, message: Message) throws {
         let db = FirebaseManager.shared.db
-        try db.collection(FirestoreCollections.Chats.value).document(chatId).collection(FirestoreCollections.Messages.value).addDocument(from: message)
+        try db
+            .collection(FirestoreCollections.Chats.value)
+            .document(chatId)
+            .collection(FirestoreCollections.Messages.value)
+            .addDocument(from: message)
     }
 
     static func updateChat(_ chat: inout Chat, with message: Message) throws {

@@ -6,3 +6,10 @@ included:
 line_length:
   warning: 150
   error: 200
+  ignores_urls: true
+
+# "db" is the conventional name for a Firestore handle.
+identifier_name:
+  excluded:
+    - id
+    - db

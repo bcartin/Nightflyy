@@ -97,7 +97,7 @@ class Navigator {
         AppState.shared.selectedTab = .inbox
         guard let chatId else {return}
         if let viewModel = ChatsManager.shared.viewModels.first(where: {$0.chatID == chatId}) {
-            router.navigateTo(.ChatView(viewModel))
+            router.navigateTo(.chatView(viewModel))
         }
     }
 

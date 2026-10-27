@@ -26,7 +26,7 @@ class NewChatViewModel {
             let chat = try ChatsManager.shared.getChat(with: accountId)
             let viewModel = InboxRowViewModel(chat: chat)
             shouldDismiss = true
-            Router.shared.navigateTo(.ChatView(viewModel))
+            Router.shared.navigateTo(.chatView(viewModel))
         } catch {
             print(error.localizedDescription)
         }

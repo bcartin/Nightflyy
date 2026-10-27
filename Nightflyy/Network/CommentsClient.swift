@@ -16,7 +16,10 @@ class CommentsClient {
     static func fetchComments(for eventId: String, since: Date? = nil) async throws -> [Comment] {
         var comments: [Comment] = .init()
         let date = since ?? Date().addingTimeInterval(-10000000)
-        let query = FirebaseManager.shared.db.collection(FirestoreCollections.Events.value).document(eventId).collection(FirestoreCollections.Events.comments)
+        let query = FirebaseManager.shared.db
+            .collection(FirestoreCollections.Events.value)
+            .document(eventId)
+            .collection(FirestoreCollections.Events.comments)
             .whereField(FirestoreCollections.GenericFields.date, isGreaterThan: date)
         let snapshot = try await query.getDocuments()
         comments = try snapshot.documents.map({ document in
@@ -27,7 +30,10 @@ class CommentsClient {
 
     static func getNumberOfComments(for eventId: String) async -> Int {
         do {
-            let query = FirebaseManager.shared.db.collection(FirestoreCollections.Events.value).document(eventId).collection(FirestoreCollections.Events.comments)
+            let query = FirebaseManager.shared.db
+                .collection(FirestoreCollections.Events.value)
+                .document(eventId)
+                .collection(FirestoreCollections.Events.comments)
             let countQuery = query.count
             let snapshot = try await countQuery.getAggregation(source: .server)
             return Int(truncating: snapshot.count)
@@ -38,7 +44,10 @@ class CommentsClient {
     }
 
     static func saveComment(for eventId: String, comment: Comment) throws {
-        let ref = FirebaseManager.shared.db.collection(FirestoreCollections.Events.value).document(eventId).collection(FirestoreCollections.Events.comments)
+        let ref = FirebaseManager.shared.db
+            .collection(FirestoreCollections.Events.value)
+            .document(eventId)
+            .collection(FirestoreCollections.Events.comments)
         try ref.addDocument(from: comment)
     }
 

@@ -54,7 +54,7 @@ struct VenueProfileView: View {
                     }
                     .onTapGesture {
                         let viewModel = NetworkViewModel(account: viewModel.account, selectedSegment: 1)
-                        router.navigateTo(.Network(viewModel))
+                        router.navigateTo(.network(viewModel))
                     }
 
                     VStack(alignment: .center) {
@@ -63,7 +63,7 @@ struct VenueProfileView: View {
                     }
                     .onTapGesture {
                         let viewModel = NetworkViewModel(account: viewModel.account, selectedSegment: 2)
-                        router.navigateTo(.Network(viewModel))
+                        router.navigateTo(.network(viewModel))
                     }
                 }
                 .foregroundStyle(.white)

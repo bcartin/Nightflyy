@@ -137,7 +137,7 @@ extension LocationManager {
 
             let nearbyVenues = self.nearbyVenues()
             for venue in nearbyVenues {
-                let geofenceRegionCenter = CLLocationCoordinate2DMake(venue.getCLLocation().coordinate.latitude, venue.getCLLocation().coordinate.longitude)
+                let geofenceRegionCenter = venue.getCLLocation().coordinate
                 let geofenceRegion = CLCircularRegion(center: geofenceRegionCenter,
                                                       radius: 20,
                                                       identifier: "\(venue.uid)")
@@ -153,7 +153,9 @@ extension LocationManager {
         guard let currentLocation = self.currentLocation else { return [] }
 
         let nearbyVenues = eventsManager.locationVenues
-        let sortedClosest = nearbyVenues.filter {$0.plusProvider ?? false == true}.sorted(by: { $0.distance(to: currentLocation) < $1.distance(to: currentLocation)})
+        let sortedClosest = nearbyVenues
+            .filter { $0.plusProvider ?? false == true }
+            .sorted(by: { $0.distance(to: currentLocation) < $1.distance(to: currentLocation) })
         return Array(sortedClosest.prefix(15))
     }
 

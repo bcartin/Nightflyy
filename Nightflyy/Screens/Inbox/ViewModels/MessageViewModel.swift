@@ -74,7 +74,7 @@ class MessageViewModel: Identifiable {
     private func navigateToAccount() {
         Task {
             guard let uid = message.messageData.uid else {
-                await Router.shared.navigateTo(.NotFound(.profile))
+                await Router.shared.navigateTo(.notFound(.profile))
                 return
             }
             let account = await AccountClient.fetchAccount(accountId: uid)
@@ -85,7 +85,7 @@ class MessageViewModel: Identifiable {
     private func navigateToEvent() {
         Task {
             guard let eventId = message.messageData.event_id else {
-                await Router.shared.navigateTo(.NotFound(.event))
+                await Router.shared.navigateTo(.notFound(.event))
                 return
             }
             let event = await EventClient.fetchEvent(eventId: eventId)
