@@ -59,7 +59,9 @@ struct PromoCodeView: View {
         .background(.backgroundBlack)
         .foregroundStyle(.white)
         .alert(isPresented: $viewModel.codeRedeemed, content: {
-            CustomDialog(title: "Success!", content: "You will receive 1 Bonus Credit after your 7-Day Trial is completed.", button1: .init(content: "Continue", tint: .mainPurple, foreground: .white, action: { _ in
+            CustomDialog(title: "Success!",
+                         content: "You will receive 1 Bonus Credit after your 7-Day Trial is completed.",
+                         button1: .init(content: "Continue", tint: .mainPurple, foreground: .white, action: { _ in
                 viewModel.changeView(to: .venueSelection)
             }))
             .transition(.blurReplace.combined(with: .push(from: .bottom)))

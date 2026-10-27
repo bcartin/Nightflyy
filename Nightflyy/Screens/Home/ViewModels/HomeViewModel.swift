@@ -23,8 +23,7 @@ class HomeViewModel {
     var filterViewModel = EventsFilterViewModel()
 
     var selectedFiler: EventsViewFilter {
-        get { filterViewModel.selectedFiler }
-        set { scrollPosition = 0 }
+        filterViewModel.selectedFiler
     }
     var scrollPosition: Int? = 0
 

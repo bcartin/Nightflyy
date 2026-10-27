@@ -104,7 +104,7 @@ struct ButtonDialogModifier<Buttons: View>: ViewModifier {
         self.labelColor = labelColor ?? defaultLabelColor
         self.buttonSpacing = buttonSpacing ?? 0
         self.buttonBackground = buttonBackground ?? defaultButtonBackground
-        self.buttonCornerRadius = (buttonCornerRadius != nil ? buttonCornerRadius : self.buttonSpacing == 0 ? 0 : buttonCornerRadius) ?? defaultCornerRadius
+        self.buttonCornerRadius = buttonCornerRadius ?? (self.buttonSpacing == 0 ? 0 : defaultCornerRadius)
         self.dialogCornerRadius = dialogCornerRadius ?? buttonCornerRadius ?? defaultCornerRadius
 
         self.buttons = buttons
@@ -142,7 +142,9 @@ struct ButtonDialogModifier<Buttons: View>: ViewModifier {
                                 }
                                 // Apply style for each button passed in content
                                 buttons()
-                                    .buttonStyle(FullWidthButtonStyle(labelColor: labelColor, buttonBackground: buttonBackground, buttonCornerRadius: buttonCornerRadius))
+                                    .buttonStyle(FullWidthButtonStyle(labelColor: labelColor,
+                                                                      buttonBackground: buttonBackground,
+                                                                      buttonCornerRadius: buttonCornerRadius))
                             }
                             .font(.title3)
                             .clipShape(RoundedRectangle(cornerRadius: dialogCornerRadius))
@@ -154,7 +156,9 @@ struct ButtonDialogModifier<Buttons: View>: ViewModifier {
                                 Text("Cancel")
                                     .fontWeight(.semibold)
                             }
-                            .buttonStyle(FullWidthButtonStyle(labelColor: cancelButtonLabelColor, buttonBackground: buttonBackground, buttonCornerRadius: dialogCornerRadius))
+                            .buttonStyle(FullWidthButtonStyle(labelColor: cancelButtonLabelColor,
+                                                              buttonBackground: buttonBackground,
+                                                              buttonCornerRadius: dialogCornerRadius))
                         }
                         .font(.title3)
                         .padding(10)

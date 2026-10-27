@@ -148,7 +148,12 @@ class InboxRowViewModel: Hashable, Identifiable {
         guard let sender = AccountManager.shared.account else { return }
         guard let recipient = account?.uid else { return }
         do {
-            let message = Message(sender: sender.uid, senderName: sender.username ?? "Nightflyy", recipient: recipient, date: Date(), type: .text, messageData: MessageData(message: messageText))
+            let message = Message(sender: sender.uid,
+                                  senderName: sender.username ?? "Nightflyy",
+                                  recipient: recipient,
+                                  date: Date(),
+                                  type: .text,
+                                  messageData: MessageData(message: messageText))
             if chat.lastUpdated == nil {
                 try ChatsManager.updateChat(&chat, with: message) // MARK: Create new chat if it doesn't exist.
             }

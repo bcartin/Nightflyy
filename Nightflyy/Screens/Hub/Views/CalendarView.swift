@@ -67,7 +67,7 @@ struct CalendarView: View {
 
                     LazyVGrid(columns: colums, spacing: 0) {
                         ForEach(extractDates()) { value in
-                            CardView(value: value)
+                            cardView(value: value)
                                 .background(
                                     Capsule()
                                         .fill(.mainPurple)
@@ -109,11 +109,11 @@ struct CalendarView: View {
     }
 
     @ViewBuilder
-    func CardView(value: DateValue) -> some View {
+    func cardView(value: DateValue) -> some View {
         VStack(spacing: 4) {
             if value.day != -1 {
                 Text("\(value.day)")
-                    .foregroundStyle(value.date.isSameDay(as: .now) ? value.date.isSameDay(as: viewModel.selectedDate) ? .white : .mainPurple : .white)
+                    .foregroundStyle(value.date.isSameDay(as: .now) && !value.date.isSameDay(as: viewModel.selectedDate) ? .mainPurple : .white)
                     .font(.title3.bold())
                     .frame(maxWidth: .infinity)
 

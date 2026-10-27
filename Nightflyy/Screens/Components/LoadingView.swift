@@ -17,7 +17,8 @@ struct LoadingView: View {
             VStack {
                 Circle()
                     .trim(from: 0.0, to: spinnerLength)
-                    .stroke(LinearGradient(colors: [.mainPurple, .onlineBlue], startPoint: .topLeading, endPoint: .bottomTrailing), style: StrokeStyle(lineWidth: 4.0, lineCap: .round, lineJoin: .round))
+                    .stroke(LinearGradient(colors: [.mainPurple, .onlineBlue], startPoint: .topLeading, endPoint: .bottomTrailing),
+                            style: StrokeStyle(lineWidth: 4.0, lineCap: .round, lineJoin: .round))
                     .animation(.easeIn(duration: 1.2).repeatForever(autoreverses: true), value: spinnerLength)
                     .frame(width: 60, height: 60)
                     .rotationEffect(Angle(degrees: Double(degree)))

@@ -57,7 +57,9 @@ struct PaywallView: View {
                         .background(
                             RoundedRectangle(cornerRadius: 16)
                                 .fill(
-                                    LinearGradient(gradient: Gradient(colors: [.backgroundBlack, .backgroundBlack, .mainPurple]), startPoint: .leading, endPoint: .trailing)
+                                    LinearGradient(gradient: Gradient(colors: [.backgroundBlack, .backgroundBlack, .mainPurple]),
+                                                   startPoint: .leading,
+                                                   endPoint: .trailing)
                                 )
                         )
                         .padding(.bottom, 4)
@@ -116,7 +118,11 @@ struct PaywallView: View {
                     }
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
-                    Text("By tapping the button I agree to the Terms and automatic monthly charge of $12.00 until I cancel. Cancel in account prior to any renewal to avoid charges. Perks will vary depending on the venue. Cancel anytime.")
+                    Text("""
+                        By tapping the button I agree to the Terms and automatic monthly charge of $12.00 until I cancel. \
+                        Cancel in account prior to any renewal to avoid charges. \
+                        Perks will vary depending on the venue. Cancel anytime.
+                        """)
                         .foregroundStyle(.gray)
                         .font(.system(size: 10))
                         .multilineTextAlignment(.center)
