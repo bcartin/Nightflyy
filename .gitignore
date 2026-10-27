@@ -12,7 +12,7 @@ graphify-out/
 node_modules/
 functions/lib/
 .firebase/
-firebase-debug*.log
+*-debug*.log
 *.local
 .env*
 .runtimeconfig.json
