@@ -20,7 +20,9 @@ struct AlertTemplate: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.backgroundBlack)
         .alert(isPresented: $showAlert) {
-            CustomDialog(title: "Unfollow NinjaTacos", content: nil, button1: .init(content: "Unfollow", tint: .mainPurple, foreground: .white, action: { folder in
+            CustomDialog(title: "Unfollow NinjaTacos",
+                         content: nil,
+                         button1: .init(content: "Unfollow", tint: .mainPurple, foreground: .white, action: { folder in
                 print(folder)
                 showAlert = false
             }), button2: .init(content: "Cancel", tint: .white.opacity(0.5), foreground: .white, action: { _ in
@@ -88,11 +90,11 @@ struct CustomDialog: View {
                     .padding(.bottom, 5)
             }
 
-            ButtonView(button1)
+            buttonView(button1)
                 .padding(.top, 8)
 
             if let button2 {
-                ButtonView(button2)
+                buttonView(button2)
                     .padding(.top, -5)
             }
         }
@@ -108,7 +110,7 @@ struct CustomDialog: View {
     }
 
     @ViewBuilder
-    private func ButtonView(_ config: Config) -> some View {
+    private func buttonView(_ config: Config) -> some View {
         Button {
             config.action(addsTextField ? text : "")
         } label: {

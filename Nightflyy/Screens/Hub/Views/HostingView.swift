@@ -52,7 +52,7 @@ struct HostingView: View {
                                     }
 
                                     HStack {
-                                        Text("\(viewModel.headerEvent?.weekday.uppercased() ?? ""), \(viewModel.headerEvent?.month ?? "")  \(viewModel.headerEvent?.day ?? "")")
+                                        Text(viewModel.headerDateText)
                                             .font(.title3)
                                             .fontWeight(.medium)
 

@@ -49,5 +49,8 @@ struct NotificationView: View {
 }
 
 #Preview {
-    NotificationView(viewModel: NotificationViewModel(notification: AppNotification(sender: "", date: .init(), type: .follow_request, notificationData: NotificationData())) )
+    NotificationView(viewModel: NotificationViewModel(notification: AppNotification(sender: "",
+                                                                                    date: .init(),
+                                                                                    type: .follow_request,
+                                                                                    notificationData: NotificationData())) )
 }

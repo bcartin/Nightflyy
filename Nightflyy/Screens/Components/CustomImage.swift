@@ -18,12 +18,12 @@ struct CustomImage: View {
         if let url = imageUrl {
             CachedAsyncImage(url: URL(string: url), size: .init(width: size.width, height: size.height), shape: .rect, contentMode: .fill)
         } else {
-            PlaceholderImage()
+            placeholderImage()
         }
     }
 
     @ViewBuilder
-    func PlaceholderImage() -> some View {
+    func placeholderImage() -> some View {
         if isSystemImage {
             Image(systemName: placeholder)
                 .resizable().scaledToFill()

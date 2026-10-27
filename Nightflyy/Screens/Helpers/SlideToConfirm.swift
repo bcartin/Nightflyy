@@ -35,13 +35,13 @@ struct SlideToConfirm: View {
                     .fill(config.tint.gradient)
                     .frame(width: knobSize + extraCapsuleWidth, height: knobSize)
 
-                LeadingTextView(size, progress: progress)
+                leadingTextView(size, progress: progress)
 
                 HStack(spacing: 0) {
-                    KnobView(size, progress: progress, maxLimit: maxLimit)
+                    knobView(size, progress: progress, maxLimit: maxLimit)
                         .zIndex(1)
 
-                    ShimmerTextView(size, progress: progress)
+                    shimmerTextView(size, progress: progress)
                 }
             }
         }
@@ -57,7 +57,7 @@ struct SlideToConfirm: View {
     }
 
     /// Knob View
-    func KnobView(_ size: CGSize, progress: CGFloat, maxLimit: CGFloat) -> some View {
+    func knobView(_ size: CGSize, progress: CGFloat, maxLimit: CGFloat) -> some View {
         Circle()
             .fill(.white)
             .padding(config.knobPadding)
@@ -101,7 +101,7 @@ struct SlideToConfirm: View {
     }
 
     /// Shimmer Text View
-    func ShimmerTextView(_ size: CGSize, progress: CGFloat) -> some View {
+    func shimmerTextView(_ size: CGSize, progress: CGFloat) -> some View {
         Text(isCompleted ? config.confirmationText : config.idleText)
             .foregroundStyle(.gray.opacity(0.6))
             .overlay {
@@ -140,7 +140,7 @@ struct SlideToConfirm: View {
     }
 
     /// OnSwipe/Confirmation Text View
-    func LeadingTextView(_ size: CGSize, progress: CGFloat) -> some View {
+    func leadingTextView(_ size: CGSize, progress: CGFloat) -> some View {
         ZStack {
             Text(config.onSwipeText)
                 .opacity(isCompleted ? 0 : 1)

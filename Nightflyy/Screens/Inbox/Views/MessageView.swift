@@ -14,14 +14,14 @@ struct MessageView: View {
     var body: some View {
         switch viewModel.message.type {
         case .text:
-            TextMessageView()
+            textMessageView()
         case .account, .event:
-            ImageMessageView()
+            imageMessageView()
         }
     }
 
     @ViewBuilder
-    func TextMessageView() -> some View {
+    func textMessageView() -> some View {
         ZStack(alignment: .bottom) {
             Rectangle()
                 .fill(viewModel.isSender ? .mainPurple : .white)
@@ -41,7 +41,7 @@ struct MessageView: View {
     }
 
     @ViewBuilder
-    func ImageMessageView() -> some View {
+    func imageMessageView() -> some View {
         ZStack(alignment: .bottom) {
             CustomImage(imageUrl: viewModel.messageImageUrl, size: .init(width: 150, height: 150), placeholder: viewModel.imagePlaceholder)
                 .overlay {

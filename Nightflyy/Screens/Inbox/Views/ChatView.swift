@@ -57,7 +57,7 @@ struct ChatView: View {
             .background(.backgroundBlack)
         }
         .safeAreaInset(edge: .top) {
-            CustomHeaderView()
+            customHeaderView()
         }
         .backgroundImage("slyde_background")
         .hideNavbarBackground()
@@ -74,7 +74,7 @@ struct ChatView: View {
     }
 
     @ViewBuilder
-    func CustomHeaderView() -> some View {
+    func customHeaderView() -> some View {
         VStack(spacing: 6) {
             ZStack {
                 UserImageRound(imageUrl: viewModel.profileImageUrl, size: 45)

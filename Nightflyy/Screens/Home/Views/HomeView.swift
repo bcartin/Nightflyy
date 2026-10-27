@@ -24,9 +24,9 @@ struct HomeView: View {
                     .frame(height: 24)
 
                 if !locationManager.permissionGranted && viewModel.selectedFiler == .nearby {
-                    NoPermissionsView()
+                    noPermissionsView()
                 } else if viewModel.displayEvents.isEmpty {
-                    NoResultsView()
+                    noResultsView()
                 } else {
 
                     GeometryReader {
@@ -117,7 +117,7 @@ struct HomeView: View {
     }
 
     @ViewBuilder
-    func NoPermissionsView() -> some View {
+    func noPermissionsView() -> some View {
         VStack(alignment: .center, spacing: 24) {
             Image(systemName: "mappin.slash.circle.fill")
                 .resizable()
@@ -143,7 +143,7 @@ struct HomeView: View {
     }
 
     @ViewBuilder
-    func NoResultsView() -> some View {
+    func noResultsView() -> some View {
         VStack {
             Spacer()
 
