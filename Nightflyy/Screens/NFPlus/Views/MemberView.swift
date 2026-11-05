@@ -19,8 +19,10 @@ struct MemberView: View {
             case .noCredits:
                 NoCreditsView(viewModel: $viewModel)
             case .hasCredits:
-//                RedeemButtonView(viewModel: $viewModel)
                 RedeemPerkSelectionView(viewModel: $viewModel)
+                    .transition(.blurReplace)
+            case .redeemButton:
+                RedeemButtonView(viewModel: $viewModel)
                     .transition(.blurReplace)
             case .codeScreen:
                 RedeemCodeView(viewModel: $viewModel)
@@ -55,7 +57,7 @@ struct MemberView: View {
                     switch viewModel.displayView {
                     case .hasCredits, .noCredits, .redeemSuccess:
                         dismiss()
-                    case .codeScreen, .venues, .help, .youtubeVideo:
+                    case .redeemButton, .codeScreen, .venues, .help, .youtubeVideo:
                         viewModel.seeVenuesButtonIsVisible = true
                         viewModel.changeView(to: viewModel.mainDisplayView)
                     }

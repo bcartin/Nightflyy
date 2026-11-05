@@ -15,6 +15,7 @@ enum AccountError: Error {
     case passwordsDontMatch
     case passwordTooShort
     case invalidCode
+    case codeForDifferentVenue
     case invalidAge
     case invalidEmail
 
@@ -37,6 +38,8 @@ extension AccountError: LocalizedError {
             "Password is too short"
         case .invalidCode:
             "Invalid code"
+        case .codeForDifferentVenue:
+            "This code is for a different venue than the selected perk"
         case .invalidAge:
             "Must be over 18 to sign up"
         case .invalidEmail:

@@ -17,6 +17,8 @@ struct NFPPerk: Identifiable {
     let perkDetails: String?
     /// Where the perk is redeemed: the venue itself, or the venue hosting the event.
     let venueName: String
+    /// Venues or events whose redemption code may redeem this perk.
+    let acceptedRedemptionIDs: Set<String>
 
     init(venue: Account) {
         id = venue.uid
@@ -25,6 +27,7 @@ struct NFPPerk: Identifiable {
         perkName = venue.perkName ?? ""
         perkDetails = venue.perkDetails
         venueName = venue.name ?? ""
+        acceptedRedemptionIDs = [venue.uid]
     }
 
     init(event: Event) {
@@ -34,6 +37,8 @@ struct NFPPerk: Identifiable {
         perkName = event.perkName ?? ""
         perkDetails = event.perkDetails
         venueName = event.eventVenue ?? ""
+        // The hosting venue's own code works too, since that's the code its staff know.
+        acceptedRedemptionIDs = Set([event.uid, event.eventVenueId].compactMap { $0 })
     }
 
     var redemptionSteps: [String] {
