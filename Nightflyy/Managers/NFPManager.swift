@@ -164,7 +164,9 @@ class NFPManager {
         }
     }
 
-    func redeemCredit(code: String) async throws {
+    /// Redeems the member's credit with a venue or event code.
+    /// - Parameter acceptedIDs: When set, the code must belong to one of these venues or events.
+    func redeemCredit(code: String, acceptedIDs: Set<String>? = nil) async throws {
         var redemptionID: String?
         var redemptionName: String?
         var redemptionType: RedemptionType?
@@ -184,6 +186,10 @@ class NFPManager {
               let redemptionName
         else {
             throw AccountError.invalidCode
+        }
+
+        if let acceptedIDs, !acceptedIDs.contains(redemptionID) {
+            throw AccountError.codeForDifferentVenue
         }
 
         let redemption = NFPRedemption(venueID: redemptionID, venueName: redemptionName, redemptionType: redemptionType, date: Date(), clientID: uid)

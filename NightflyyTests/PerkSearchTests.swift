@@ -44,4 +44,14 @@ struct PerkSearchTests {
         #expect(NFPRedeemViewModel.sorted([far, near], near: user).map(\.name) == ["Near", "Far"])
         #expect(NFPRedeemViewModel.sorted([far, near], near: nil).map(\.name) == ["Far", "Near"])
     }
+
+    @Test func perksAcceptOnlyTheirOwnRedemptionCodes() {
+        var venue = Account(name: "Aqua Vitae")
+        venue.id = "venue1"
+        var event = Event(eventName: "Jazz Night", eventVenueId: "venue2")
+        event.id = "event1"
+
+        #expect(NFPPerk(venue: venue).acceptedRedemptionIDs == ["venue1"])
+        #expect(NFPPerk(event: event).acceptedRedemptionIDs == ["event1", "venue2"])
+    }
 }

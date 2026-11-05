@@ -72,7 +72,7 @@ class NFPRedeemViewModel {
     func redeemCredit() {
         Task {
             do {
-                try await NFPManager.shared.redeemCredit(code: venueCode)
+                try await NFPManager.shared.redeemCredit(code: venueCode, acceptedIDs: selectedPerk?.acceptedRedemptionIDs)
                 changeView(to: .redeemSuccess)
             } catch {
                 self.error = error
