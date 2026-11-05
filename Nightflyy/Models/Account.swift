@@ -63,8 +63,10 @@ struct Account: Identifiable, Codable, Savable {
     // MARK: - Location
     var city: String?
     var state: String?
-    var geohash: String?
-    var location: GeoPoint?
+//    var geohash: String?
+//    var location: GeoPoint?
+    var latitude: Double?
+    var longitude: Double?
 
     // MARK: - App Metadata
     var appVersion: String?
@@ -137,8 +139,10 @@ struct Account: Identifiable, Codable, Savable {
         // Location
         case city
         case state
-        case geohash = "g"
-        case location = "l"
+//        case geohash = "g"
+//        case location = "l"
+        case latitude = "lat"
+        case longitude = "lng"
 
         // App Metadata
         case appVersion = "app_version"

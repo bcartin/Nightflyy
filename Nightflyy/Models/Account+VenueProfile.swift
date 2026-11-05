@@ -29,7 +29,7 @@ extension Account {
     }
 
     func getCLLocation() -> CLLocation {
-        return CLLocation(latitude: self.location?.latitude ?? 0, longitude: self.location?.longitude ?? 0)
+        return CLLocation(latitude: self.latitude ?? 0, longitude: self.longitude ?? 0)
     }
 
 }

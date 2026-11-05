@@ -19,7 +19,8 @@ struct MemberView: View {
             case .noCredits:
                 NoCreditsView(viewModel: $viewModel)
             case .hasCredits:
-                RedeemButtonView(viewModel: $viewModel)
+//                RedeemButtonView(viewModel: $viewModel)
+                RedeemPerkSelectionView(viewModel: $viewModel)
                     .transition(.blurReplace)
             case .codeScreen:
                 RedeemCodeView(viewModel: $viewModel)
@@ -91,10 +92,12 @@ struct MemberView: View {
             .foregroundStyle(.mainPurple)
             .font(.system(size: 14, weight: .medium))
             .padding()
-            .opacity(viewModel.seeVenuesButtonIsVisible ? 1 : 0)
+            .opacity(viewModel.seeVenuesButtonIsVisible && viewModel.displayView != .hasCredits ? 1 : 0)
         })
         .task {
-            await viewModel.fetchNFPVenues()
+            async let venues: Void = viewModel.fetchNFPVenues()
+            async let events: Void = viewModel.fetchNFPEvents()
+            _ = await (venues, events)
         }
         .errorAlert(error: $viewModel.error, buttonTitle: "OK")
     }
