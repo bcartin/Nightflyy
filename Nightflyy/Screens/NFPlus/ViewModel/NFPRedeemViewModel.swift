@@ -12,6 +12,7 @@ import SwiftUI
 enum RedeemView {
 
     case hasCredits
+    case redeemButton
     case noCredits
     case codeScreen
     case redeemSuccess
@@ -143,7 +144,7 @@ class NFPRedeemViewModel {
 
     func usePerk() {
         seeVenuesButtonIsVisible = false
-        changeView(to: .codeScreen)
+        changeView(to: .redeemButton)
     }
 
     func navigateToProfile(account: Account) {
