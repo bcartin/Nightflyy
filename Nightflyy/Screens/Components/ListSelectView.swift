@@ -8,20 +8,20 @@
 import SwiftUI
 
 struct ListSelectView: View {
-    
+
     var title: String
     var listItems: [String]
     @Binding var selectedItem: String
-    
+
     var body: some View {
         VStack {
             ForEach(listItems, id: \.self) { item in
                 let isSelected: Bool = selectedItem == item
                 HStack {
                     Text(item)
-                    
+
                     Spacer(minLength: 0)
-                    
+
                     Image(systemName: isSelected ? "checkmark.circle.fill" : "circle.fill")
                         .font(.title)
                         .contentTransition(.symbolEffect)
@@ -37,7 +37,7 @@ struct ListSelectView: View {
                     }
                 }
             }
-            
+
             Spacer()
         }
         .padding(.horizontal)
@@ -52,7 +52,7 @@ struct ListSelectView: View {
                     .foregroundStyle(.white)
             }
         }
-        
+
     }
 }
 

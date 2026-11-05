@@ -11,34 +11,34 @@ import Combine
 
 @Observable @MainActor
 class EventGuestListViewModel: Hashable {
-    
+
     nonisolated let id: String
-    
+
     nonisolated static func == (lhs: EventGuestListViewModel, rhs: EventGuestListViewModel) -> Bool {
         lhs.id == rhs.id
     }
-    
+
     nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
+
     var event: Event
     var selectedSegment: Int
     let segments = [SegmentedViewOption(id: 1, title: "Going"), SegmentedViewOption(id: 2, title: "Interested")]
     var attending: [String] = []
     var interested: [String] = []
-    
+
     @ObservationIgnored
     @Published var searchText: String = ""
     private var searchCancellable: AnyCancellable?
-    
+
     init(event: Event, selectedSegment: Int) {
         self.id = event.uid
         self.event = event
         self.selectedSegment = selectedSegment
         self.attending = event.attending ?? []
         self.interested = event.interested ?? []
-        
+
         searchCancellable = $searchText
             .receive(on: DispatchQueue.main)
             .debounce(for: .seconds(1), scheduler: RunLoop.main)
@@ -46,17 +46,16 @@ class EventGuestListViewModel: Hashable {
                 self?.performSearch(searchText: fragment)
             })
     }
-    
+
     var displayArray: [String] {
         selectedSegment == 1 ? attending : interested
     }
-    
+
     private func performSearch(searchText: String) {
         if searchText.isEmpty {
             self.attending = self.event.attending ?? []
             self.interested = self.event.interested ?? []
-        }
-        else {
+        } else {
             let algoliaSearchResults = SearchManager.shared.performSearch(searchText: searchText).compactMap(\.objectID)
             let searchAttending = event.attending ?? []
             self.attending = searchAttending.filter {
@@ -68,5 +67,5 @@ class EventGuestListViewModel: Hashable {
             }
         }
     }
-    
+
 }

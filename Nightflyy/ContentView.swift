@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseAuth
 
 struct ContentView: View {
-    
+
     @State var presentOverlay = true
     @State private var showMenu: Bool = false
     @State private var selection = 0 // Home is default
@@ -18,13 +18,12 @@ struct ContentView: View {
     @State var menuViewModel = SideBarMenuViewModel()
     @Environment(ToastsManager.self) private var toastsManager
     @Environment(AppState.self) private var appState
-    
+
     var body: some View {
         @Bindable var toastsManager = toastsManager
         @Bindable var appState = appState
- 
-            AnimatedSideBar(showMenu: $showMenu)
-            { safeArea in
+
+            AnimatedSideBar(showMenu: $showMenu) { _ in
                 TabView(selection: $appState.selectedTab) {
                     Tab("", image: "ic_home", value: AppTab.home) {
                         HomeView(showMenu: $showMenu, viewModel: HomeViewModel())
@@ -51,7 +50,7 @@ struct ContentView: View {
                 }
                 .accentColor(.mainPurple)
                 .environment(\.colorScheme, .dark)
-            
+
             } menuView: { safeArea in
                 SideBarMenuView(showMenu: $showMenu, safeArea: safeArea, viewModel: $menuViewModel)
             }
@@ -63,10 +62,7 @@ struct ContentView: View {
 
 }
 
-//#Preview {
+// #Preview {
 //    ContentView()
 //        .preferredColorScheme(.dark)
-//}
-
-
-
+// }

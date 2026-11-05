@@ -13,11 +13,11 @@ struct City: Identifiable, Codable {
     var latitude: Double
     var longitude: Double
     var state: String
-    
+
     var displayName: String {
         return city + ", " + state
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case city
         case latitude

@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct DiscoverResultsListView: View {
-    
+
     @Bindable var viewModel: SearchResultsListViewModel
-    
+
     var body: some View {
         VStack(alignment: .leading) {
-            
+
             SegmentedView(segments: viewModel.segments, selected: $viewModel.selectedSegment)
-            
+
             ScrollView {
                 if viewModel.selectedSegment == 0 {
                     LazyVStack {
@@ -23,55 +23,52 @@ struct DiscoverResultsListView: View {
                             switch searchResult.type {
                             case .event:
                                 if let event = searchResult.event {
-                                    let vm = EventListItemViewModel(event: event)
-                                    EventListItemView(viewModel: vm) {
-                                        vm.navigateToEvent()
+                                    let itemViewModel = EventListItemViewModel(event: event)
+                                    EventListItemView(viewModel: itemViewModel) {
+                                        itemViewModel.navigateToEvent()
                                     }
                                     .task {
-                                        await vm.fetchOwner()
+                                        await itemViewModel.fetchOwner()
                                     }
                                 }
                             case .person:
                                 if let person = searchResult.account {
-                                    let vm = PersonListItemViewModel(account: person)
-                                    PersonListItemView(viewModel: vm) {
-                                        vm.navigateToProfile()
+                                    let itemViewModel = PersonListItemViewModel(account: person)
+                                    PersonListItemView(viewModel: itemViewModel) {
+                                        itemViewModel.navigateToProfile()
                                     }
                                 }
                             case .venue:
                                 if let venue = searchResult.account {
-                                    let vm = VenueListItemViewModel(venue: venue)
-                                    VenueListItemView(viewModel: vm) {
-                                        vm.navigateToProfile()
+                                    let itemViewModel = VenueListItemViewModel(venue: venue)
+                                    VenueListItemView(viewModel: itemViewModel) {
+                                        itemViewModel.navigateToProfile()
                                     }
                                 }
                             }
                         }
                     }
-                }
-                else if viewModel.selectedSegment == 1 {
+                } else if viewModel.selectedSegment == 1 {
                     LazyVStack {
-                        ForEach(viewModel.eventResultsViewModels, id: \.self) { vm in
-                            EventListItemView(viewModel: vm) {
-                                vm.navigateToEvent()
+                        ForEach(viewModel.eventResultsViewModels, id: \.self) { itemViewModel in
+                            EventListItemView(viewModel: itemViewModel) {
+                                itemViewModel.navigateToEvent()
                             }
                             .task {
-                                await vm.fetchOwner()
+                                await itemViewModel.fetchOwner()
                             }
                         }
                     }
-                }
-                else if viewModel.selectedSegment == 2 {
-                    ForEach(viewModel.venueResultsViewModels, id: \.self) { vm in
-                        VenueListItemView(viewModel: vm) {
-                            vm.navigateToProfile()
+                } else if viewModel.selectedSegment == 2 {
+                    ForEach(viewModel.venueResultsViewModels, id: \.self) { itemViewModel in
+                        VenueListItemView(viewModel: itemViewModel) {
+                            itemViewModel.navigateToProfile()
                         }
                     }
-                }
-                else if viewModel.selectedSegment == 3 {
-                    ForEach(viewModel.personResultsViewModels, id: \.self) { vm in
-                        PersonListItemView(viewModel: vm) {
-                            vm.navigateToProfile()
+                } else if viewModel.selectedSegment == 3 {
+                    ForEach(viewModel.personResultsViewModels, id: \.self) { itemViewModel in
+                        PersonListItemView(viewModel: itemViewModel) {
+                            itemViewModel.navigateToProfile()
                         }
                     }
                 }
@@ -92,4 +89,3 @@ struct DiscoverResultsListView: View {
         }
     }
 }
-

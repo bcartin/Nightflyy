@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct BasicCachedAsyncImage: View {
     private let url: URL?
-    @State private var image: Image? = nil
+    @State private var image: Image?
     @State private var isLoading = false
 
     public init(url: URL?) {

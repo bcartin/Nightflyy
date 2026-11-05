@@ -11,15 +11,15 @@ import FirebaseFirestore
 import FirebaseFunctions
 
 class FirebaseManager {
-    
+
     private init() { }
-    
+
     static let shared = FirebaseManager()
-    
+
     lazy var functions = Functions.functions()
-    
+
     let db = Firestore.firestore()
-    
+
     func getDocument<T>(collection: String, documentId: String, _ type: T.Type) async throws -> T? where T: Decodable {
         let docRef = self.db.collection(collection).document(documentId)
         return try await docRef.getDocument(as: type.self)

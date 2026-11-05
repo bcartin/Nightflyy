@@ -8,20 +8,20 @@
 import SwiftUI
 
 struct DiscoverView: View {
-    
+
     @Binding var showMenu: Bool
     @State var viewModel: DiscoverViewModel
     @State var isFilterViewShowing: Bool = false
     @State var isSearhing: Bool = false
-    
+
     var body: some View {
         @Bindable var viewModel = viewModel
-        
+
         RouterView {
             ScrollView {
-                
+
                 VStack(alignment: .leading, spacing: 0) {
-                    
+
                     Button {
                         withAnimation {
                             self.isSearhing = true
@@ -32,26 +32,25 @@ struct DiscoverView: View {
                                 Image(systemName: "magnifyingglass")
                                     .font(.callout)
                                     .foregroundStyle(.white.opacity(0.5))
-                                
+
                                 Text("Search").foregroundStyle(.white.opacity(0.5))
-                                
+
                                 Spacer()
-                               
+
                             }
                             .padding(.horizontal, 16)
                             .frame(height: 44)
                             .glassEffect(.regular, in: .capsule)
                             .padding(.top, 8)
                             .padding(.horizontal, 16)
-                        }
-                        else {
+                        } else {
                             HStack(spacing: 8) {
                                 Image(systemName: "magnifyingglass")
                                     .font(.callout)
                                     .foregroundStyle(.white.opacity(0.5))
-                                
+
                                 Text("Search").foregroundStyle(.white.opacity(0.5))
-                                
+
                                 Spacer()
                             }
                             .padding(.horizontal, 16)
@@ -60,13 +59,12 @@ struct DiscoverView: View {
                             .cornerRadius(8)
                             .padding(.top, 8)
                             .padding(.horizontal, 16)
-                            
+
                         }
                     }
-                    
+
                     VStack(alignment: .leading) {
-                        
-                        
+
                         ScrollView(.horizontal) {
                             HStack(spacing: 16) {
                                 ForEach(viewModel.filteredDisplayEvents) { event in
@@ -78,7 +76,7 @@ struct DiscoverView: View {
                         .scrollIndicators(.hidden)
                         .safeAreaPadding(12)
                         .scrollTargetBehavior(.viewAligned)
-                        
+
                         HStack {
                             Button {
                                 isFilterViewShowing.toggle()
@@ -94,7 +92,7 @@ struct DiscoverView: View {
                             .fullScreenCover(isPresented: $isFilterViewShowing) {
                                 EventsFilterView(viewModel: $viewModel.filterViewModel)
                             }
-                            
+
                             Button {
                                 viewModel.selectFilterView(.date)
                             } label: {
@@ -107,7 +105,7 @@ struct DiscoverView: View {
                                     )
                                     .overlay(RoundedRectangle(cornerRadius: 12).stroke(viewModel.hasDateFilter ? .mainPurple : .white))
                             }
-                            
+
                             Button {
                                 viewModel.selectFilterView(.cover)
                             } label: {
@@ -120,16 +118,16 @@ struct DiscoverView: View {
                                     )
                                     .overlay(RoundedRectangle(cornerRadius: 12).stroke(viewModel.hasCoverFilter ? .mainPurple : .white, lineWidth: 1))
                             }
-                            
+
                         }
                         .padding(.horizontal, 12)
-                        
+
                         Toggle(isOn: $viewModel.filterPlusOnly) {
                             HStack {
                                 Image("plus_badge")
                                     .resizable()
                                     .frame(width: 18, height: 18)
-                                
+
                                 Text("Nightflyy+ Only")
                                     .foregroundStyle(.white)
                                     .font(.system(size: 14, weight: .semibold))
@@ -139,27 +137,26 @@ struct DiscoverView: View {
                         .frame(width: 200)
                         .padding(.horizontal)
                         .padding(.top, 4)
-                        
-                        
+
                         Text("Venue")
                             .font(.system(size: 20, weight: .bold))
                             .padding(.horizontal)
                             .padding(.top)
-                        
+
                         TagSelectView(tags: VenuesType.allValues, selectedTags: $viewModel.selectedVenues)
-                        
+
                         Text("Music")
                             .font(.system(size: 20, weight: .bold))
                             .padding(.horizontal)
                             .padding(.top)
-                        
+
                         TagSelectView(tags: MusicGenre.allValues, selectedTags: $viewModel.selectedMusic)
-                        
+
                         Text("Crowds")
                             .font(.system(size: 20, weight: .bold))
                             .padding(.horizontal)
                             .padding(.top)
-                        
+
                         TagSelectView(tags: ClienteleType.allValues, selectedTags: $viewModel.selectedCrowds)
                     }
                 }
@@ -176,7 +173,7 @@ struct DiscoverView: View {
                         .foregroundStyle(.white)
                         .font(.system(size: 18, weight: .medium))
                 }
-                
+
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: {
                         showMenu.toggle()
@@ -186,13 +183,12 @@ struct DiscoverView: View {
                             .contentTransition(.symbolEffect)
                     })
                 }
-                
+
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
                         if isSearhing {
                             self.isSearhing = false
-                        }
-                        else {
+                        } else {
                             viewModel.clearFilters()
                         }
                     }, label: {
@@ -215,8 +211,7 @@ struct DiscoverView: View {
                                 .glassEffect(.regular.tint(.mainPurple).interactive())
                         }
                         .padding(.bottom, 8)
-                    }
-                    else {
+                    } else {
                         Button {
                             viewModel.navigateToResultsView()
                         } label: {
@@ -232,7 +227,7 @@ struct DiscoverView: View {
             .overlay(alignment: .bottom, content: {
                 if isSearhing {
                     SearchResultsView(viewModel: viewModel.searchResultsViewModel)
-                       
+
                 }
             })
             .sheet(isPresented: $viewModel.presentFilterView) {
@@ -246,7 +241,7 @@ struct DiscoverView: View {
                 case .none:
                     EmptyView()
                 }
-                
+
             }
         }
         .scrollIndicators(.hidden)

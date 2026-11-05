@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct InviteFromEventView: View {
-    
+
     @Bindable var viewModel: InviteFromEventViewModel
-    
+
     var body: some View {
         VStack {
-            
+
             RoundedRectangle(cornerRadius: 3)
                 .fill(.gray.opacity(0.9))
                 .frame(width: 86, height: 6)
                 .safeAreaPadding(.top, 12)
                 .padding(.bottom, 12)
-            
+
             ScrollView {
                 LazyVStack {
                     ForEach(viewModel.followers, id: \.self) { followerId in

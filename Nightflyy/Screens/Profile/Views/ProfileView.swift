@@ -8,48 +8,46 @@
 import SwiftUI
 
 struct ProfileView: View {
-    
+
     @Environment(Router.self) private var router
     @Environment(ToastsManager.self) private var toastsManager
     @Bindable var viewModel: ProfileViewModel
     @State private var hasLoadedInitialData = false
     var safeArea: EdgeInsets
     var size: CGSize
-    
-    
+
     var body: some View {
         @Bindable var toastsManager = toastsManager
-        
+
         ScrollView(.vertical) {
             VStack(alignment: .leading) {
                 HeaderImage(size: size, safeArea: safeArea, imageUrl: viewModel.account.profileImageUrl, hideImage: !viewModel.canInteract) {
-                    
+
                     HStack {
                         Text(viewModel.account.username ?? "")
                             .font(.system(size: 24, weight: .bold))
                             .foregroundStyle(.white)
-                        
+
                         if viewModel.isPlusProvider {
                             Image("plus_badge")
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                        }
-                        else if viewModel.isPlusAccount {
+                        } else if viewModel.isPlusAccount {
                             Image("plus_badge_user")
                                 .resizable()
                                 .frame(width: 24, height: 24)
                         }
-                        
+
                         Spacer()
                     }
                     .padding(.bottom, 15)
                 }
-                
+
                 HStack(alignment: .top, spacing: 16) {
                     Text(viewModel.account.name ?? "")
-                    
+
                     Spacer()
-                    
+
                     if viewModel.canInteract {
                         VStack(alignment: .center) {
                             Text("Followers")
@@ -58,9 +56,9 @@ struct ProfileView: View {
                         .font(.system(size: 14))
                         .onTapGesture {
                             let viewModel = NetworkViewModel(account: viewModel.account, selectedSegment: 1)
-                            router.navigateTo(.Network(viewModel))
+                            router.navigateTo(.network(viewModel))
                         }
-                        
+
                         VStack(alignment: .center) {
                             Text("Following")
                             Text("\(viewModel.account.followingCount)")
@@ -68,49 +66,49 @@ struct ProfileView: View {
                         .font(.system(size: 14))
                         .onTapGesture {
                             let viewModel = NetworkViewModel(account: viewModel.account, selectedSegment: 2)
-                            router.navigateTo(.Network(viewModel))
+                            router.navigateTo(.network(viewModel))
                         }
                     }
                 }
                 .foregroundStyle(.white)
                 .font(.system(size: 18))
                 .padding(.horizontal, 12)
-                
+
                 if viewModel.hasBio {
                     ExpandableText(text: viewModel.account.bio ?? "", isExpanded: false)
                         .foregroundStyle(.white.opacity(0.8))
                 }
-                
+
                 if !viewModel.isSelf {
                     Divider()
                         .background(.white)
-                    
+
                     HStack {
-                        
-                        IconButton(iconName: viewModel.followButtonProperties.icon, title: viewModel.followButtonProperties.title, color: viewModel.followButtonProperties.color) {
+
+                        IconButton(iconName: viewModel.followButtonProperties.icon,
+                                   title: viewModel.followButtonProperties.title,
+                                   color: viewModel.followButtonProperties.color) {
                             viewModel.followButtonAction()
                         }
                         .frame(maxWidth: .infinity)
-                        
-                        
+
                         IconButton(iconName: "ic_message", title: "Message") {
                             viewModel.messageButtonAction()
                         }
                         .frame(maxWidth: .infinity)
-                        
-                        
+
                         IconButton(iconName: "ic_invite", title: "Invite", isEnabled: viewModel.canInteract) {
                             let viewModel = InviteToEventViewModel(accountToInvite: viewModel.account)
-                            router.navigateTo(.InviteToEvent(viewModel))
+                            router.navigateTo(.inviteToEvent(viewModel))
                         }
                         .frame(maxWidth: .infinity)
-                        
+
                     }
                 }
-                
+
                 Divider()
                     .background(.white)
-                
+
                 if viewModel.isPlusProvider {
                     Button {
                         viewModel.selectPresentView(for: .paywall)
@@ -119,23 +117,23 @@ struct ProfileView: View {
                             Image("plus_badge")
                                 .resizable()
                                 .frame(width: 30, height: 30)
-                            
+
                             VStack(alignment: .leading) {
                                 Text("Nightflyy+ Perk")
                                     .font(.system(size: 12))
                                     .foregroundColor(.onlineBlue)
-                                
+
                                 Text(viewModel.account.perkName ?? "")
                                     .font(.system(size: 15, weight: .bold))
                                     .foregroundStyle(.white)
-                                
+
                                 Text(viewModel.account.perkDetails ?? "")
                                     .font(.system(size: 10))
                                     .foregroundStyle(.white)
                             }
-                            
+
                             Spacer()
-                            
+
                             Image(systemName: "chevron.right")
                                 .foregroundStyle(.onlineBlue)
                         }
@@ -148,22 +146,20 @@ struct ProfileView: View {
                     }
 
                 }
-                
+
                 if viewModel.canInteract {
-                    EventListView(header: "Upcoming Events", viewModels: viewModel.futureHostingEvents)
-                    EventListView(header: "Events Attending", viewModels: viewModel.attendingEvents)
-                    EventListView(header: "Past Events", viewModels: viewModel.pastHostingEvents)
-                }
-                else {
+                    EventListSection(header: "Upcoming Events", viewModels: viewModel.futureHostingEvents, headerFont: .system(size: 14))
+                    EventListSection(header: "Events Attending", viewModels: viewModel.attendingEvents, headerFont: .system(size: 14))
+                    EventListSection(header: "Past Events", viewModels: viewModel.pastHostingEvents, headerFont: .system(size: 14))
+                } else {
                     VStack(alignment: .center, spacing: 8) {
                         Spacer()
                             .frame(height: 120)
-                        
+
                         Image("ic_eye")
-                        
-                        
+
                         Text("Account is Private")
-                        
+
                         Spacer()
                     }
                     .foregroundStyle(.gray)
@@ -171,7 +167,11 @@ struct ProfileView: View {
                 }
             }
             .overlay(alignment: .top) {
-                HeaderView()
+                CollapsingHeaderBar(title: viewModel.account.username ?? "",
+                                    size: size,
+                                    safeArea: safeArea,
+                                    optionsImage: viewModel.isSelf ? "ic_edit" : "ic_dotmenu",
+                                    onOptions: { viewModel.handleOptionsTapped() })
             }
         }
         .scrollIndicators(.hidden)
@@ -180,11 +180,11 @@ struct ProfileView: View {
         .background(.backgroundBlack)
         .task {
             viewModel.updateAccount()
-            
+
             guard !hasLoadedInitialData else { return }
             hasLoadedInitialData = true
             await viewModel.loadAccountEvents()
-            
+
         }
         .sheet(item: $viewModel.selectedPresentView) { screen in
             switch screen {
@@ -202,7 +202,7 @@ struct ProfileView: View {
         }
         .alert(isPresented: $viewModel.presentUnfollowAlert) {
             CustomDialog(title: "Unfollow \(viewModel.account.username ?? "")?",
-                         button1: .init(content: "Unfollow", tint: .mainPurple, foreground: .white, action: { folder in
+                         button1: .init(content: "Unfollow", tint: .mainPurple, foreground: .white, action: { _ in
                 viewModel.unfollowAccount()
             }),
                          button2: .init(content: "Cancel", tint: .gray, foreground: .white, action: { _ in
@@ -215,7 +215,7 @@ struct ProfileView: View {
         }
         .alert(isPresented: $viewModel.presentBlockAlert) {
             CustomDialog(title: "Block \(viewModel.account.username ?? "")?",
-                         button1: .init(content: "Block", tint: .mainPurple, foreground: .white, action: { folder in
+                         button1: .init(content: "Block", tint: .mainPurple, foreground: .white, action: { _ in
                 viewModel.handleBlockTapped()
             }),
                          button2: .init(content: "Cancel", tint: .gray, foreground: .white, action: { _ in
@@ -243,128 +243,9 @@ struct ProfileView: View {
         }
         .interactiveToast($toastsManager.toasts)
     }
-    
-    @ViewBuilder
-    func HeaderView() -> some View {
-        GeometryReader { proxy in
-            let minY = proxy.frame(in: .named("SCROLL")).minY
-            let height = size.height * 0.45
-            let progress = minY / (height * (minY > 0 ? 0.5 : 0.8))
-            let titleProress = minY / height
-            
-            HStack(spacing: 10) {
-                if #available(iOS 26.0, *) { //TODO: Remove when min version is iOS 26
-                    Button {
-                        router.navigateBack()
-                    } label: {
-                        Label("Back", systemImage: "chevron.left")
-                            .labelStyle(.iconOnly)
-                            .frame(width: 50, height: 50)
-                            .foregroundStyle(.white)
-                    }
-                    .glassEffect()
-                } else {
-                    Button {
-                        router.navigateBack()
-                    } label: {
-                        HStack {
-                            Spacer()
-                                .frame(width: 12)
-                            Image(systemName: "chevron.left")
-                                .font(.title3)
-                                .foregroundStyle(.white)
-                            Spacer()
-                                .frame(width: 48)
-                        }
-                    }
-                }
-                
-                Spacer()
-                
-                if #available(iOS 26.0, *) { //TODO: Remove when min version is iOS 26
-                    Button {
-                        viewModel.handleOptionsTapped()
-                    } label: {
-                        Label("Options", image: viewModel.isSelf ? "ic_edit" : "ic_dotmenu")
-                            .labelStyle(.iconOnly)
-                            .frame(width: 50, height: 50)
-                            .foregroundStyle(.white)
-                    }
-                    .glassEffect()
-                } else {
-                    Button {
-                        viewModel.handleOptionsTapped()
-                    } label: {
-                        Button {
-                            viewModel.handleOptionsTapped()
-                        } label: {
-                            Image(viewModel.isSelf ? "ic_edit" : "ic_dotmenu")
-                                .font(.title3)
-                                .foregroundStyle(.white)
-                                .tint(.white)
-                        }
-                    }
-                }                
-                
-            }
-            .overlay(content: {
-                Text(viewModel.account.username ?? "")
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.white)
-                    .offset(y: -titleProress > 0.75 ? 0 : 45)
-                    .clipped()
-                    .animation(.easeInOut(duration: 0.25), value: -titleProress > 0.75)
-            })
-            .padding(.top, safeArea.top + 10)
-            .padding([.horizontal, .bottom], 15)
-            .background(
-                .backgroundBlack
-                    .opacity(-progress > 1 ? 1 : 0)
-            )
-            .offset(y: -minY)
-        }
-        .frame(height: 35)
-    }
-    
-    
-    @ViewBuilder
-    func EventListView(header: String, viewModels: [EventListItemViewModel]) -> some View {
-        
-        VStack(alignment: .leading) {
-            Text(header.uppercased())
-                .font(.system(size: 14))
-                .foregroundStyle(.white)
-                .fontWeight(.medium)
-            
-            if viewModels.isEmpty {
-                Text("No Events")
-                    .foregroundStyle(.gray)
-                    .fontWeight(.medium)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding()
-            }
-            else {
-                ForEach(viewModels, id: \.self) { viewModel in
-                    LazyVStack {
-                        EventListItemView(viewModel: viewModel) {
-                            viewModel.navigateToEvent()
-                        }
-                        .task {
-                            await viewModel.fetchOwner()
-                        }
-                        
-                    }
-                }
-            }
-            
-        }
-        .padding(.top, 8)
-        .padding(.horizontal, 12)
-        
-    }
 }
 
-//#Preview {
+// #Preview {
 //        ProfileContainer()
 //            .preferredColorScheme(.dark)
-//}
+// }

@@ -9,16 +9,16 @@ import SwiftUI
 
 @Observable @MainActor
 class PrivacySettingsViewModel {
-    
+
     var error: Error?
-    
+
     var account: Account
     var isLoading: Bool = false
-    
+
     init() {
         self.account =  AccountManager.shared.account ?? Account()
     }
-    
+
     var isPrivateAccount: Bool {
         get {
             return account.accountIsPrivate ?? false
@@ -27,7 +27,7 @@ class PrivacySettingsViewModel {
             account.accountIsPrivate = newValue
         }
     }
-    
+
     func saveChanges() {
         Task {
                 self.isLoading = true
@@ -37,11 +37,10 @@ class PrivacySettingsViewModel {
                     isLoading = false
                     AccountManager.shared.account = self.account
                     General.showSavedMessage()
-                }
-                catch {
+                } catch {
                     self.error = error
                 }
             }
     }
-    
+
 }

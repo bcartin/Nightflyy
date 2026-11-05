@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct SegmentedViewOption: Identifiable {
-    
+
     var id: Int
     var title: String
-    
+
 }
 
 struct SegmentedView: View {
@@ -55,8 +55,7 @@ struct SegmentedView: View {
             }
         }
     }
-    
-    
+
     func disableButtons() {
         isDisabled = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {

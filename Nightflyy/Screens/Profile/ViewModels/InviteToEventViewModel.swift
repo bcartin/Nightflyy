@@ -10,22 +10,22 @@ import SwiftUI
 
 @Observable @MainActor
 class InviteToEventViewModel: Hashable {
-    
+
     nonisolated let id: String
-    
+
     nonisolated static func == (lhs: InviteToEventViewModel, rhs: InviteToEventViewModel) -> Bool {
         lhs.id == rhs.id
     }
-    
+
     nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
+
     var attendingEvents: [EventListItemViewModel] = .init()
     var futureHostingEvents: [EventListItemViewModel] = .init()
     var accountToInvite: Account
     var selectedEvents: [String] = .init()
-    
+
     init(accountToInvite: Account) {
         self.id = accountToInvite.uid
         self.accountToInvite = accountToInvite
@@ -34,11 +34,11 @@ class InviteToEventViewModel: Hashable {
     func loadEvents() async {
         await EventsManager.shared.fetchHostingEvents()
         await EventsManager.shared.fetchAttendingEvents()
-        
-        attendingEvents = EventsManager.shared.attendingEvents.map{EventListItemViewModel(event: $0)}.sortedByDate()
-        futureHostingEvents = EventsManager.shared.hostingEvents.removingPastEvents().map{EventListItemViewModel(event: $0)}.sortedByDate()
+
+        attendingEvents = EventsManager.shared.attendingEvents.map {EventListItemViewModel(event: $0)}.sortedByDate()
+        futureHostingEvents = EventsManager.shared.hostingEvents.removingPastEvents().map {EventListItemViewModel(event: $0)}.sortedByDate()
     }
-    
+
     func selectOrDeselectEvent(_ eventId: String) {
         if let index = selectedEvents.firstIndex(of: eventId) {
             selectedEvents.remove(at: index)
@@ -46,26 +46,27 @@ class InviteToEventViewModel: Hashable {
             selectedEvents.append(eventId)
         }
     }
-    
+
     func sendInvites() {
-        guard let uid = AccountManager.shared.account?.uid else { return }
+        guard let account = AccountManager.shared.account else { return }
+        let uid = account.uid
         selectedEvents.forEach { eventId in
-            
-            var event: Event? = nil          
-            event = attendingEvents.first{ $0.event.uid == eventId}?.event
+
+            var event: Event?
+            event = attendingEvents.first { $0.event.uid == eventId}?.event
             if event == nil {
-                event = futureHostingEvents.first{ $0.event.uid == eventId}?.event
+                event = futureHostingEvents.first { $0.event.uid == eventId}?.event
             }
-            
+
             if let event = event {
                 let notification = AppNotification(sender: uid,
                                                    date: Date(),
-                                                   type: AppNotificationType.invite_to_event,
-                                                   notificationData: NotificationData(event_flyer_url: event.eventFlyerUrl,
-                                                                                      event_id: event.uid,
-                                                                                      event_name: event.eventName,
-                                                                                      profile_image_url: AccountManager.shared.account?.profileImageUrl,
-                                                                                      username: AccountManager.shared.account?.username))
+                                                   type: AppNotificationType.inviteToEvent,
+                                                   notificationData: NotificationData(eventFlyerUrl: event.eventFlyerUrl,
+                                                                                      eventId: event.uid,
+                                                                                      eventName: event.eventName,
+                                                                                      profileImageUrl: account.profileImageUrl,
+                                                                                      username: account.username))
                 try? AppNotificationClient.saveNotification(for: accountToInvite.uid, notification: notification)
             }
         }
@@ -73,6 +74,6 @@ class InviteToEventViewModel: Hashable {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             Router.shared.navigateBack()
         }
-        
+
     }
 }

@@ -8,17 +8,17 @@
 import Foundation
 
 enum SignupError: Error {
-    
+
     case invalidCredentials
     case cannotProcessRequest
     case noReferralVenueSelected
 }
 
 extension SignupError: LocalizedError {
-    
+
     public var errorDescription: String? {
         switch self {
-            
+
         case .invalidCredentials:
             "Invalid Credentials"
         case .cannotProcessRequest:
@@ -27,5 +27,5 @@ extension SignupError: LocalizedError {
             "Please select a referral venue."
         }
     }
-    
+
 }

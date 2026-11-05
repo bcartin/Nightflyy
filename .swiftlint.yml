@@ -1,0 +1,24 @@
+# Only lint the app and its tests; skips graphify-out, Release, Mock Images, packages.
+included:
+  - Nightflyy
+  - NightflyyTests
+
+# SwiftUI modifier chains run long; 120 is too tight for them.
+line_length:
+  warning: 150
+  error: 200
+  ignores_urls: true
+
+# "db" is the conventional name for a Firestore handle.
+identifier_name:
+  excluded:
+    - id
+    - db
+
+# Named (icon, title, color) tuples are clear enough; no struct needed.
+large_tuple:
+  warning: 3
+
+# A switch over every enum case is the clearest form; don't count each case as a branch.
+cyclomatic_complexity:
+  ignores_case_statements: true

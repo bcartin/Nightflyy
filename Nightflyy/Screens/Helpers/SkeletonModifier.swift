@@ -34,7 +34,7 @@ struct SkeletonModifier: ViewModifier {
                         /// Movement Offsets
                         let minX = -(skeletonWidth + blurDiameter)
                         let maxX = size.width + skeletonWidth + blurDiameter
-                        
+
                         Rectangle()
                             .fill(scheme == .dark ? .white : .black)
                             .frame(width: skeletonWidth, height: size.height * 2)

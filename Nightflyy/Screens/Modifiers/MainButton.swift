@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct MainButton: ViewModifier {
-    
+
     var color: Color
-    
+
     func body(content: Content) -> some View {
         content
             .foregroundStyle(Color.white)
             .padding()
             .frame(maxWidth: .infinity)
-            .background{
+            .background {
                 Capsule()
                     .fill(color.gradient)
             }

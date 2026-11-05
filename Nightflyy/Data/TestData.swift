@@ -8,13 +8,13 @@
 import Foundation
 
 class TestData {
-    
+
     static var formatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssX"
         return formatter
     }()
-    
+
     static var events: [Event] = [
         Event(id: "1",
               createdBy: "034y9d1YbbhaVIupxbJZ3CJxanO2",
@@ -24,7 +24,7 @@ class TestData {
               eventVenue: "Pulse",
               eventVenueType: "Bar",
               startDate: formatter.date(from: "2025-12-23T18:25:43+01:00")),
-        
+
         Event(id: "1",
               createdBy: "034y9d1YbbhaVIupxbJZ3CJxanO2",
               endDate: formatter.date(from: "2025-12-24T18:25:43+01:00"),
@@ -35,13 +35,12 @@ class TestData {
               startDate: formatter.date(from: "2025-12-24T18:25:43+01:00"))
     ]
 
-    
     static var account: Account = Account(id: "1",
                                           name: "Test Account",
                                           username: "Username",
                                           bio: "This is a test bio that should be a few lines long so that it can be properly tested.",
                                           profileImageUrl: "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg")
-    
+
     static var chat: Chat = Chat(id: "1",
                                  lastMessage: "Yay!!!",
                                  lastUpdated: Date(),

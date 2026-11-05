@@ -11,11 +11,11 @@ import Mixpanel
 
 @main
 struct NightflyyApp: App {
-    
+
     let persistenceController = PersistenceController.shared
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @Environment(\.scenePhase) var scenePhase
-    
+
     @State private var appState = AppState.shared
     @State private var authenticationManager = AuthenticationManager.shared
     @State private var accountManager = AccountManager.shared
@@ -29,7 +29,7 @@ struct NightflyyApp: App {
 
     var body: some Scene {
         WindowGroup {
-                        
+
             ZStack {
                 if authenticationManager.isSignedIn && !authenticationManager.isSigningUp {
                         ContentView()
@@ -43,32 +43,31 @@ struct NightflyyApp: App {
                             .environment(router)
                             .environment(authenticationManager)
                             .environment(pushNotificationsManager)
-                }
-                else {
+                } else {
                     SignedOutView()
                         .environment(appState)
                         .environment(locationManager)
                         .environment(router)
                         .environment(authenticationManager)
                 }
-                
+
                 if appState.isLoading {
                     LoadingView()
                 }
-                
+
                 if appState.showSplashScreen {
                     SplashScreenView()
                 }
-                
+
                 if appState.showUpdateScreen {
                     UpdateView()
                 }
-                
+
             }
             .task {
                 navigator = Navigator(router: router)
                 pushNotificationsManager.navigator = navigator
-                
+
                 _ = Airbridge.handleDeferredDeeplink { url in
                     if let url = url {
                         navigator?.handleUniversalLink(url: url)
@@ -76,19 +75,19 @@ struct NightflyyApp: App {
                 }
             }
             .onOpenURL { url in
-                
+
                 Airbridge.trackDeeplink(url: url)
                 let isAirbridgeDeeplink = Airbridge.handleDeeplink(url: url) { url in
                     navigator?.handleUniversalLink(url: url)
                 }
-                
+
                 if isAirbridgeDeeplink { return }
-                
+
                 navigator?.handleUniversalLink(url: url)
             }
             .onChange(of: scenePhase) { _, newValue in
                 switch newValue {
-                    
+
                 case .background:
                     print("App moved to background")
                 case .inactive:
@@ -103,7 +102,7 @@ struct NightflyyApp: App {
                     break
                 }
             }
-            
+
         }
     }
 }

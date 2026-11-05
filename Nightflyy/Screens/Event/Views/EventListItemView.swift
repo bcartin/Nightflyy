@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct EventListItemView: View {
-    
+
     var viewModel: EventListItemViewModel
-    var tapAction: ButtonAction? = nil
-    
+    var tapAction: ButtonAction?
+
     var body: some View {
         HStack(spacing: 0) {
                 EventImage(imageUrl: viewModel.event.eventFlyerUrl, size: CGSize(width: 70, height: 70))
                     .cornerRadius(12, corners: [.topLeft, .bottomLeft])
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text(viewModel.event.eventName ?? "")
                         .foregroundStyle(.white)
@@ -24,11 +24,11 @@ struct EventListItemView: View {
                         .fontWeight(.medium)
                         .lineLimit(1)
                         .truncationMode(.tail)
-                    
+
                     Text(viewModel.event.eventVenue ?? "")
                         .foregroundStyle(.gray)
                         .font(.system(size: 12))
-                    
+
                     if viewModel.event.hasPerk ?? false {
                         Label {
                             Text(viewModel.event.perkName ?? "")
@@ -39,7 +39,7 @@ struct EventListItemView: View {
                                 .resizable()
                                 .frame(width: 12, height: 12)
                         }
-                        .padding(.horizontal,8)
+                        .padding(.horizontal, 8)
                         .padding(.vertical, 2)
                         .background(
                             RoundedRectangle(cornerRadius: 8)
@@ -50,19 +50,19 @@ struct EventListItemView: View {
                     }
                 }
                 .padding(.leading, 12)
-                
+
                 Spacer()
-                
+
                 VStack(alignment: .center, spacing: 4) {
                     Text(viewModel.weekday)
                         .foregroundStyle(.white)
                         .font(.footnote)
                         .fontWeight(.medium)
-                    
+
                     Text(viewModel.month)
                         .foregroundStyle(.gray)
                         .font(.system(size: 12))
-                    
+
                     Text(viewModel.day)
                         .foregroundStyle(.gray)
                         .font(.system(size: 12))
@@ -85,7 +85,7 @@ struct EventListItemView: View {
     }
 }
 
-//#Preview {
+// #Preview {
 //    EventListItemView(viewModel: EventListItemViewModel(event: TestData.events.first!), tapAction: nil)
 //        .preferredColorScheme(.dark)
-//}
+// }

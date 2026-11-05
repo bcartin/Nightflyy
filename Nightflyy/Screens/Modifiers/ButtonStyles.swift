@@ -12,7 +12,7 @@ enum ActionButtonStyle {
 
     case actionPrimary
     case actionSecondary
-    
+
     var backgroundColor: Color {
         switch self {
         case .actionPrimary:
@@ -21,7 +21,7 @@ enum ActionButtonStyle {
                 .backgroundBlack
         }
     }
-    
+
     var foregroundColor: Color {
         switch self {
         case .actionPrimary:
@@ -30,7 +30,7 @@ enum ActionButtonStyle {
                 .mainPurple
         }
     }
-    
+
     var borderColor: Color {
         switch self {
         case .actionPrimary:
@@ -39,7 +39,7 @@ enum ActionButtonStyle {
                 .mainPurple
         }
     }
-    
+
 }
 
 struct CustomButtonStyle: ButtonStyle {

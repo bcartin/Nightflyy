@@ -8,21 +8,19 @@
 import SwiftUI
 
 struct EventImage: View {
-    
+
     var imageUrl: String?
     var size: CGSize
     var contentMode: ContentMode = .fill
-    
+
     var body: some View {
         if let url = imageUrl, !url.isEmpty {
             CachedAsyncImage(url: URL(string: url),
                              size: .init(width: size.width, height: size.height),
                              shape: .rect)
-        }
-        else {
+        } else {
             Image(systemName: "questionmark.square.dashed")
-                .resizable()
-                .aspectRatio(contentMode: .fill)
+                .resizable().scaledToFill()
                 .frame(width: size.width, height: size.height)
                 .foregroundStyle(.mainPurple)
                 .background(.white.opacity(0.1))

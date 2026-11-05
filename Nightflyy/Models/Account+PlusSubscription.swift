@@ -10,17 +10,17 @@ import Foundation
 // MARK: - Plus Subscription Convenience
 
 extension Account {
-    
+
     var hasActiveSubscription: Bool {
         plusMember ?? false
     }
-    
+
     var hasAvailableCredits: Bool {
         (plusCredits ?? 0) > 0
     }
-    
+
     var isProvider: Bool {
         plusProvider ?? false
     }
-    
+
 }

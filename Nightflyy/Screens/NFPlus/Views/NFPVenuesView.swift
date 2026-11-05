@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct NFPVenuesView: View {
-    
+
     @Environment(\.dismiss) var dismiss
     @Binding var viewModel: NFPRedeemViewModel
-    
+
     var body: some View {
         VStack(spacing: 8) {
             Text("Nightflyy+ Venues")
@@ -19,7 +19,7 @@ struct NFPVenuesView: View {
                 .padding(.top, 24)
                 .multilineTextAlignment(.center)
                 .padding(24)
-            
+
             ScrollView(.vertical) {
                 ForEach(viewModel.nfpVenues) { account in
 

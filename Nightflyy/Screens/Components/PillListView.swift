@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct PillListView: View {
-    
+
     var header: String
     var items: [String]
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(header.uppercased())
                 .foregroundStyle(.gray)
                 .font(.system(size: 13))
                 .padding(.bottom, 6)
-            
+
             TagLayout(alignment: .leading, spacing: 10) {
                 ForEach(items, id: \.self) { item in
                     Text(item)
@@ -26,7 +26,7 @@ struct PillListView: View {
                         .frame(height: 35)
                         .foregroundStyle(.white)
                         .padding(.horizontal, 15)
-                        .background{
+                        .background {
                             Capsule()
                                 .fill(.backgroundBlack)
                                 .stroke(.mainPurple, lineWidth: 1)

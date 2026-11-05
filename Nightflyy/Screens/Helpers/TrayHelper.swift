@@ -37,27 +37,27 @@ extension View {
                     .interactiveDismissDisabled(config.isInteractiveDismissDisabled)
                     .background(RemoveSheetShadow())
             }
-        
+
     }
-    
+
 }
 
-fileprivate struct RemoveSheetShadow: UIViewRepresentable {
+private struct RemoveSheetShadow: UIViewRepresentable {
     func makeUIView(context: Context) -> UIView {
         let view = UIView(frame: .zero)
         view.backgroundColor = .clear
-        
+
         DispatchQueue.main.async {
             if let shadowView = view.dropShadowView {
                 shadowView.layer.shadowColor = UIColor.clear.cgColor
             }
         }
-        
+
         return view
     }
-    
+
     func updateUIView(_ uiView: UIView, context: Context) {
-        
+
     }
 }
 
@@ -66,7 +66,7 @@ extension UIView {
         if let superview, String(describing: type(of: superview)) == "UIDropShadowView" {
             return superview
         }
-        
+
         return superview?.dropShadowView
     }
 }

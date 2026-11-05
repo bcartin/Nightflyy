@@ -8,8 +8,8 @@
 import Foundation
 
 enum UniversalLinkType: String {
-    
-    case event 
+
+    case event
     case venue
     case person
     case nfplus

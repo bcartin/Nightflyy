@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct EventsFilterView: View {
-    
+
     @Environment(\.dismiss) var dismiss
     @Binding var viewModel: EventsFilterViewModel
     @State var searchText: String = ""
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Spacer()
-                
+
                 Button {
                     dismiss()
                 } label: {
@@ -27,7 +27,7 @@ struct EventsFilterView: View {
                 }
 
             }
-            
+
             HStack(spacing: 12) {
                 Button {
                     viewModel.setFilterAsNearby()
@@ -38,7 +38,7 @@ struct EventsFilterView: View {
                             .resizable()
                             .frame(width: 24, height: 24)
                             .foregroundStyle(.mainPurple)
-                        
+
                         Text("Nearby")
                     }
                     .padding()
@@ -47,10 +47,9 @@ struct EventsFilterView: View {
                         RoundedRectangle(cornerRadius: 8)
                             .stroke(.mainPurple, lineWidth: 1)
                     }
-                    
+
                 }
-                
-                
+
                 Button {
                     viewModel.fetchFollowingEvents()
                     viewModel.selectedFiler = .following
@@ -61,7 +60,7 @@ struct EventsFilterView: View {
                             .resizable()
                             .frame(width: 24, height: 24)
                             .tint(.mainPurple)
-                        
+
                         Text("Following")
                     }
                     .padding()
@@ -73,11 +72,10 @@ struct EventsFilterView: View {
                 }
 
             }
-            
-            
+
             Text("POPULAR")
                 .font(.system(size: 20, weight: .bold))
-            
+
             Button {
                 viewModel.selectCity(name: "Charlotte")
                 dismiss()
@@ -85,7 +83,7 @@ struct EventsFilterView: View {
                 Text("Charlotte, NC")
                     .citySearchResult()
             }
-            
+
             Button {
                 viewModel.selectCity(name: "Rochester")
                 dismiss()
@@ -101,12 +99,12 @@ struct EventsFilterView: View {
                 Text("Syracuse, NY")
                     .citySearchResult()
             }
-            
+
             Text("SEARCH")
                 .font(.system(size: 20, weight: .bold))
-            
+
             searchBar
-                        
+
             ScrollView {
                 VStack {
                     ForEach(viewModel.filteredCities) { city in
@@ -117,22 +115,22 @@ struct EventsFilterView: View {
                                 viewModel.selectCity(city: city)
                                 dismiss()
                             }
-                        
+
                         Divider().background(.white)
                     }
                 }
             }
-            
+
         }
         .foregroundStyle(.white)
         .padding(.horizontal)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.backgroundBlack)
-        .onChange(of: searchText) { oldValue, newValue in
+        .onChange(of: searchText) { _, newValue in
             viewModel.filterCities(filterText: newValue)
         }
     }
-    
+
     var searchBar: some View {
         HStack(alignment: .firstTextBaseline) {
             Image(systemName: "magnifyingglass").foregroundColor(.gray)
@@ -149,6 +147,6 @@ struct EventsFilterView: View {
     }
 }
 
-//#Preview {
+// #Preview {
 //    HomeFilterView(viewModel: .constant(.init()))
-//}
+// }

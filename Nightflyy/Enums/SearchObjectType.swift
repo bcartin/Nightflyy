@@ -6,9 +6,9 @@
 //
 
 enum SearchObjectType: String, Codable {
-    
+
     case event
     case person
     case venue
-    
+
 }

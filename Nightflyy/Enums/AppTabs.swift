@@ -6,7 +6,7 @@
 //
 
 enum AppTab: Int {
-    
+
     case home = 0
     case discover = 1
     case hub = 2

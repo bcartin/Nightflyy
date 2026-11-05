@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BottomSheetView: View {
-    
+
     var body: some View {
         ZStack {
             Rectangle()
@@ -17,27 +17,27 @@ struct BottomSheetView: View {
                 .overlay {
                     UseYourPerk()
                 }
-            
+
         }
         .frame(height: 70)
     }
 }
 
 struct UseYourPerk: View {
-    
+
     var body: some View {
         HStack {
                 Image(systemName: "chevron.up")
                     .foregroundStyle(.onlineBlue)
-                
+
                 Spacer()
-                
+
                 Text("Use your perk")
                     .foregroundStyle(.onlineBlue)
                     .font(.custom("NeuropolXRg-Regular", size: 17))
                     .padding(.vertical, 12)
                     .padding(.trailing, 24)
-                
+
                 Spacer()
         }
         .padding(.horizontal)
@@ -47,11 +47,7 @@ struct UseYourPerk: View {
     }
 }
 
-  
-
 #Preview {
     ContentView()
         .preferredColorScheme(.dark)
 }
-
-

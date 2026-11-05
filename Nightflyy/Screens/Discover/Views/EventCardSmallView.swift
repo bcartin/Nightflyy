@@ -8,23 +8,23 @@
 import SwiftUI
 
 struct EventCardSmallView: View {
-    
+
     var viewModel: EventCardSmallViewModel
     @Environment(Router.self) private var router
-    
+
     var body: some View {
         ZStack(alignment: .bottom) {
-            
+
             EventImage(imageUrl: viewModel.event.eventFlyerUrl, size: CGSize(width: 136, height: 124))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
-            
+
             VStack(alignment: .leading) {
                 Text(viewModel.event.eventName ?? "")
                     .foregroundStyle(.white)
                     .font(.system(size: 12, weight: .medium))
                     .padding(.top, 2)
                     .padding(.horizontal, 4)
-                
+
                 Text(viewModel.event.eventVenue ?? "")
                     .foregroundStyle(.gray)
                     .font(.system(size: 12))
@@ -45,6 +45,6 @@ struct EventCardSmallView: View {
     }
 }
 
-//#Preview {
+// #Preview {
 //    EventCardSmallView(event: TestData.events.first!)
-//}
+// }

@@ -5,15 +5,14 @@
 //  Created by Bernie Cartin on 5/27/25.
 //
 
-
 import Foundation
 import FirebaseFirestore
 import OSLog
 
 class PromoCodesClient {
-    
+
     static let shared = PromoCodesClient()
-    
+
     static func codeIsValid(code: String) async -> Bool {
         do {
             let query = FirebaseManager.shared.db.collection(FirestoreCollections.BACodes.value)
@@ -21,21 +20,20 @@ class PromoCodesClient {
                 .whereField(FirestoreCollections.BACodes.isEnabled, isEqualTo: true)
             let snapshot = try await query.getDocuments()
             return !snapshot.documents.isEmpty
-        }
-        catch {
+        } catch {
             Logger.network.error("Error validating promo code: \(error.localizedDescription)")
             return false
         }
     }
-    
+
     static func addRedemption(code: String) {
         guard let uid = AccountManager.shared.account?.uid, let username = AccountManager.shared.account?.username else { return }
         let ref = FirebaseManager.shared.db.collection(FirestoreCollections.BACodes.value).document(code)
-        let redemption = ["uid" : uid, "username": username, "date": Date()] as [String : Any]
-        ref.updateData([FirestoreCollections.BACodes.redemptions : FieldValue.arrayUnion([redemption])])
-        
+        let redemption = ["uid": uid, "username": username, "date": Date()] as [String: Any]
+        ref.updateData([FirestoreCollections.BACodes.redemptions: FieldValue.arrayUnion([redemption])])
+
     }
-    
+
 }
 
 // MARK: - PromoCodesClientProtocol
@@ -44,11 +42,8 @@ extension PromoCodesClient: PromoCodesClientProtocol {
     func codeIsValid(code: String) async -> Bool {
         await Self.codeIsValid(code: code)
     }
-    
+
     func addRedemption(code: String) {
         Self.addRedemption(code: code)
     }
 }
-
-
-

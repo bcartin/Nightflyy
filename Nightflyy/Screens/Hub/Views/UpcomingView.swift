@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct UpcomingView: View {
-    
+
     var viewModel = UpcomingViewModel()
-    
+
     var noEventsView: some View {
         Text("No Events")
             .foregroundColor(.secondary)
             .frame(maxWidth: .infinity, alignment: .center)
             .padding(.vertical, 48)
     }
-    
+
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .leading) {
@@ -25,50 +25,47 @@ struct UpcomingView: View {
                     .foregroundStyle(.white)
                     .font(.system(size: 14))
                     .padding(.vertical, 12)
-                
+
                 if viewModel.eventsAttending.isEmpty {
                     noEventsView
-                }
-                else {
+                } else {
                     ForEach(viewModel.eventsAttending, id: \.self) { viewModel in
                         EventListItemView(viewModel: viewModel) {
                             viewModel.navigateToEvent()
                         }
                     }
                 }
-                
+
                 Text("INTERESTED")
                     .foregroundStyle(.white)
                     .font(.system(size: 14))
                     .padding(.vertical, 12)
-                
+
                 if viewModel.eventsInterested.isEmpty {
                     noEventsView
-                }
-                else {
+                } else {
                     ForEach(viewModel.eventsInterested, id: \.self) { viewModel in
                         EventListItemView(viewModel: viewModel) {
                             viewModel.navigateToEvent()
                         }
                     }
                 }
-                
+
                 Text("INVITED")
                     .foregroundStyle(.white)
                     .font(.system(size: 14))
                     .padding(.vertical, 12)
-                
+
                 if viewModel.eventsInvited.isEmpty {
                     noEventsView
-                }
-                else {
+                } else {
                     ForEach(viewModel.eventsInvited, id: \.self) { viewModel in
                         EventListItemView(viewModel: viewModel) {
                             viewModel.navigateToEvent()
                         }
                     }
                 }
-                
+
                 Spacer()
             }
             .padding(.horizontal, 12)
@@ -83,7 +80,7 @@ struct UpcomingView: View {
 }
 
 #Preview {
-    //UpcomingView()
-    
+    // UpcomingView()
+
     HubView(showMenu: .constant(false), viewModel: HubViewModel())
 }

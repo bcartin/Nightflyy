@@ -11,9 +11,9 @@ import OSLog
 
 @Observable
 class NFPManager {
-    
+
     static let shared = NFPManager()
-    
+
     private let accountClient: any AccountClientProtocol
     private let eventClient: any EventClientProtocol
     private let invitesClient: any NFPInvitesClientProtocol
@@ -22,7 +22,7 @@ class NFPManager {
     private let iapManager: any IAPManaging
     private let pushNotifications: any PushNotificationsManaging
     private let localNotifications: any LocalNotificationsManaging
-    
+
     private init(
         accountClient: any AccountClientProtocol = AccountClient.shared,
         eventClient: any EventClientProtocol = EventClient.shared,
@@ -42,19 +42,19 @@ class NFPManager {
         self.pushNotifications = pushNotifications
         self.localNotifications = localNotifications
     }
-    
+
     var isPlusMember: Bool {
         accountManager.account?.hasActiveSubscription ?? false
     }
-    
+
     var hasCredits: Bool {
         accountManager.account?.plusCredits ?? 0 > 0 + (UserDefaultsKeys.bonusCredit.getValue() ?? 0)
     }
-    
+
     var showNFPView: Bool = false
-    
+
     var referralAccount: Account?
-    
+
     var nextCreditDate: Date = {
         let currentDate = Date()
         let calendar = Calendar.current
@@ -62,13 +62,13 @@ class NFPManager {
         let nextPerkDate = calendar.nextDate(after: currentDate, matching: components, matchingPolicy: .nextTime)
         return nextPerkDate ?? Date()
     }()
-    
+
     var bonusCreditDate: Date = {
         let calendar = Calendar.current
         let bcd = calendar.date(byAdding: .day, value: 7, to: Date())
         return bcd ?? Date()
     }()
-    
+
     var perkReminderDate: Date = {
         let calendar = Calendar.current
         var components = calendar.dateComponents([.weekOfYear, .yearForWeekOfYear], from: Date())
@@ -78,7 +78,7 @@ class NFPManager {
         let friday = calendar.date(from: components)
         return friday ?? Date()
     }()
-    
+
     func checkForCredits() {
         if isPlusMember {
             let nextCreditDate = accountManager.account?.nextCreditDate ?? nextCreditDate
@@ -93,25 +93,23 @@ class NFPManager {
             }
         }
     }
-    
+
     func checkSubscriptionStatus() async {
         do {
             let status = try await iapManager.checkPermissions()
             updatePlusMemberStatus(status: status)
             if status {
                 self.checkForCredits()
-            }
-            else {
+            } else {
                 self.cancelPlusMember()
                 try await invitesClient.deleteInvites()
             }
             accountManager.saveAccount()
-        }
-        catch {
+        } catch {
             Logger.iap.error("Error checking subscription status: \(error.localizedDescription)")
         }
     }
-    
+
     func makePlusMember(promoCode: String?) async throws {
         if accountManager.account != nil {
             accountManager.account?.plusMember = true
@@ -128,18 +126,18 @@ class NFPManager {
             pushNotifications.subscribeToNotifications(target: .nfplus)
         }
     }
-    
+
     func cancelPlusMember() {
         accountManager.account?.plusMember = false
         accountManager.account?.plusCredits = 0
         accountManager.account?.nextCreditDate = nil
         accountManager.account?.bonusCreditDate = nil
     }
-    
+
     func updatePlusMemberStatus(status: Bool) {
         accountManager.account?.plusMember = status
     }
-    
+
     func addCredits() {
         accountManager.account?.plusCredits = 1
         accountManager.account?.nextCreditDate = nextCreditDate
@@ -149,44 +147,42 @@ class NFPManager {
             Logger.iap.error("Error saving credits: \(error.localizedDescription)")
         }
     }
-    
+
     func addReminderNotification() {
         if perkReminderDate > Date() {
             let data = ["type": "nfplus"]
             localNotifications.scheduleLocalNotification(type: .perkReminder, date: perkReminderDate, data: data)
         }
     }
-    
+
     func redeemCredit(code: String) async throws {
         var redemptionID: String?
         var redemptionName: String?
         var redemptionType: RedemptionType?
-        
+
         if let venue = try await accountClient.fetchVenueByRedemptionCode(code: code) {
             redemptionID = venue.id
             redemptionName = venue.name
             redemptionType = .venue
-        }
-        else if let event = try await eventClient.fetchEventByRedemptionCode(code: code) {
+        } else if let event = try await eventClient.fetchEventByRedemptionCode(code: code) {
             redemptionID = event.id
             redemptionName = event.eventName
             redemptionType = .event
         }
-        
+
         guard let uid = accountManager.account?.uid,
               let redemptionID,
               let redemptionName
         else {
             throw AccountError.invalidCode
         }
-        
+
         let redemption = NFPRedemption(venueID: redemptionID, venueName: redemptionName, redemptionType: redemptionType, date: Date(), clientID: uid)
         try redemption.save()
-        
+
         if UserDefaultsKeys.bonusCredit.getValue() ?? 0 > 0 {
             UserDefaultsKeys.bonusCredit.removeValue()
-        }
-        else {
+        } else {
             accountManager.account?.plusCredits = 0
             try accountManager.account?.save()
         }

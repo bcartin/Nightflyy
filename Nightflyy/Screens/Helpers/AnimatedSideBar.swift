@@ -33,7 +33,7 @@ struct AnimatedSideBar<Content: View, MenuView: View>: View {
                         menuView(safeArea)
                 }
                 .frame(width: sideMenuWidth)
-                
+
                 GeometryReader { _ in
                         content(safeArea)
                 }
@@ -49,7 +49,7 @@ struct AnimatedSideBar<Content: View, MenuView: View>: View {
                             }
                     }
                 }
-                .mask{
+                .mask {
                     RoundedRectangle(cornerRadius: progress * cornerRadius)
                 }
                 .scaleEffect(rotatesWhenExpands ? 1 - (progress * 0.1) : 1, anchor: .trailing)
@@ -66,7 +66,7 @@ struct AnimatedSideBar<Content: View, MenuView: View>: View {
         }
         .background(.black.opacity(0.8))
         .ignoresSafeArea()
-        .onChange(of: showMenu) { oldValue, newValue in
+        .onChange(of: showMenu) { _, newValue in
             withAnimation(.snappy(duration: 0.3, extraBounce: 0)) {
                 if newValue {
                     showSideBar()
@@ -76,7 +76,7 @@ struct AnimatedSideBar<Content: View, MenuView: View>: View {
             }
         }
     }
-    
+
     var dragGesture: some Gesture {
         DragGesture()
             .updating($isDragging) { _, out, _ in
@@ -91,7 +91,7 @@ struct AnimatedSideBar<Content: View, MenuView: View>: View {
                 withAnimation(.snappy(duration: 0.3, extraBounce: 0)) {
                     let velocityX = value.velocity.width / 8
                     let total = velocityX + offsetX
-                    
+
                     if total > (sideMenuWidth * 0.5) {
                         showSideBar()
                     } else {
@@ -100,7 +100,7 @@ struct AnimatedSideBar<Content: View, MenuView: View>: View {
                 }
             }
     }
-    
+
     // Show Side Bar
     func showSideBar() {
         offsetX = sideMenuWidth
@@ -108,7 +108,7 @@ struct AnimatedSideBar<Content: View, MenuView: View>: View {
         showMenu = true
         calculateProgress()
     }
-    
+
     // Resets to initial state
     func reset() {
         offsetX = 0
@@ -116,7 +116,7 @@ struct AnimatedSideBar<Content: View, MenuView: View>: View {
         showMenu = false
         calculateProgress()
     }
-    
+
     // Converts offset into series of progress ranging from 0 - 1
     func calculateProgress() {
         progress = max(min(offsetX / sideMenuWidth, 1), 0)

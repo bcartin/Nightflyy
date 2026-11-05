@@ -8,20 +8,20 @@
 import SwiftUI
 
 struct MultiSelectAccountListItemView: View {
-    
+
     var accountId: String
     @State var account: Account?
     @State var isSelected: Bool = false
     @Binding var selectedAccounts: [String]
-    
+
     var body: some View {
         HStack(spacing: 12) {
             UserImageRound(imageUrl: account?.profileImageUrl, size: 48)
-            
+
             Text(account?.username ?? "")
                 .foregroundStyle(.white)
                 .fontWeight(.medium)
-            
+
             Spacer()
         }
         .padding(8)
@@ -36,13 +36,12 @@ struct MultiSelectAccountListItemView: View {
             selectOrUnselect()
         }
     }
-    
+
     func selectOrUnselect() {
         if let index = selectedAccounts.firstIndex(of: accountId) {
             selectedAccounts.remove(at: index)
             isSelected = false
-        }
-        else {
+        } else {
             selectedAccounts.append(accountId)
             isSelected = true
         }

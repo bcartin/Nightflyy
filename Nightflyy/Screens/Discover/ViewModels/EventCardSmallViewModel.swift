@@ -9,15 +9,15 @@ import Foundation
 
 @Observable @MainActor
 class EventCardSmallViewModel {
-    
+
     var event: Event
     var eventOwner: Account?
-    
+
     init(event: Event) {
         self.event = event
         fetchEventOwner()
     }
-    
+
     private func fetchEventOwner() {
         if let ownerId = event.createdBy, ownerId != "unclaimed" {
             Task {
@@ -25,7 +25,7 @@ class EventCardSmallViewModel {
             }
         }
     }
-    
+
     func navigateToEvent() {
         Router.shared.navigateToEvent(event: event, eventOwner: eventOwner)
     }

@@ -13,7 +13,7 @@ struct ActionTextField: View {
     var disabled = false
     var isRequired: Bool = false
     var action: ButtonAction
-    
+
     var body: some View {
         HStack {
             ZStack(alignment: .leading) {
@@ -30,17 +30,17 @@ struct ActionTextField: View {
                                 .offset(x: 20, y: !(value.isEmpty) ? -20 : 0)
                         }
                     })
-                
+
                 Text(value)
                     .lineLimit(1)
                     .frame(height: 55)
                     .disabled(disabled)
             }
             .layoutPriority(1)
-            
+
             Spacer()
                 .frame(height: 18)
-            
+
             Image(systemName: "chevron.right")
                 .foregroundColor(.white.opacity(0.5))
                 .font(.system(size: 10))

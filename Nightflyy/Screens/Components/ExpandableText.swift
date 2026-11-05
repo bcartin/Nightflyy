@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct ExpandableText: View {
-    
-    var label: String? = nil
+
+    var label: String?
     var text: String
     @State var isExpanded: Bool
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             if let label {
@@ -20,7 +20,7 @@ struct ExpandableText: View {
                     .foregroundStyle(.gray)
                     .font(.system(size: 13))
             }
-            
+
             Text(text)
                 .lineLimit($isExpanded.wrappedValue ? nil : 4)
                 .overlay {
@@ -29,7 +29,7 @@ struct ExpandableText: View {
                             Rectangle()
                                 .fill(
                                     LinearGradient(colors: [.clear, .clear, .backgroundBlack], startPoint: .top, endPoint: .bottom)
-                                    
+
                                 )
                         }
                     }
@@ -47,6 +47,11 @@ struct ExpandableText: View {
 }
 
 #Preview {
-    ExpandableText(text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", isExpanded: false)
+    ExpandableText(text: """
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. \
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        """, isExpanded: false)
         .preferredColorScheme(.dark)
 }

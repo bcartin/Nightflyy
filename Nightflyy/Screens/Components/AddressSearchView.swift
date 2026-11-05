@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct AddressSearchView: View {
-    
+
     @Environment(\.dismiss) var dismiss
     @State var isTyping: Bool = false
     @Binding var selectedAddress: String
     @State var viewModel: AddressSearchViewModel
     @FocusState private var isFieldFocused: Bool
-    
+
     var body: some View {
         VStack {
             TextField("", text: $viewModel.searchText, prompt: Text("Address").foregroundStyle(.white.opacity(0.5)))
@@ -33,7 +33,7 @@ struct AddressSearchView: View {
                             .foregroundStyle(.white.opacity(0.5))
                             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                             .padding(.leading, 8)
-                        
+
                         if isTyping {
                             Button(action: {
                                 viewModel.searchText = ""
@@ -45,7 +45,7 @@ struct AddressSearchView: View {
                         }
                     }
                 }
-            
+
             ScrollView {
                 ForEach(viewModel.searchResults, id: \.self) { result in
                     Button {
@@ -64,13 +64,13 @@ struct AddressSearchView: View {
                                 Text(result.subtitle)
                                     .font(.footnote)
                                     .foregroundStyle(.white)
-                                
+
                                 Divider()
                                     .overlay(.white.opacity(0.3))
                             }
-                            
+
                             Spacer()
-                            
+
                             Image(systemName: "chevron.right")
                                 .foregroundStyle(.white)
                         }
@@ -98,10 +98,10 @@ struct AddressSearchView: View {
             isFieldFocused = true
             isTyping = true
         }
-        
+
     }
 }
 
-//#Preview {
+// #Preview {
 //    AddressSearchView(selectedAddress: .constant(""), viewModel: AddressSearchViewModel())
-//}
+// }

@@ -10,33 +10,33 @@ import SwiftUI
 
 @Observable
 class MessageViewModel: Identifiable {
-    
+
     var message: Message
-    
+
     init(message: Message) {
         self.message = message
     }
-    
+
     var id: String {
         "\(message.id ?? "")"
     }
-    
+
     var isSender: Bool {
         AccountManager.shared.account?.id == message.sender
     }
-    
+
     var messageImageUrl: String? {
         switch message.type {
         case .text:
             return nil
         case .account:
-            return message.messageData.profile_image_url
+            return message.messageData.profileImageUrl
         case .event:
-            return message.messageData.event_flyer_url
-            
+            return message.messageData.eventFlyerUrl
+
         }
     }
-    
+
     var messageText: String {
         switch message.type {
         case .text:
@@ -44,11 +44,11 @@ class MessageViewModel: Identifiable {
         case .account:
             return message.messageData.username ?? ""
         case .event:
-            return message.messageData.event_name ?? ""
-            
+            return message.messageData.eventName ?? ""
+
         }
     }
-    
+
     var imagePlaceholder: String {
         switch message.type {
         case .text:
@@ -59,7 +59,7 @@ class MessageViewModel: Identifiable {
             return "questionmark.square.dashed"
         }
     }
-    
+
     func navigateTo() {
         switch message.type {
         case .text:
@@ -70,27 +70,27 @@ class MessageViewModel: Identifiable {
             navigateToEvent()
         }
     }
-    
+
     private func navigateToAccount() {
         Task {
             guard let uid = message.messageData.uid else {
-                await Router.shared.navigateTo(.NotFound(.profile))
+                await Router.shared.navigateTo(.notFound(.profile))
                 return
             }
             let account = await AccountClient.fetchAccount(accountId: uid)
             await Router.shared.navigateToProfile(account: account)
         }
     }
-    
+
     private func navigateToEvent() {
         Task {
-            guard let eventId = message.messageData.event_id else {
-                await Router.shared.navigateTo(.NotFound(.event))
+            guard let eventId = message.messageData.eventId else {
+                await Router.shared.navigateTo(.notFound(.event))
                 return
             }
             let event = await EventClient.fetchEvent(eventId: eventId)
             await Router.shared.navigateToEvent(event: event)
         }
     }
-    
+
 }

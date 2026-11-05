@@ -8,8 +8,8 @@
 import Foundation
 
 protocol Savable {
-    
+
     static var collection: String { get set }
-    
+
     func save() throws
 }

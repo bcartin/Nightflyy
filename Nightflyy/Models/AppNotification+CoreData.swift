@@ -23,17 +23,17 @@ extension AppNotification {
             date: date,
             type: type,
             notificationData: NotificationData(
-                event_flyer_url: cached.eventFlyerUrl,
-                event_id: cached.eventId,
-                event_name: cached.eventName,
-                event_status: cached.eventStatus,
-                start_reminder: cached.startReminder,
-                created_by: cached.createdBy,
-                profile_image_url: cached.profileImageUrl,
+                eventFlyerUrl: cached.eventFlyerUrl,
+                eventId: cached.eventId,
+                eventName: cached.eventName,
+                eventStatus: cached.eventStatus,
+                startReminder: cached.startReminder,
+                createdBy: cached.createdBy,
+                profileImageUrl: cached.profileImageUrl,
                 username: cached.username,
                 rating: cached.rating,
-                topic_id: cached.topicId,
-                topic_name: cached.topicName
+                topicId: cached.topicId,
+                topicName: cached.topicName
             )
         )
         notification.id = id
@@ -46,16 +46,16 @@ extension AppNotification {
         cached.sender = sender
         cached.date = date
         cached.notificationType = type.rawValue
-        cached.eventFlyerUrl = notificationData.event_flyer_url
-        cached.eventId = notificationData.event_id
-        cached.eventName = notificationData.event_name
-        cached.eventStatus = notificationData.event_status
-        cached.startReminder = notificationData.start_reminder
-        cached.createdBy = notificationData.created_by
-        cached.profileImageUrl = notificationData.profile_image_url
+        cached.eventFlyerUrl = notificationData.eventFlyerUrl
+        cached.eventId = notificationData.eventId
+        cached.eventName = notificationData.eventName
+        cached.eventStatus = notificationData.eventStatus
+        cached.startReminder = notificationData.startReminder
+        cached.createdBy = notificationData.createdBy
+        cached.profileImageUrl = notificationData.profileImageUrl
         cached.username = notificationData.username
         cached.rating = notificationData.rating
-        cached.topicId = notificationData.topic_id
-        cached.topicName = notificationData.topic_name
+        cached.topicId = notificationData.topicId
+        cached.topicName = notificationData.topicName
     }
 }

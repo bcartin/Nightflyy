@@ -9,16 +9,15 @@ import Foundation
 import FirebaseFirestore
 
 struct AppNotification: Identifiable, Codable {
-    
+
     @DocumentID var id = UUID().uuidString
     var sender: String
     var date: Date
     var type: AppNotificationType
     var notificationData: NotificationData
-    
+
     var isSelected: Bool = false
-    
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case sender
@@ -29,17 +28,31 @@ struct AppNotification: Identifiable, Codable {
 
 }
 
-
 struct NotificationData: Codable {
-    var event_flyer_url: String?
-    var event_id: String?
-    var event_name: String?
-    var event_status: String?
-    var start_reminder: String?
-    var created_by: String?
-    var profile_image_url: String?
+    var eventFlyerUrl: String?
+    var eventId: String?
+    var eventName: String?
+    var eventStatus: String?
+    var startReminder: String?
+    var createdBy: String?
+    var profileImageUrl: String?
     var username: String?
     var rating: String?
-    var topic_id: String?
-    var topic_name: String?
+    var topicId: String?
+    var topicName: String?
+
+    /// Firestore field names (snake_case); also read by Cloud Functions.
+    enum CodingKeys: String, CodingKey {
+        case eventFlyerUrl = "event_flyer_url"
+        case eventId = "event_id"
+        case eventName = "event_name"
+        case eventStatus = "event_status"
+        case startReminder = "start_reminder"
+        case createdBy = "created_by"
+        case profileImageUrl = "profile_image_url"
+        case username
+        case rating
+        case topicId = "topic_id"
+        case topicName = "topic_name"
+    }
 }

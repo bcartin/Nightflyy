@@ -8,10 +8,10 @@
 import Foundation
 
 struct SearchResult: Identifiable {
-    
+
     let type: SearchObjectType
     let account: Account?
     let event: Event?
     let id: String
-    
+
 }

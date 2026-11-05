@@ -9,38 +9,38 @@ import SwiftUI
 
 @Observable @MainActor
 class NotificationsSettingsViewModel {
-    
+
     var error: Error?
 
     var account: Account
     var isLoading: Bool = false
     var showSettingsAlert: Bool = false
-    
+
     init() {
         self.account = AccountManager.shared.account ?? Account()
     }
-    
+
     var allowPushNotificaitons: Bool {
         get {
             PushNotificationsManager.shared.authorizationStatus == .authorized
         }
-        set(newValue) {
+        // Toggling always asks for permission or points to Settings, so the new value is not stored.
+        // swiftlint:disable:next unused_setter_value
+        set {
             Task {
                 if PushNotificationsManager.shared.authorizationStatus == .notDetermined {
                     do {
                         try await PushNotificationsManager.shared.requestPermission()
-                    }
-                    catch {
+                    } catch {
                         self.error = error
                     }
-                }
-                else {
+                } else {
                     showSettingsAlert = true
                 }
             }
         }
     }
-    
+
     var followStarted: Bool {
         get {
             account.notificationSettings?.followStart ?? true
@@ -49,7 +49,7 @@ class NotificationsSettingsViewModel {
             account.notificationSettings?.followStart = newValue
         }
     }
-    
+
     var followRequest: Bool {
         get {
             account.notificationSettings?.followRequest ?? true
@@ -58,7 +58,7 @@ class NotificationsSettingsViewModel {
             account.notificationSettings?.followRequest = newValue
         }
     }
-    
+
     var followRequestAccepted: Bool {
         get {
             account.notificationSettings?.followAccepted ?? true
@@ -67,7 +67,7 @@ class NotificationsSettingsViewModel {
             account.notificationSettings?.followAccepted = newValue
         }
     }
-    
+
     var alert: Bool {
         get {
             account.notificationSettings?.alertReceived ?? true
@@ -76,7 +76,7 @@ class NotificationsSettingsViewModel {
             account.notificationSettings?.alertReceived = newValue
         }
     }
-    
+
     var directMessage: Bool {
         get {
             account.notificationSettings?.message ?? true
@@ -85,7 +85,7 @@ class NotificationsSettingsViewModel {
             account.notificationSettings?.message = newValue
         }
     }
-    
+
     var eventInvite: Bool {
         get {
             account.notificationSettings?.inviteToEvent ?? true
@@ -94,7 +94,7 @@ class NotificationsSettingsViewModel {
             account.notificationSettings?.inviteToEvent = newValue
         }
     }
-    
+
     var eventRsvp: Bool {
         get {
             account.notificationSettings?.eventGoing ?? true
@@ -103,7 +103,7 @@ class NotificationsSettingsViewModel {
             account.notificationSettings?.eventGoing = newValue
         }
     }
-    
+
     var chatroomComment: Bool {
         get {
             account.notificationSettings?.eventComment ?? true
@@ -112,7 +112,7 @@ class NotificationsSettingsViewModel {
             account.notificationSettings?.eventComment = newValue
         }
     }
-    
+
     func saveChanges() {
         Task {
                 self.isLoading = true
@@ -122,22 +122,20 @@ class NotificationsSettingsViewModel {
                     isLoading = false
                     AccountManager.shared.account = self.account
                     General.showSavedMessage()
-                }
-                catch {
+                } catch {
                     self.error = error
                 }
             }
     }
-    
+
     func openAppSettings() {
         guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
             return
         }
-        
+
         if UIApplication.shared.canOpenURL(settingsUrl) {
             UIApplication.shared.open(settingsUrl, options: [:], completionHandler: nil)
         }
     }
 
-    
 }

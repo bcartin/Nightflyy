@@ -10,7 +10,7 @@ import FirebaseFirestore
 
 struct Event: Identifiable, Codable {
     static var collection: String = FirestoreCollections.Events.value
-    
+
     @DocumentID var id = UUID().uuidString
     var assignedTo: String?
     var attending: [String]?
@@ -47,26 +47,26 @@ struct Event: Identifiable, Codable {
     var startTime: String?
     var status: String?
     var ticketingUrl: String?
-    
-    //MARK: NFPLUS
-    
+
+    // MARK: NFPLUS
+
     var hasPerk: Bool?
     var perkDetails: String?
     var perkName: String?
     var perkRedemptionCode: String?
-    
+
     var uid: String {
         return self.id ?? ""
     }
-    
+
     var isFutureEvent: Bool {
         return self.endDate ?? .init() > Date()
     }
-    
+
     var isUnclaimed: Bool {
         return createdBy == "unclaimed"
     }
-    
+
     func getAttendanceStatus(uid: String) -> AttendanceStatus {
         if let attending = self.attending, attending.contains(uid) {
             return .attending
@@ -76,7 +76,7 @@ struct Event: Identifiable, Codable {
         }
         return .notAttending
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case createdBy = "created_by"
@@ -112,9 +112,9 @@ struct Event: Identifiable, Codable {
         case recurringID = "recurring_id"
         case newComments = "new_comments"
         case lastCommentsCheck = "last_comments_check"
-        
-        //MARK: NFPLUS
-        
+
+        // MARK: NFPLUS
+
         case hasPerk = "has_perk"
         case perkDetails = "perk_details"
         case perkName = "perk_name"
@@ -123,11 +123,11 @@ struct Event: Identifiable, Codable {
 }
 
 extension Event {
-    
+
     func save() throws {
         _ = try FirebaseManager.shared.db.collection(Event.collection).document(id!).setData(from: self, merge: true)
     }
-    
+
     func updateCache() {
         firebaseCache[uid] = .event(self)
     }

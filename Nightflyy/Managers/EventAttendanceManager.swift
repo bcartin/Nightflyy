@@ -8,14 +8,14 @@
 import Foundation
 
 class EventAttendanceManager {
-    
+
     static let shared = EventAttendanceManager()
-    
+
     private let eventClient: any EventClientProtocol
     private let notificationClient: any AppNotificationClientProtocol
     private let accountManager: any AccountManaging
     private let localNotifications: any LocalNotificationsManaging
-    
+
     private init(
         eventClient: any EventClientProtocol = EventClient.shared,
         notificationClient: any AppNotificationClientProtocol = AppNotificationClient.shared,
@@ -27,55 +27,53 @@ class EventAttendanceManager {
         self.accountManager = accountManager
         self.localNotifications = localNotifications
     }
-    
+
     func markAsInterested(event: inout Event) async throws {
         guard let uid = accountManager.account?.uid, let eventId = event.id else { return }
         try await eventClient.addUserToInterested(eventId: eventId, uid: uid)
         if event.interested != nil {
             event.interested?.append(uid)
-        }
-        else {
+        } else {
             event.interested = [uid]
         }
         try await eventClient.removeUserFromAttending(eventId: eventId, uid: uid)
         removeFromAttending(event: &event)
     }
-    
+
     func markAsAttending(event: inout Event) async throws {
         guard let uid = accountManager.account?.uid, let eventId = event.id else { return }
         try await eventClient.addUserToAttending(eventId: eventId, uid: uid)
         if event.attending != nil {
             event.attending?.append(uid)
-        }
-        else {
+        } else {
             event.attending = [uid]
         }
         try await eventClient.removeUserFromInterested(eventId: eventId, uid: uid)
         removeFromInterested(event: &event)
         event.updateCache()
-        
+
         // Send Notification to Event Owner
         if let eventCreator = event.createdBy, !event.isUnclaimed {
             let notification = AppNotification(sender: uid,
                                                date: Date(),
-                                               type: AppNotificationType.event_going,
-                                               notificationData: NotificationData(event_flyer_url: event.eventFlyerUrl,
-                                                                                  event_id: eventId,
-                                                                                  event_name: event.eventName,
-                                                                                  profile_image_url: accountManager.account?.profileImageUrl,
+                                               type: AppNotificationType.eventGoing,
+                                               notificationData: NotificationData(eventFlyerUrl: event.eventFlyerUrl,
+                                                                                  eventId: eventId,
+                                                                                  eventName: event.eventName,
+                                                                                  profileImageUrl: accountManager.account?.profileImageUrl,
                                                                                   username: accountManager.account?.username))
             try notificationClient.saveNotification(for: eventCreator, notification: notification)
         }
-        
-        //Schedule Local Notification
+
+        // Schedule Local Notification
         if let startDate = event.startDate {
-            let data = ["type":"event", "id":event.uid]
+            let data = ["type": "event", "id": event.uid]
             let date = startDate.addingTimeInterval(-60 * 60)
             localNotifications.scheduleLocalNotification(type: .eventReminder(event), date: date, data: data)
         }
-        
+
     }
-    
+
     func markAsNotAttending(event: inout Event) async throws {
         guard let uid = accountManager.account?.uid, let eventId = event.id else { return }
         try await eventClient.removeUserFromAttending(eventId: eventId, uid: uid)
@@ -85,7 +83,7 @@ class EventAttendanceManager {
         event.updateCache()
         localNotifications.removeScheduledNotification(type: .eventReminder(event))
     }
-    
+
     private func removeFromAttending(event: inout Event) {
         guard let uid = accountManager.account?.uid else { return }
         if let index = event.attending?.firstIndex(of: uid) {
@@ -93,7 +91,7 @@ class EventAttendanceManager {
             event.updateCache()
         }
     }
-    
+
     private func removeFromInterested(event: inout Event) {
         guard let uid = accountManager.account?.uid else { return }
         if let index = event.interested?.firstIndex(of: uid) {
@@ -101,5 +99,5 @@ class EventAttendanceManager {
             event.updateCache()
         }
     }
-    
+
 }

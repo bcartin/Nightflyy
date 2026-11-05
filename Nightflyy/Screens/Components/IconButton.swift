@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct IconButton: View {
-    
+
     var iconName: String
     var title: String
     var isEnabled: Bool = true
     var color: Color?
     var action: ButtonAction
-    
+
     var body: some View {
         Button {
             self.action()
@@ -23,7 +23,7 @@ struct IconButton: View {
                 Image(iconName)
                     .resizable()
                     .frame(width: 38, height: 38)
-                
+
                 Text(title)
                     .font(.system(size: 12))
             }

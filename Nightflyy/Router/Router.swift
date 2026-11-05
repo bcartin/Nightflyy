@@ -10,93 +10,92 @@ import SwiftUI
 
 @Observable @MainActor
 class Router {
-    
+
     static var shared = Router()
-    
+
     private init() {}
-    
+
     enum Route: Hashable {
-        case Profile(ProfileViewModel)
-        case Event(EventViewModel)
-        case Network(NetworkViewModel)
-        case InviteToEvent(InviteToEventViewModel)
-        case EventGuestList(EventGuestListViewModel)
-        case CreateEvent(CreateEventViewModel)
-        case SearchResultsListView(SearchResultsListViewModel)
-        case ChatView(InboxRowViewModel)
-        case ReviewVenueView(ReviewVenueViewModel)
-        case SendObjectAsMessage(SendObjectAsMessageViewModel)
-        case NotFound(NotFoundView.ContentType)
+        case profile(ProfileViewModel)
+        case event(EventViewModel)
+        case network(NetworkViewModel)
+        case inviteToEvent(InviteToEventViewModel)
+        case eventGuestList(EventGuestListViewModel)
+        case createEvent(CreateEventViewModel)
+        case searchResultsListView(SearchResultsListViewModel)
+        case chatView(InboxRowViewModel)
+        case reviewVenueView(ReviewVenueViewModel)
+        case sendObjectAsMessage(SendObjectAsMessageViewModel)
+        case notFound(NotFoundView.ContentType)
     }
-    
+
     var path: NavigationPath = NavigationPath()
-    
+
     @ViewBuilder
     func view(for route: Route) -> some View {
         switch route {
-        case .Profile(let viewModel):
+        case .profile(let viewModel):
             GeometryReader {
                 let safeArea = $0.safeAreaInsets
                 let size = $0.size
-                
+
                 if viewModel.isPersonalAccount {
                     ProfileView(viewModel: viewModel, safeArea: safeArea, size: size)
                         .ignoresSafeArea(.container, edges: .top)
-                }
-                else {
+                } else {
                     VenueProfileView(viewModel: viewModel, safeArea: safeArea, size: size)
                         .ignoresSafeArea(.container, edges: .top)
                 }
             }
-        case .Event(let viewModel):
+        case .event(let viewModel):
             GeometryReader {
                 let safeArea = $0.safeAreaInsets
                 let size = $0.size
-                
+
                 EventView(viewModel: viewModel, safeArea: safeArea, size: size)
                     .ignoresSafeArea(.container, edges: .top)
             }
-        case .Network(let viewModel):
+        case .network(let viewModel):
             NetworkView(viewModel: viewModel)
-        case .InviteToEvent(let viewModel):
+        case .inviteToEvent(let viewModel):
             InviteToEventView(viewModel: viewModel)
-        case .EventGuestList(let viewModel):
+        case .eventGuestList(let viewModel):
             EventGuestListView(viewModel: viewModel)
-        case .CreateEvent(let viewModel):
+        case .createEvent(let viewModel):
             CreateEventView(viewModel: viewModel)
-        case .SearchResultsListView(let viewModel):
+        case .searchResultsListView(let viewModel):
             DiscoverResultsListView(viewModel: viewModel)
-        case .ChatView(let viewModel):
+        case .chatView(let viewModel):
             ChatView(viewModel: viewModel)
-        case .ReviewVenueView(let viewModel):
+        case .reviewVenueView(let viewModel):
             ReviewVenueView(viewModel: viewModel)
-        case .SendObjectAsMessage(let viewModel):
+        case .sendObjectAsMessage(let viewModel):
             SendObjectAsMessageView(viewModel: viewModel)
-        case .NotFound(let type):
+        case .notFound(let type):
             NotFoundView(contentType: type)
         }
-    
+
     }
-    
+
     func navigateTo(_ appRoute: Route) {
         withAnimation {
             path.append(appRoute)
         }
     }
-    
+
     func navigateBack() {
         if path.count == 0 { return }
         withAnimation {
             path.removeLast()
         }
     }
-    
+
     func popToRoot() {
         withAnimation {
             path.removeLast(path.count)
         }
     }
-    
+
     func popLast(numberOfViews: Int) {
         withAnimation {
             for _ in 1...numberOfViews {
@@ -104,27 +103,27 @@ class Router {
             }
         }
     }
-    
+
 }
 
 extension Router {
-    
+
     func navigateToProfile(account: Account?) {
         guard let account else {
-            self.navigateTo(.NotFound(.profile))
+            self.navigateTo(.notFound(.profile))
             return
         }
         let viewModel = ProfileViewModel(account: account)
-        self.navigateTo(.Profile(viewModel))
+        self.navigateTo(.profile(viewModel))
     }
-    
+
     func navigateToEvent(event: Event?, eventOwner: Account? = nil) {
         guard let event else {
-            self.navigateTo(.NotFound(.event))
+            self.navigateTo(.notFound(.event))
             return
         }
         let viewModel = EventViewModel(event: event, eventOwner: eventOwner)
-        self.navigateTo(.Event(viewModel))
+        self.navigateTo(.event(viewModel))
     }
-    
+
 }

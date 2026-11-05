@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct NotificationsView: View {
-    
+
     @Binding var showMenu: Bool
     var viewModel: NotificationsViewModel
-    
+
     var body: some View {
         RouterView {
             VStack(alignment: .leading) {
@@ -20,11 +20,11 @@ struct NotificationsView: View {
                         Image(systemName: "arrow.left")
                             .font(.system(size: 16))
                             .foregroundStyle(.gray)
-                        
+
                         Text("Swipe right for actions.")
                             .foregroundStyle(.gray)
                             .font(.system(size: 12))
-                        
+
                         Button {
                             viewModel.setHideSwipeForActionPrompt(true)
                         } label: {
@@ -39,7 +39,7 @@ struct NotificationsView: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.top)
                 }
-                
+
                 List {
                     ForEach(AppNotificationsManager.shared.notifications) { notification in
                         let viewModel = NotificationViewModel(notification: notification)
@@ -49,7 +49,7 @@ struct NotificationsView: View {
                                 viewModel.actionsView()
                             }
                     }
-                    
+
                 }
                 .listStyle(PlainListStyle())
                 .refreshable {
@@ -84,4 +84,3 @@ struct NotificationsView: View {
         }
     }
 }
-

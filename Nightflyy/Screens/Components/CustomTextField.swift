@@ -26,7 +26,7 @@ struct CustomTextField: View {
                         .fill(Color.red.opacity(0.2))
                         .frame(height: 36)
                 }
-                
+
                 Text(placeholder)
                     .textCase(isTyping || !(value.isEmpty) ? .uppercase : .none)
                     .foregroundStyle(isTyping ? .mainPurple : .white.opacity(0.5))
@@ -40,8 +40,7 @@ struct CustomTextField: View {
                                 .offset(x: 20, y: isTyping || !(value.isEmpty) ? -20 : 0)
                         }
                     })
-                
-                
+
                     TextField("", text: $value)
                         .frame(height: 55)
                         .focused($isFocused)
@@ -54,8 +53,8 @@ struct CustomTextField: View {
                     .frame(height: 1)
                     .offset(y: -10)
             })
-            
-            .onChange(of: isFocused) { oldValue, newValue in
+
+            .onChange(of: isFocused) { _, newValue in
                 withAnimation {
                     isTyping = newValue
                 }
@@ -71,7 +70,7 @@ struct CustomTextField: View {
     VStack {
         CustomTextField(placeholder: "First Name", value: .constant(""), isRequired: true)
             .preferredColorScheme(.dark)
-        
+
         CustomTextField(placeholder: "Last Name", value: .constant(""))
             .preferredColorScheme(.dark)
     }

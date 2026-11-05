@@ -8,41 +8,40 @@
 import SwiftUI
 
 struct NetworkUserView: View {
-    
+
     @Environment(Router.self) private var router
     var viewModel: NetworkUserViewModel
-    
+
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
             ZStack(alignment: .topTrailing) {
                 UserImageRound(imageUrl: viewModel.account?.profileImageUrl, size: 48)
-                
+
                 if viewModel.account?.isProvider ?? false {
                     Image("plus_badge")
                         .resizable()
                         .frame(width: 18, height: 18)
                         .padding(.trailing, -4)
-                }
-                else if viewModel.account?.hasActiveSubscription ?? false {
+                } else if viewModel.account?.hasActiveSubscription ?? false {
                     Image("plus_badge_user")
                         .resizable()
                         .frame(width: 18, height: 18)
                         .padding(.trailing, -4)
                 }
             }
-            
+
             VStack(alignment: .leading, spacing: 4) {
                 Text(viewModel.account?.username ?? "")
-                
+
                 Text(viewModel.account?.name ?? "")
                     .foregroundStyle(.gray)
             }
             .font(.system(size: 12))
-            
+
             Spacer()
-            
-            //TODO: Add Button functionality
-            
+
+            // TODO: Add Button functionality
+
 //            Button {
 //                
 //            } label: {
