@@ -34,6 +34,8 @@ class NFPRedeemViewModel {
     }
     var selectedPerkSegment: Int = 1
     var selectedPerkId: String?
+    /// Bumped after a failed redemption so the swipe control resets for another try.
+    var redeemAttempts: Int = 0
     let perkSegments = [SegmentedViewOption(id: 1, title: "Venues"), SegmentedViewOption(id: 2, title: "Events")]
     var seeVenuesButtonIsVisible = true
 
@@ -74,6 +76,7 @@ class NFPRedeemViewModel {
                 changeView(to: .redeemSuccess)
             } catch {
                 self.error = error
+                redeemAttempts += 1
             }
         }
     }
@@ -135,6 +138,10 @@ class NFPRedeemViewModel {
         fields.contains { $0?.localizedStandardContains(searchText) ?? false }
     }
 
+    var selectedPerk: NFPPerk? {
+        displayedPerks.first { $0.id == selectedPerkId }
+    }
+
     /// Expands a perk to show its redemption instructions, or collapses it when tapped again.
     func perkTapped(_ perk: NFPPerk) {
         withAnimation(.smooth) {
@@ -145,6 +152,12 @@ class NFPRedeemViewModel {
     func usePerk() {
         seeVenuesButtonIsVisible = false
         changeView(to: .redeemButton)
+    }
+
+    func cancelRedemption() {
+        venueCode = ""
+        seeVenuesButtonIsVisible = true
+        changeView(to: mainDisplayView)
     }
 
     func navigateToProfile(account: Account) {

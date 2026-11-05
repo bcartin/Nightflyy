@@ -59,7 +59,7 @@ struct SlideToConfirm: View {
     /// Knob View
     func knobView(_ size: CGSize, progress: CGFloat, maxLimit: CGFloat) -> some View {
         Circle()
-            .fill(.white)
+            .fill(config.knobColor)
             .padding(config.knobPadding)
             .frame(width: size.height, height: size.height)
             .overlay {
@@ -73,7 +73,7 @@ struct SlideToConfirm: View {
                         .blur(radius: (1 - progress) * 10)
                 }
                 .font(.title3.bold())
-                .foregroundStyle(.black)
+                .foregroundStyle(config.knobIconColor)
             }
             .contentShape(.circle)
             .scaleEffect(isCompleted ? 0.6 : 1, anchor: .center)
@@ -171,6 +171,8 @@ struct SlideToConfirm: View {
         var height: CGFloat = 65
         /// Add Other Customization Properties as per your needs!
         var knobPadding: CGFloat = 5
+        var knobColor: Color = .white
+        var knobIconColor: Color = .black
     }
 }
 

@@ -11,14 +11,15 @@ import SwiftUI
 struct PerkImage: View {
 
     let imageUrl: String?
+    var size: CGFloat = 70
 
     var body: some View {
         if let imageUrl, !imageUrl.isEmpty {
-            CachedAsyncImage(url: URL(string: imageUrl), size: .init(width: 70, height: 70), shape: .rect)
+            CachedAsyncImage(url: URL(string: imageUrl), size: .init(width: size, height: size), shape: .rect)
         } else {
             Image("venue_default")
                 .resizable()
-                .frame(width: 70, height: 70)
+                .frame(width: size, height: size)
                 .background(.white)
         }
     }
