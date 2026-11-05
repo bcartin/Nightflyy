@@ -48,7 +48,8 @@ class NFPManager {
     }
 
     var hasCredits: Bool {
-        accountManager.account?.plusCredits ?? 0 > 0 + (UserDefaultsKeys.bonusCredit.getValue() ?? 0)
+        let bonusCredits: Int = UserDefaultsKeys.bonusCredit.getValue() ?? 0
+        return (accountManager.account?.plusCredits ?? 0) + bonusCredits > 0
     }
 
     var showNFPView: Bool = false
