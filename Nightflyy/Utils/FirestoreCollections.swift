@@ -38,6 +38,7 @@ enum FirestoreCollections {
         static let comments = "comments"
         static let likes = "likes"
         static let perkRedemptionCode = "perk_redemption_code"
+        static let hasPerk = "has_perk"
     }
 
     enum Chats {

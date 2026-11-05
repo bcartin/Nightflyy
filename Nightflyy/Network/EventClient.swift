@@ -201,6 +201,23 @@ class EventClient {
         return try document?.data(as: Event.self)
     }
 
+    static func fetchNightflyyPlusEvents() async -> [Event] {
+        var events: [Event] = .init()
+        do {
+            let eventsRef = FirebaseManager.shared.db.collection(FirestoreCollections.Events.value)
+                .whereField(FirestoreCollections.Events.hasPerk, isEqualTo: true)
+                .whereField(FirestoreCollections.Events.endDate, isGreaterThan: Date())
+            let snapshot = try await eventsRef.getDocuments()
+            events = try snapshot.documents.map({ document in
+                return try document.data(as: Event.self)
+            })
+        } catch {
+            Logger.network.error("Error fetching nfp events: \(error.localizedDescription)")
+            return events
+        }
+        return events
+    }
+
 }
 // MARK: - EventClientProtocol
 
@@ -271,5 +288,9 @@ extension EventClient: EventClientProtocol {
 
     func fetchEventByRedemptionCode(code: String) async throws -> Event? {
         try await Self.fetchEventByRedemptionCode(code: code)
+    }
+
+    func fetchNightflyyPlusEvents() async -> [Event] {
+        await Self.fetchNightflyyPlusEvents()
     }
 }

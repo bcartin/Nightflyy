@@ -48,7 +48,8 @@ class NFPManager {
     }
 
     var hasCredits: Bool {
-        accountManager.account?.plusCredits ?? 0 > 0 + (UserDefaultsKeys.bonusCredit.getValue() ?? 0)
+        let bonusCredits: Int = UserDefaultsKeys.bonusCredit.getValue() ?? 0
+        return (accountManager.account?.plusCredits ?? 0) + bonusCredits > 0
     }
 
     var showNFPView: Bool = false
@@ -95,6 +96,14 @@ class NFPManager {
     }
 
     func checkSubscriptionStatus() async {
+        // Launch with `-mockPlusMember` (Edit Scheme > Arguments) to act as a subscriber with a credit.
+        // In memory only: skips Qonversion and saves nothing to Firestore. Reads launch arguments rather
+        // than UserDefaults so it can't be switched on by a stored value; only Xcode can pass arguments.
+        if ProcessInfo.processInfo.arguments.contains("-mockPlusMember") {
+            accountManager.account?.plusMember = true
+            accountManager.account?.plusCredits = 1
+            return
+        }
         do {
             let status = try await iapManager.checkPermissions()
             updatePlusMemberStatus(status: status)
