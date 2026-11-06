@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-/// Branding drawn over the share photo: venue image, perk name, date and the Nightflyy logo.
+/// Branding drawn over the share photo: the Nightflyy logo, perk name and date at the top, and the
+/// venue image in the bottom-right corner, clear of the shutter.
 /// Font sizes are fixed on purpose so the saved image looks the same whatever the user's text size.
 struct PerkShareOverlayView: View {
 
@@ -17,6 +18,20 @@ struct PerkShareOverlayView: View {
 
     var body: some View {
         VStack(spacing: 8) {
+            Image("banner")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 200)
+
+            Text(perkName.uppercased())
+                .font(.custom("Bebas-Regular", fixedSize: 40))
+                .multilineTextAlignment(.center)
+
+            Text(dateText)
+                .font(.custom("NeuropolXRg-Regular", fixedSize: 16))
+
+            Spacer()
+
             Group {
                 if let venueImage {
                     Image(uiImage: venueImage)
@@ -30,21 +45,7 @@ struct PerkShareOverlayView: View {
             }
             .frame(width: 96, height: 96)
             .clipShape(.circle)
-
-            Text(perkName.uppercased())
-                .font(.custom("Bebas-Regular", fixedSize: 40))
-                .multilineTextAlignment(.center)
-
-            Text(dateText)
-                .font(.custom("NeuropolXRg-Regular", fixedSize: 16))
-
-            Spacer()
-
-            Image("slyde_fly")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 144, height: 144)
-                .frame(maxWidth: .infinity, alignment: .trailing)
+            .frame(maxWidth: .infinity, alignment: .trailing)
         }
         .padding()
         .foregroundStyle(.white)
