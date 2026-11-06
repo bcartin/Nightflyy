@@ -7,7 +7,7 @@
 
 import UIKit
 
-/// Hosts a control-less rear camera that fills this controller's view.
+/// Hosts a control-less camera that fills this controller's view. Starts on the rear camera.
 /// SwiftUI has no camera view, so `CameraView` wraps this.
 final class CameraPreviewController: UIViewController {
 
