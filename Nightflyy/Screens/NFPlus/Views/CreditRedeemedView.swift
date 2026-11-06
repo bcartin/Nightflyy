@@ -7,36 +7,58 @@
 
 import SwiftUI
 
+/// Confirmation shown after a perk is redeemed, with options to share it or finish.
 struct CreditRedeemedView: View {
 
     @Environment(\.dismiss) var dismiss
     @Binding var viewModel: NFPRedeemViewModel
 
     var body: some View {
-        VStack(alignment: .center, spacing: 24) {
+        VStack(spacing: 16) {
+            Spacer()
+
             Image("ConfirmationCheck")
                 .resizable()
-                .frame(width: 96, height: 96)
+                .frame(width: 120, height: 120)
+                .padding(.bottom)
 
-            Text("Credit Redeemed")
-                .font(.system(size: 12, weight: .bold))
-                .foregroundStyle(.white)
+            VStack(spacing: 4) {
+                Text("Credit Redeemed")
+                    .font(.footnote)
+                    .bold()
 
-            Text("Enjoy your perk!")
-                .font(.system(size: 28, weight: .bold))
-                .foregroundStyle(.white)
+                Text("Enjoy your perk!")
+                    .font(.largeTitle)
+                    .bold()
+            }
+
+            Spacer()
+
+            // Verbatim so the asterisks show instead of being read as Markdown italics.
+            Text(verbatim: "*Remember to tip your server generously*")
+                .font(.caption)
+
+            // The custom share flow is built separately; the button does nothing yet.
+            Button("Share") {}
+                .mainButtonStyle()
 
             Button {
                 dismiss()
             } label: {
                 Text("Continue")
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .contentShape(.capsule)
+                    .overlay {
+                        Capsule()
+                            .stroke(.mainPurple, lineWidth: 1)
+                    }
             }
-            .mainButtonStyle()
-
-            Text("*Remember to tip your server generously*")
-                .font(.system(size: 10))
-                .foregroundStyle(.white)
+            .foregroundStyle(.white)
+            .padding(.horizontal, 32)
         }
+        .foregroundStyle(.white)
+        .padding(.bottom)
     }
 }
 

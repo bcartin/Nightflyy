@@ -95,11 +95,22 @@ class NFPManager {
         }
     }
 
+    // Testing switches, set in Edit Scheme > Arguments. They read launch arguments rather than
+    // UserDefaults so a stored value can't switch them on; only Xcode can pass arguments.
+
+    /// `-mockPlusMember`: act as a subscriber with one credit. In memory only: skips Qonversion and
+    /// never saves the mocked membership. Redemption still checks codes for real.
+    private var isMockPlusMember: Bool {
+        ProcessInfo.processInfo.arguments.contains("-mockPlusMember")
+    }
+
+    /// `-mockRedemption`: any code redeems successfully and nothing is written to Firestore.
+    private var isMockRedemption: Bool {
+        ProcessInfo.processInfo.arguments.contains("-mockRedemption")
+    }
+
     func checkSubscriptionStatus() async {
-        // Launch with `-mockPlusMember` (Edit Scheme > Arguments) to act as a subscriber with a credit.
-        // In memory only: skips Qonversion and saves nothing to Firestore. Reads launch arguments rather
-        // than UserDefaults so it can't be switched on by a stored value; only Xcode can pass arguments.
-        if ProcessInfo.processInfo.arguments.contains("-mockPlusMember") {
+        if isMockPlusMember {
             accountManager.account?.plusMember = true
             accountManager.account?.plusCredits = 1
             return
@@ -167,6 +178,12 @@ class NFPManager {
     /// Redeems the member's credit with a venue or event code.
     /// - Parameter acceptedIDs: When set, the code must belong to one of these venues or events.
     func redeemCredit(code: String, acceptedIDs: Set<String>? = nil) async throws {
+        if isMockRedemption {
+            // Any code works and nothing is written; spending the credit is in memory only.
+            accountManager.account?.plusCredits = 0
+            return
+        }
+
         var redemptionID: String?
         var redemptionName: String?
         var redemptionType: RedemptionType?
@@ -199,7 +216,10 @@ class NFPManager {
             UserDefaultsKeys.bonusCredit.removeValue()
         } else {
             accountManager.account?.plusCredits = 0
-            try accountManager.account?.save()
+            // Saving would write the mocked membership to Firestore.
+            if !isMockPlusMember {
+                try accountManager.account?.save()
+            }
         }
         localNotifications.removeScheduledNotification(type: .perkReminder)
     }
