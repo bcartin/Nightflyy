@@ -38,9 +38,11 @@ struct CreditRedeemedView: View {
             Text(verbatim: "*Remember to tip your server generously*")
                 .font(.caption)
 
-            // The custom share flow is built separately; the button does nothing yet.
-            Button("Share") {}
-                .mainButtonStyle()
+            Button("Share") {
+                viewModel.isSharingPerk = true
+            }
+            .mainButtonStyle()
+            .disabled(viewModel.selectedPerk == nil)
 
             Button {
                 dismiss()
@@ -59,6 +61,12 @@ struct CreditRedeemedView: View {
         }
         .foregroundStyle(.white)
         .padding(.bottom)
+        .sheet(isPresented: $viewModel.isSharingPerk) {
+            if let perk = viewModel.selectedPerk {
+                PerkShareView(perk: perk)
+                    .presentationDragIndicator(.visible)
+            }
+        }
     }
 }
 

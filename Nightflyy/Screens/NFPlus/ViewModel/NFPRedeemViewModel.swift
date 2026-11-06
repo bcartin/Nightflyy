@@ -36,6 +36,7 @@ class NFPRedeemViewModel {
     var selectedPerkId: String?
     /// Bumped after a failed redemption so the swipe control resets for another try.
     var redeemAttempts: Int = 0
+    var isSharingPerk = false
     let perkSegments = [SegmentedViewOption(id: 1, title: "Venues"), SegmentedViewOption(id: 2, title: "Events")]
     var seeVenuesButtonIsVisible = true
 

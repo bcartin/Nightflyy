@@ -33,6 +33,10 @@
 	</array>
 	<key>MIXPANEL_TOKEN</key>
 	<string>$(MIXPANEL_TOKEN)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Nightflyy uses the camera so you can take a photo to share your Nightflyy+ perk.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Nightflyy saves your Nightflyy+ perk photo to your photo library.</string>
 	<key>QONVERSION_KEY</key>
 	<string>$(QONVERSION_KEY)</string>
 	<key>SENDGRID_BASEURL</key>
