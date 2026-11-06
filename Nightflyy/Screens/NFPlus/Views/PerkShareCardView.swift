@@ -11,6 +11,7 @@ import SwiftUI
 struct PerkShareCardView: View {
 
     let photo: UIImage
+    var isMirrored = false
     let venueImage: UIImage?
     let perkName: String
     let dateText: String
@@ -22,6 +23,7 @@ struct PerkShareCardView: View {
                 Image(uiImage: photo)
                     .resizable()
                     .scaledToFill()
+                    .scaleEffect(x: isMirrored ? -1 : 1, y: 1)
             }
             .clipped()
             .overlay {

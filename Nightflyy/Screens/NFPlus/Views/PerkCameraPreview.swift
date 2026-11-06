@@ -26,7 +26,9 @@ struct PerkCameraPreview: View {
         } else {
             switch viewModel.cameraAccess {
             case .granted:
-                CameraView(captureRequest: viewModel.captureRequest, onCapture: viewModel.photoCaptured)
+                CameraView(captureRequest: viewModel.captureRequest,
+                           usesFrontCamera: viewModel.usesFrontCamera,
+                           onCapture: viewModel.photoCaptured)
             case .denied:
                 VStack {
                     Text("Allow camera access to take a photo of your perk.")

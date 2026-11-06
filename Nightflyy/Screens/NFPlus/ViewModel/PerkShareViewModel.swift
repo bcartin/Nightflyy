@@ -23,6 +23,12 @@ final class PerkShareViewModel {
     let dateText: String
     /// False in the Simulator, which has no camera; the shutter then uses a sample photo.
     let isCameraAvailable = UIImagePickerController.isSourceTypeAvailable(.camera)
+    let canFlipCamera = UIImagePickerController.isCameraDeviceAvailable(.front)
+
+    var usesFrontCamera = false
+    /// Front-camera photos come back unmirrored, while the preview is mirrored like a selfie.
+    /// Mirroring the photo keeps the saved image looking like what the user saw.
+    var isPhotoMirrored = false
 
     var cameraAccess: CameraAccess = .unknown
     var venueImage: UIImage?
@@ -57,15 +63,21 @@ final class PerkShareViewModel {
         }
     }
 
+    func flipCamera() {
+        usesFrontCamera.toggle()
+    }
+
     func photoCaptured(_ image: UIImage) {
         photo = image
+        isPhotoMirrored = isCameraAvailable && usesFrontCamera
         renderShareImage()
     }
 
     private func renderShareImage() {
         guard let photo else { return }
         let size = cardSize == .zero ? CGSize(width: 390, height: 700) : cardSize
-        let card = PerkShareCardView(photo: photo, venueImage: venueImage, perkName: perk.perkName, dateText: dateText)
+        let card = PerkShareCardView(photo: photo, isMirrored: isPhotoMirrored, venueImage: venueImage,
+                                     perkName: perk.perkName, dateText: dateText)
             .frame(width: size.width, height: size.height)
         let renderer = ImageRenderer(content: card)
         // Fixed 3x keeps the shared image sharp on every device.

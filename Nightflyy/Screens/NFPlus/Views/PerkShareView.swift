@@ -23,6 +23,7 @@ struct PerkShareView: View {
             ZStack(alignment: .bottom) {
                 if let photo = viewModel.photo {
                     PerkShareCardView(photo: photo,
+                                      isMirrored: viewModel.isPhotoMirrored,
                                       venueImage: viewModel.venueImage,
                                       perkName: viewModel.perk.perkName,
                                       dateText: viewModel.dateText)
@@ -45,6 +46,17 @@ struct PerkShareView: View {
                     }
                     .accessibilityLabel("Take Photo")
                     .disabled(viewModel.isCameraAvailable && viewModel.cameraAccess != .granted)
+                    .frame(maxWidth: .infinity)
+                    .overlay(alignment: .leading) {
+                        if viewModel.canFlipCamera && viewModel.cameraAccess == .granted {
+                            Button("Flip Camera", systemImage: "arrow.triangle.2.circlepath", action: viewModel.flipCamera)
+                                .labelStyle(.iconOnly)
+                                .font(.title2)
+                                .frame(width: 52, height: 52)
+                                .background(.ultraThinMaterial, in: .circle)
+                                .padding(.leading, 32)
+                        }
+                    }
                     .padding(.bottom, 24)
                 }
             }
