@@ -7,61 +7,42 @@
 
 import SwiftUI
 
+/// Tells the member to hand their phone to the server before the staff code screen.
+/// Members can turn it off with Never Show Again.
 struct RedeemButtonView: View {
 
-    @State private var glow = false
     @Binding var viewModel: NFPRedeemViewModel
 
     var body: some View {
-        VStack(spacing: 36) {
+        VStack(spacing: 16) {
+            Text("Show phone to your server")
+                .font(.title3)
+                .bold()
+                .multilineTextAlignment(.center)
+                .padding(.top, 64)
 
-            Button {
-                viewModel.changeView(to: .youtubeVideo)
-            } label: {
-                Text("Watch the tutorial")
-                    .font(.system(size: 12))
-                    .padding(8)
-                    .foregroundColor(.white)
-                    .background {
+            AnimatedGIFView(assetName: "rotate")
+                .frame(maxHeight: .infinity)
+                .padding(.vertical)
+                .accessibilityHidden(true)
+
+            Button("Continue", action: viewModel.continueToCode)
+                .mainButtonStyle()
+
+            Button(action: viewModel.hideShowPhoneScreen) {
+                Text("Never Show Again")
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .contentShape(.capsule)
+                    .overlay {
                         Capsule()
-                            .strokeBorder(.mainPurple, lineWidth: 1)
+                            .stroke(.mainPurple, lineWidth: 1)
                     }
             }
-
-            Text("Tap Below")
-                .font(.system(size: 16))
-                .foregroundColor(.gray)
-
-            Button {
-                viewModel.seeVenuesButtonIsVisible = false
-                viewModel.changeView(to: .codeScreen)
-            } label: {
-                ZStack {
-
-                    Circle()
-                        .fill(Color.onlineBlue)
-                        .frame(width: 200, height: 200)
-                        .shadow(color: Color.onlineBlue.opacity(glow ? 0.8 : 0.3), radius: glow ? 25 : 5)
-                        .onAppear {
-                            withAnimation(Animation.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
-                                glow.toggle()
-                            }
-                        }
-
-                    Image("plus_button_borderless")
-                        .resizable()
-                        .frame(width: 200, height: 200)
-                }
-            }
-
-            Text("Credits Remaining this week: 1")
-                .font(.system(size: 16))
-                .foregroundColor(.gray)
-
-            Spacer()
-                .frame(height: 48)
+            .foregroundStyle(.white)
+            .padding(.horizontal, 32)
         }
-
+        .padding(.bottom)
     }
 }
 

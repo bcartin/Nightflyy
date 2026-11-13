@@ -13,6 +13,8 @@ enum UserDefaultsKeys: String {
     case nfpReferred
     case lastNotificationsFetchDate
     case venueNotificationTimestamps
+    /// Set when a Nightflyy+ member picks Never Show Again on the show-your-phone screen.
+    case hideShowPhoneScreen
 
     func getValue<T>() -> T? {
         switch self {
@@ -27,6 +29,8 @@ enum UserDefaultsKeys: String {
             UserDefaults.standard.object(forKey: rawValue) as? Date as? T
         case .venueNotificationTimestamps:
             UserDefaults.standard.dictionary(forKey: rawValue) as? [String: Date] as? T
+        case .hideShowPhoneScreen:
+            UserDefaults.standard.bool(forKey: rawValue) as? T
         }
 
     }
