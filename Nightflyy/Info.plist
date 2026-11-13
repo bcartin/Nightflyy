@@ -35,8 +35,10 @@
 	<string>$(MIXPANEL_TOKEN)</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Nightflyy uses the camera so you can take a photo to share your Nightflyy+ perk.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Nightflyy uses the microphone to record sound with the video of your Nightflyy+ perk.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Nightflyy saves your Nightflyy+ perk photo to your photo library.</string>
+	<string>Nightflyy saves your Nightflyy+ perk photo or video to your photo library.</string>
 	<key>QONVERSION_KEY</key>
 	<string>$(QONVERSION_KEY)</string>
 	<key>SENDGRID_BASEURL</key>

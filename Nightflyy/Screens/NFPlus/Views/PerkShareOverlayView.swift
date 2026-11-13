@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// Branding drawn over the share photo: the Nightflyy logo, perk name and date at the top, and the
+/// Branding drawn over the share photo or video: the Nightflyy logo, perk name and date at the top, and the
 /// venue image in the bottom-right corner, clear of the shutter.
 /// Font sizes are fixed on purpose so the saved image looks the same whatever the user's text size.
 struct PerkShareOverlayView: View {
@@ -18,7 +18,7 @@ struct PerkShareOverlayView: View {
 
     var body: some View {
         VStack(spacing: 8) {
-            Image("banner")
+            Image("share_logo")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 200)

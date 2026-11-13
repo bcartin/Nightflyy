@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-/// Camera screen for sharing a redeemed perk: take a photo under the perk branding, then share or
-/// save it through the share sheet (which includes Save Image), or cancel.
+/// Camera screen for sharing a redeemed perk: tap for a photo or hold for a video under the perk
+/// branding, then share or save it through the share sheet (which includes Save Image and Save Video), or cancel.
 struct PerkShareView: View {
 
     @Environment(\.dismiss) private var dismiss
@@ -23,10 +23,18 @@ struct PerkShareView: View {
             ZStack(alignment: .bottom) {
                 if let photo = viewModel.photo {
                     PerkShareCardView(photo: photo,
-                                      isMirrored: viewModel.isPhotoMirrored,
                                       venueImage: viewModel.venueImage,
                                       perkName: viewModel.perk.perkName,
                                       dateText: viewModel.dateText)
+                } else if let player = viewModel.videoPlayer {
+                    // The video already has the branding burned in.
+                    PlayerLayerView(player: player)
+                } else if viewModel.isPreparingVideo {
+                    Color.black
+                        .overlay {
+                            ProgressView("Preparing video…")
+                                .tint(.white)
+                        }
                 } else {
                     PerkCameraPreview(viewModel: viewModel)
 
@@ -34,21 +42,13 @@ struct PerkShareView: View {
                                          perkName: viewModel.perk.perkName,
                                          dateText: viewModel.dateText)
 
-                    Button(action: viewModel.takePhoto) {
-                        Circle()
-                            .fill(.white)
-                            .frame(width: 64, height: 64)
-                            .padding(4)
-                            .overlay {
-                                Circle()
-                                    .stroke(.white.opacity(0.6), lineWidth: 3)
-                            }
-                    }
-                    .accessibilityLabel("Take Photo")
-                    .disabled(viewModel.isCameraAvailable && viewModel.cameraAccess != .granted)
+                    PerkShutterButton(isRecording: viewModel.isRecording,
+                                      onPress: viewModel.shutterPressed,
+                                      onRelease: viewModel.shutterReleased)
+                    .allowsHitTesting(!viewModel.isCameraAvailable || viewModel.cameraAccess == .granted)
                     .frame(maxWidth: .infinity)
                     .overlay(alignment: .leading) {
-                        if viewModel.canFlipCamera && viewModel.cameraAccess == .granted {
+                        if viewModel.canFlipCamera && viewModel.cameraAccess == .granted && !viewModel.isRecording {
                             Button("Flip Camera", systemImage: "arrow.triangle.2.circlepath", action: viewModel.flipCamera)
                                 .labelStyle(.iconOnly)
                                 .font(.title2)
@@ -59,6 +59,15 @@ struct PerkShareView: View {
                     }
                     .padding(.bottom, 24)
                 }
+
+                if viewModel.hasResult {
+                    Button("Retake", systemImage: "arrow.counterclockwise", action: viewModel.retake)
+                        .font(.headline)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
+                        .background(.ultraThinMaterial, in: .capsule)
+                        .padding(.bottom, 24)
+                }
             }
             .clipShape(.rect(cornerRadius: 24))
             .onGeometryChange(for: CGSize.self) { proxy in
@@ -68,7 +77,13 @@ struct PerkShareView: View {
             }
 
             HStack {
-                if let shareImage = viewModel.shareImage {
+                if let shareVideo = viewModel.shareVideo {
+                    ShareLink(item: shareVideo, preview: SharePreview(viewModel.perk.perkName)) {
+                        Text("Share")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                } else if let shareImage = viewModel.shareImage {
                     ShareLink(item: shareImage, preview: SharePreview(viewModel.perk.perkName, image: shareImage)) {
                         Text("Share")
                             .frame(maxWidth: .infinity)
@@ -102,5 +117,6 @@ struct PerkShareView: View {
         .task {
             await viewModel.prepare()
         }
+        .onDisappear(perform: viewModel.stopCamera)
     }
 }

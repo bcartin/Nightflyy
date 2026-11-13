@@ -5,57 +5,30 @@
 //  Created by Bernie Cartin on 11/6/26.
 //
 
+import AVFoundation
 import SwiftUI
-import UIKit
 
-/// Live camera preview that fills its frame. Increase `captureRequest` to take a photo;
-/// the photo arrives through `onCapture`.
-struct CameraView: UIViewControllerRepresentable {
+/// Live preview of a capture session, filling its frame and cropping like the captured photo
+/// and video. SwiftUI has no camera preview, so this wraps the preview layer.
+struct CameraView: UIViewRepresentable {
 
-    let captureRequest: Int
-    var usesFrontCamera = false
-    let onCapture: (UIImage) -> Void
+    let session: AVCaptureSession
 
-    func makeUIViewController(context: Context) -> CameraPreviewController {
-        let controller = CameraPreviewController()
-        controller.picker.delegate = context.coordinator
-        return controller
+    func makeUIView(context: Context) -> PreviewView {
+        let view = PreviewView()
+        view.previewLayer.session = session
+        view.previewLayer.videoGravity = .resizeAspectFill
+        return view
     }
 
-    func updateUIViewController(_ controller: CameraPreviewController, context: Context) {
-        context.coordinator.onCapture = onCapture
-        let device: UIImagePickerController.CameraDevice = usesFrontCamera ? .front : .rear
-        if controller.picker.cameraDevice != device {
-            controller.picker.cameraDevice = device
-            // Switching cameras can reset the preview transform, so lay out again to reapply it.
-            controller.view.setNeedsLayout()
-        }
-        if captureRequest != context.coordinator.lastCaptureRequest {
-            context.coordinator.lastCaptureRequest = captureRequest
-            controller.picker.takePicture()
-        }
-    }
+    func updateUIView(_ view: PreviewView, context: Context) {}
 
-    func makeCoordinator() -> Coordinator {
-        Coordinator(captureRequest: captureRequest, onCapture: onCapture)
-    }
+    final class PreviewView: UIView {
 
-    @MainActor
-    final class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+        override static var layerClass: AnyClass { AVCaptureVideoPreviewLayer.self }
 
-        var lastCaptureRequest: Int
-        var onCapture: (UIImage) -> Void
-
-        init(captureRequest: Int, onCapture: @escaping (UIImage) -> Void) {
-            self.lastCaptureRequest = captureRequest
-            self.onCapture = onCapture
-        }
-
-        func imagePickerController(_ picker: UIImagePickerController,
-                                   didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-            if let image = info[.originalImage] as? UIImage {
-                onCapture(image)
-            }
-        }
+        // layerClass guarantees the layer type.
+        // swiftlint:disable:next force_cast
+        var previewLayer: AVCaptureVideoPreviewLayer { layer as! AVCaptureVideoPreviewLayer }
     }
 }

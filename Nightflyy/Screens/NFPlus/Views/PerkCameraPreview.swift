@@ -18,7 +18,7 @@ struct PerkCameraPreview: View {
         if !viewModel.isCameraAvailable {
             LinearGradient(colors: [.mainPurple, .onlineBlue], startPoint: .topLeading, endPoint: .bottomTrailing)
                 .overlay {
-                    Text("No camera here. Tap the shutter to use a sample photo.")
+                    Text("No camera here. Tap the shutter for a sample photo, or hold it for a sample video.")
                         .font(.footnote)
                         .multilineTextAlignment(.center)
                         .padding()
@@ -26,9 +26,7 @@ struct PerkCameraPreview: View {
         } else {
             switch viewModel.cameraAccess {
             case .granted:
-                CameraView(captureRequest: viewModel.captureRequest,
-                           usesFrontCamera: viewModel.usesFrontCamera,
-                           onCapture: viewModel.photoCaptured)
+                CameraView(session: viewModel.camera.session)
             case .denied:
                 VStack {
                     Text("Allow camera access to take a photo of your perk.")
