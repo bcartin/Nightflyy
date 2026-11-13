@@ -150,9 +150,21 @@ class NFPRedeemViewModel {
         }
     }
 
+    /// Goes to the show-your-phone screen, or straight to the staff code screen once the member has hidden it.
     func usePerk() {
         seeVenuesButtonIsVisible = false
-        changeView(to: .redeemButton)
+        let hidesShowPhoneScreen: Bool = UserDefaultsKeys.hideShowPhoneScreen.getValue() ?? false
+        changeView(to: hidesShowPhoneScreen ? .codeScreen : .redeemButton)
+    }
+
+    func continueToCode() {
+        changeView(to: .codeScreen)
+    }
+
+    /// Never Show Again: remembers the choice and moves on to the staff code screen.
+    func hideShowPhoneScreen() {
+        UserDefaultsKeys.hideShowPhoneScreen.setValue(true)
+        continueToCode()
     }
 
     func cancelRedemption() {
