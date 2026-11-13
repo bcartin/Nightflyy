@@ -18,7 +18,6 @@ enum RedeemView {
     case redeemSuccess
     case venues
     case help
-    case youtubeVideo
 }
 
 @Observable @MainActor
@@ -52,12 +51,6 @@ class NFPRedeemViewModel {
     init() {
         displayView = mainDisplayView
         updateTimer()
-    }
-
-    func nfpButtonTapped() {
-        withAnimation {
-            displayView = .codeScreen
-        }
     }
 
     func changeView(to view: RedeemView) {
