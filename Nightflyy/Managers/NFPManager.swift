@@ -48,6 +48,8 @@ class NFPManager {
     }
 
     var hasCredits: Bool {
+        // A saved bonus credit would otherwise still count.
+        if isMockPlusMember && isMockNoCredits { return false }
         let bonusCredits: Int = UserDefaultsKeys.bonusCredit.getValue() ?? 0
         return (accountManager.account?.plusCredits ?? 0) + bonusCredits > 0
     }
@@ -104,6 +106,11 @@ class NFPManager {
         ProcessInfo.processInfo.arguments.contains("-mockPlusMember")
     }
 
+    /// `-mockNoCredits`: with `-mockPlusMember`, act as a subscriber who has used this week's credit.
+    private var isMockNoCredits: Bool {
+        ProcessInfo.processInfo.arguments.contains("-mockNoCredits")
+    }
+
     /// `-mockRedemption`: any code redeems successfully and nothing is written to Firestore.
     private var isMockRedemption: Bool {
         ProcessInfo.processInfo.arguments.contains("-mockRedemption")
@@ -112,7 +119,7 @@ class NFPManager {
     func checkSubscriptionStatus() async {
         if isMockPlusMember {
             accountManager.account?.plusMember = true
-            accountManager.account?.plusCredits = 1
+            accountManager.account?.plusCredits = isMockNoCredits ? 0 : 1
             return
         }
         do {
