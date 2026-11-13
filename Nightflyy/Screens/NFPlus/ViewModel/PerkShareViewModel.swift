@@ -9,7 +9,8 @@ import AVFoundation
 import OSLog
 import SwiftUI
 
-/// Drives the perk share camera: camera permission, the captured photo, and the branded image to share.
+/// Drives the perk share camera: camera permission, tap for a photo or hold for a video,
+/// and the branded photo or video to share.
 @Observable @MainActor
 final class PerkShareViewModel {
 
@@ -19,26 +20,40 @@ final class PerkShareViewModel {
         case denied
     }
 
+    /// How long the shutter must be held before it records instead of taking a photo.
+    static let holdToRecordDelay: Duration = .milliseconds(300)
+
     let perk: NFPPerk
     let dateText: String
-    /// False in the Simulator, which has no camera; the shutter then uses a sample photo.
-    let isCameraAvailable = UIImagePickerController.isSourceTypeAvailable(.camera)
-    let canFlipCamera = UIImagePickerController.isCameraDeviceAvailable(.front)
+    let camera = CameraController()
+    /// False in the Simulator, which has no camera; the shutter then uses a sample photo or video.
+    let isCameraAvailable = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) != nil
+    let canFlipCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) != nil
 
     var usesFrontCamera = false
-    /// Front-camera photos come back unmirrored, while the preview is mirrored like a selfie.
-    /// Mirroring the photo keeps the saved image looking like what the user saw.
-    var isPhotoMirrored = false
-
     var cameraAccess: CameraAccess = .unknown
     var venueImage: UIImage?
     var photo: UIImage?
     /// The photo with the branding drawn on, ready for the share sheet.
     var shareImage: Image?
-    /// Increased to ask `CameraView` to take a photo.
-    var captureRequest = 0
-    /// Size of the on-screen card, so the shared image matches what the user saw.
+    var isRecording = false
+    /// True while the recorded clip is being cropped and branded.
+    var isPreparingVideo = false
+    /// The recorded video with the branding burned in, ready for the share sheet.
+    var shareVideo: URL?
+    /// Loops the finished video on the card.
+    var videoPlayer: AVQueuePlayer?
+    /// Size of the on-screen card, so the shared photo or video matches what the user saw.
     var cardSize: CGSize = .zero
+
+    /// A finished photo or video is showing instead of the camera.
+    var hasResult: Bool {
+        photo != nil || videoPlayer != nil
+    }
+
+    private var holdTask: Task<Void, Never>?
+    private var pressStartedRecording = false
+    private var videoLooper: AVPlayerLooper?
 
     init(perk: NFPPerk, redeemedDate: Date = .now) {
         self.perk = perk
@@ -52,32 +67,152 @@ final class PerkShareViewModel {
 
     func prepare() async {
         await requestCameraAccess()
+        if cameraAccess == .granted {
+            await camera.start(recordsAudio: await AVCaptureDevice.requestAccess(for: .audio))
+        }
         await loadVenueImage()
     }
 
-    func takePhoto() {
-        if isCameraAvailable {
-            captureRequest += 1
+    func stopCamera() {
+        camera.stop()
+        videoPlayer?.pause()
+    }
+
+    // MARK: Shutter
+
+    /// A tap takes a photo; holding past `holdToRecordDelay` records a video until release.
+    func shutterPressed() {
+        pressStartedRecording = false
+        holdTask = Task {
+            try? await Task.sleep(for: Self.holdToRecordDelay)
+            guard !Task.isCancelled else { return }
+            startRecording()
+        }
+    }
+
+    func shutterReleased() {
+        holdTask?.cancel()
+        holdTask = nil
+        if pressStartedRecording {
+            stopRecording()
         } else {
+            takePhoto()
+        }
+    }
+
+    func takePhoto() {
+        guard isCameraAvailable else {
             photoCaptured(Self.samplePhoto())
+            return
+        }
+        Task {
+            do {
+                photoCaptured(try await camera.takePhoto())
+            } catch {
+                Logger.general.error("Error taking perk photo: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    func startRecording() {
+        pressStartedRecording = true
+        isRecording = true
+        // The Simulator only pretends to record; releasing makes a sample clip.
+        guard isCameraAvailable else { return }
+        Task {
+            do {
+                let clip = try await camera.recordVideo()
+                await videoRecorded(clip)
+            } catch {
+                isRecording = false
+                isPreparingVideo = false
+            }
+        }
+    }
+
+    func stopRecording() {
+        // Already stopped when the clip hit the time limit.
+        guard isRecording else { return }
+        isRecording = false
+        isPreparingVideo = true
+        if isCameraAvailable {
+            camera.stopRecording()
+        } else {
+            Task {
+                do {
+                    await videoRecorded(try await PerkShareVideo.sampleVideo(Self.sampleImage(width: 540, height: 960)))
+                } catch {
+                    isPreparingVideo = false
+                }
+            }
+        }
+    }
+
+    /// Throws away the photo or video and goes back to the camera.
+    func retake() {
+        photo = nil
+        shareImage = nil
+        videoPlayer?.pause()
+        videoPlayer = nil
+        videoLooper = nil
+        if let shareVideo {
+            try? FileManager.default.removeItem(at: shareVideo)
+        }
+        shareVideo = nil
+        guard cameraAccess == .granted else { return }
+        Task {
+            await camera.resume()
         }
     }
 
     func flipCamera() {
         usesFrontCamera.toggle()
+        camera.useCamera(front: usesFrontCamera)
     }
+
+    // MARK: Results
 
     func photoCaptured(_ image: UIImage) {
         photo = image
-        isPhotoMirrored = isCameraAvailable && usesFrontCamera
+        camera.stop()
         renderShareImage()
+    }
+
+    private func videoRecorded(_ clip: URL) async {
+        isRecording = false
+        isPreparingVideo = true
+        camera.stop()
+        defer {
+            isPreparingVideo = false
+            try? FileManager.default.removeItem(at: clip)
+        }
+        let size = cardSizeOrDefault
+        let overlay = ImageRenderer(content: PerkShareOverlayView(venueImage: venueImage, perkName: perk.perkName,
+                                                                  dateText: dateText)
+            .frame(width: size.width, height: size.height))
+        // Any scale works; the export stretches the overlay to the video's size.
+        overlay.scale = 3
+        guard let overlayImage = overlay.uiImage else { return }
+        do {
+            let video = try await PerkShareVideo.export(clip, overlay: overlayImage, aspectRatio: size.width / size.height)
+            let player = AVQueuePlayer()
+            videoLooper = AVPlayerLooper(player: player, templateItem: AVPlayerItem(url: video))
+            player.play()
+            videoPlayer = player
+            shareVideo = video
+        } catch {
+            Logger.general.error("Error preparing perk video: \(error.localizedDescription)")
+        }
+    }
+
+    private var cardSizeOrDefault: CGSize {
+        cardSize == .zero ? CGSize(width: 390, height: 700) : cardSize
     }
 
     private func renderShareImage() {
         guard let photo else { return }
-        let size = cardSize == .zero ? CGSize(width: 390, height: 700) : cardSize
-        let card = PerkShareCardView(photo: photo, isMirrored: isPhotoMirrored, venueImage: venueImage,
-                                     perkName: perk.perkName, dateText: dateText)
+        let size = cardSizeOrDefault
+        let card = PerkShareCardView(photo: photo, venueImage: venueImage, perkName: perk.perkName, dateText: dateText)
             .frame(width: size.width, height: size.height)
         let renderer = ImageRenderer(content: card)
         // Fixed 3x keeps the shared image sharp on every device.
@@ -86,6 +221,8 @@ final class PerkShareViewModel {
             shareImage = Image(uiImage: image)
         }
     }
+
+    // MARK: Setup
 
     private func requestCameraAccess() async {
         guard isCameraAvailable else { return }
@@ -117,10 +254,19 @@ final class PerkShareViewModel {
         }
     }
 
-    /// Stand-in photo for the Simulator.
+    // MARK: Simulator stand-ins
+
     private static func samplePhoto() -> UIImage {
-        let gradient = LinearGradient(colors: [.mainPurple, .onlineBlue], startPoint: .topLeading, endPoint: .bottomTrailing)
-            .frame(width: 1080, height: 1440)
-        return ImageRenderer(content: gradient).uiImage ?? UIImage()
+        let renderer = ImageRenderer(content: sampleGradient.frame(width: 1080, height: 1440))
+        return renderer.uiImage ?? UIImage()
+    }
+
+    private static func sampleImage(width: CGFloat, height: CGFloat) -> CIImage {
+        let renderer = ImageRenderer(content: sampleGradient.frame(width: width, height: height))
+        return renderer.cgImage.map { CIImage(cgImage: $0) } ?? CIImage(color: .black)
+    }
+
+    private static var sampleGradient: some View {
+        LinearGradient(colors: [.mainPurple, .onlineBlue], startPoint: .topLeading, endPoint: .bottomTrailing)
     }
 }
