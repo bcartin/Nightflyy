@@ -45,7 +45,8 @@ struct PerkShareView: View {
                     PerkShutterButton(isRecording: viewModel.isRecording,
                                       onPress: viewModel.shutterPressed,
                                       onRelease: viewModel.shutterReleased)
-                    .allowsHitTesting(!viewModel.isCameraAvailable || viewModel.cameraAccess == .granted)
+                    .allowsHitTesting(viewModel.canUseShutter)
+                    .opacity(viewModel.canUseShutter ? 1 : 0.5)
                     .frame(maxWidth: .infinity)
                     .overlay(alignment: .leading) {
                         if viewModel.canFlipCamera && viewModel.cameraAccess == .granted && !viewModel.isRecording {
@@ -54,6 +55,7 @@ struct PerkShareView: View {
                                 .font(.title2)
                                 .frame(width: 52, height: 52)
                                 .background(.ultraThinMaterial, in: .circle)
+                                .disabled(!viewModel.isCameraReady)
                                 .padding(.leading, 32)
                         }
                     }
