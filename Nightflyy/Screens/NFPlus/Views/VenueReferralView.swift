@@ -92,15 +92,19 @@ struct VenueReferralView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay(alignment: .topLeading) {
             // This screen is only reached from the promo code screen.
-            Button("Back", systemImage: "chevron.left") {
+            Button {
                 viewModel.changeView(to: .promoCode)
+            } label: {
+                Label("Back", systemImage: "chevron.left")
+                    .labelStyle(.iconOnly)
+                    .font(.title3)
+                    .bold()
+                    // Lines up with the title, which has the same top padding. The padding is
+                    // inside the label so it's tappable, giving at least a 44 pt target.
+                    .padding(.top, 24)
+                    .padding(.horizontal)
+                    .contentShape(.rect)
             }
-            .labelStyle(.iconOnly)
-            .font(.title3)
-            .bold()
-            // Lines up with the title, which has the same top padding.
-            .padding(.top, 24)
-            .padding(.horizontal)
         }
         .backgroundImage("slyde_background")
         .background(.backgroundBlack)
