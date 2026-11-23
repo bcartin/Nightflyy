@@ -29,16 +29,22 @@ struct RedeemPerkSelectionView: View {
             }
 
             ScrollView(.vertical) {
-                // VStack rather than LazyVStack: the list is short, and lazy stacks animate height changes poorly.
-                VStack {
-                    ForEach(viewModel.displayedPerks) { perk in
-                        PerkListItemView(perk: perk,
-                                         isSelected: perk.id == viewModel.selectedPerkId,
-                                         selectAction: { viewModel.perkTapped(perk) },
-                                         useAction: viewModel.usePerk)
+                if let emptyState = viewModel.eventsEmptyState {
+                    // Inside the scroll view so dragging still dismisses the keyboard.
+                    PerkEventsEmptyView(state: emptyState, searchText: viewModel.perkSearchText)
+                        .containerRelativeFrame(.vertical)
+                } else {
+                    // VStack rather than LazyVStack: the list is short, and lazy stacks animate height changes poorly.
+                    VStack {
+                        ForEach(viewModel.displayedPerks) { perk in
+                            PerkListItemView(perk: perk,
+                                             isSelected: perk.id == viewModel.selectedPerkId,
+                                             selectAction: { viewModel.perkTapped(perk) },
+                                             useAction: viewModel.usePerk)
+                        }
                     }
+                    .padding()
                 }
-                .padding()
             }
             .scrollIndicators(.hidden)
             .scrollDismissesKeyboard(.immediately)

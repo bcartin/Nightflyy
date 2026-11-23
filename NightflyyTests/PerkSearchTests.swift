@@ -10,6 +10,17 @@ import Testing
 @MainActor
 struct PerkSearchTests {
 
+    @Test func eventsTabShowsTheRightEmptyState() {
+        // Venues tab, or events to list: no empty state.
+        #expect(NFPRedeemViewModel.eventsEmptyState(segment: 1, hasFetched: true, eventCount: 0, matchingCount: 0) == nil)
+        #expect(NFPRedeemViewModel.eventsEmptyState(segment: 2, hasFetched: true, eventCount: 3, matchingCount: 1) == nil)
+        // Not loaded yet: a spinner, not "no events".
+        #expect(NFPRedeemViewModel.eventsEmptyState(segment: 2, hasFetched: false, eventCount: 0, matchingCount: 0) == .loading)
+        #expect(NFPRedeemViewModel.eventsEmptyState(segment: 2, hasFetched: true, eventCount: 0, matchingCount: 0) == .noEvents)
+        // A search that hides every event, versus no events to search at all.
+        #expect(NFPRedeemViewModel.eventsEmptyState(segment: 2, hasFetched: true, eventCount: 3, matchingCount: 0) == .noSearchResults)
+    }
+
     @Test func venuesMatchByNameOrCity() {
         let venues = [Account(name: "TacoDero", city: "Rochester"), Account(name: "Nashvilles", city: "Buffalo")]
 
