@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "venue_default.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
