@@ -28,6 +28,8 @@ class NFPRedeemViewModel {
     var error: Error?
     var nfpVenues: [Account] = .init()
     var nfpEvents: [Event] = .init()
+    /// False until the first events fetch finishes, so the Events tab can tell loading from empty.
+    var hasFetchedEvents = false
     var perkSearchText: String = "" {
         didSet { selectedPerkId = nil }
     }
@@ -98,6 +100,23 @@ class NFPRedeemViewModel {
 
     func fetchNFPEvents() async {
         nfpEvents = await EventClient.fetchNightflyyPlusEvents()
+        hasFetchedEvents = true
+    }
+
+    /// What the Events tab shows instead of a list, or nil when there are events to list.
+    var eventsEmptyState: PerkEventsEmptyState? {
+        Self.eventsEmptyState(segment: selectedPerkSegment, hasFetched: hasFetchedEvents,
+                              eventCount: nfpEvents.count, matchingCount: displayedPerks.count)
+    }
+
+    /// - Parameters:
+    ///   - eventCount: All event perks fetched.
+    ///   - matchingCount: The ones the search leaves on the list.
+    static func eventsEmptyState(segment: Int, hasFetched: Bool, eventCount: Int,
+                                 matchingCount: Int) -> PerkEventsEmptyState? {
+        guard segment == 2, matchingCount == 0 else { return nil }
+        if !hasFetched { return .loading }
+        return eventCount == 0 ? .noEvents : .noSearchResults
     }
 
     // MARK: - Perk Selection
