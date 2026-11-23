@@ -90,6 +90,18 @@ struct VenueReferralView: View {
 
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay(alignment: .topLeading) {
+            // This screen is only reached from the promo code screen.
+            Button("Back", systemImage: "chevron.left") {
+                viewModel.changeView(to: .promoCode)
+            }
+            .labelStyle(.iconOnly)
+            .font(.title3)
+            .bold()
+            // Lines up with the title, which has the same top padding.
+            .padding(.top, 24)
+            .padding(.horizontal)
+        }
         .backgroundImage("slyde_background")
         .background(.backgroundBlack)
         .foregroundStyle(.white)
