@@ -32,6 +32,8 @@ final class PerkShareViewModel {
 
     var usesFrontCamera = false
     var cameraAccess: CameraAccess = .unknown
+    /// The camera is running and can take a photo or video. The shutter and Flip stay off until then.
+    var isCameraReady = false
     var venueImage: UIImage?
     var photo: UIImage?
     /// The photo with the branding drawn on, ready for the share sheet.
@@ -69,13 +71,25 @@ final class PerkShareViewModel {
         await requestCameraAccess()
         if cameraAccess == .granted {
             await camera.start(recordsAudio: await AVCaptureDevice.requestAccess(for: .audio))
+            // Closed while the camera was starting: its stop may have run first, so stop again.
+            if Task.isCancelled {
+                camera.stop()
+                return
+            }
+            isCameraReady = true
         }
         await loadVenueImage()
     }
 
     func stopCamera() {
+        isCameraReady = false
         camera.stop()
         videoPlayer?.pause()
+    }
+
+    /// Whether the shutter can be used: once the camera is running, or always in the Simulator.
+    var canUseShutter: Bool {
+        !isCameraAvailable || isCameraReady
     }
 
     // MARK: Shutter
@@ -83,6 +97,7 @@ final class PerkShareViewModel {
     /// A tap takes a photo; holding past `holdToRecordDelay` records a video until release.
     func shutterPressed() {
         pressStartedRecording = false
+        guard canUseShutter else { return }
         holdTask = Task {
             try? await Task.sleep(for: Self.holdToRecordDelay)
             guard !Task.isCancelled else { return }
@@ -95,7 +110,7 @@ final class PerkShareViewModel {
         holdTask = nil
         if pressStartedRecording {
             stopRecording()
-        } else {
+        } else if canUseShutter {
             takePhoto()
         }
     }
@@ -162,18 +177,26 @@ final class PerkShareViewModel {
         guard cameraAccess == .granted else { return }
         Task {
             await camera.resume()
+            isCameraReady = true
         }
     }
 
     func flipCamera() {
+        guard isCameraReady else { return }
+        // Off while the camera switches, so nothing captures mid-change.
+        isCameraReady = false
         usesFrontCamera.toggle()
-        camera.useCamera(front: usesFrontCamera)
+        Task {
+            await camera.useCamera(front: usesFrontCamera)
+            isCameraReady = true
+        }
     }
 
     // MARK: Results
 
     func photoCaptured(_ image: UIImage) {
         photo = image
+        isCameraReady = false
         camera.stop()
         renderShareImage()
     }
@@ -181,6 +204,7 @@ final class PerkShareViewModel {
     private func videoRecorded(_ clip: URL) async {
         isRecording = false
         isPreparingVideo = true
+        isCameraReady = false
         camera.stop()
         defer {
             isPreparingVideo = false

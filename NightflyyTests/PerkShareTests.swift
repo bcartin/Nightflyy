@@ -67,6 +67,24 @@ struct PerkShareTests {
 
     private static let perk = NFPPerk(event: Event())
 
+    // Capturing from a camera that isn't running used to crash the app on a phone, and never
+    // finishes in the Simulator, so these have a time limit.
+    @Test(.timeLimit(.minutes(1))) func takingAPhotoBeforeTheCameraRunsFailsWithoutCrashing() async {
+        let camera = CameraController()
+
+        await #expect(throws: CameraController.CameraError.notReady) {
+            try await camera.takePhoto()
+        }
+    }
+
+    @Test(.timeLimit(.minutes(1))) func recordingBeforeTheCameraRunsFailsWithoutCrashing() async {
+        let camera = CameraController()
+
+        await #expect(throws: CameraController.CameraError.notReady) {
+            try await camera.recordVideo()
+        }
+    }
+
     @Test func renderSizeCropsWiderVideoToTheCardShape() {
         #expect(PerkShareVideo.renderSize(for: CGSize(width: 1080, height: 1920), aspectRatio: 0.5) == CGSize(width: 960, height: 1920))
     }
