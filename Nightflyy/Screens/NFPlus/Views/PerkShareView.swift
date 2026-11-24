@@ -80,7 +80,7 @@ struct PerkShareView: View {
 
             HStack {
                 if let shareVideo = viewModel.shareVideo {
-                    ShareLink(item: shareVideo, preview: SharePreview(viewModel.perk.perkName)) {
+                    ShareLink(item: PerkVideoFile(url: shareVideo), preview: SharePreview(viewModel.perk.perkName)) {
                         Text("Share")
                             .frame(maxWidth: .infinity)
                     }
