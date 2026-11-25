@@ -14,8 +14,8 @@ import UIKit
 enum PerkShareVideo {
 
     /// Crops `video` around its center to `aspectRatio` (width / height), draws `overlay` over
-    /// every frame, and writes an MP4 to a temporary file.
-    static func export(_ video: URL, overlay: UIImage, aspectRatio: CGFloat) async throws -> URL {
+    /// every frame, and writes an MP4 named after `name` to a new temporary folder.
+    static func export(_ video: URL, overlay: UIImage, aspectRatio: CGFloat, name: String = "Nightflyy") async throws -> URL {
         let asset = AVURLAsset(url: video)
         guard let track = try await asset.loadTracks(withMediaType: .video).first else {
             throw CocoaError(.fileReadCorruptFile)
@@ -43,9 +43,34 @@ enum PerkShareVideo {
             throw CocoaError(.featureUnsupported)
         }
         session.videoComposition = composition
-        let output = URL.temporaryDirectory.appending(path: "\(UUID().uuidString).mp4")
-        try await session.export(to: output, as: .mp4)
+        // A folder of its own lets the file keep a readable name, which the share sheet shows.
+        let folder = URL.temporaryDirectory.appending(path: UUID().uuidString, directoryHint: .isDirectory)
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        let output = folder.appending(path: "\(fileName(for: name)).mp4")
+        do {
+            try await session.export(to: output, as: .mp4)
+        } catch {
+            try? FileManager.default.removeItem(at: folder)
+            throw error
+        }
         return output
+    }
+
+    /// Deletes a video from `export(_:overlay:aspectRatio:name:)`, along with its folder.
+    static func delete(_ video: URL) {
+        let folder = video.deletingLastPathComponent()
+        // Only an export's own folder, never a shared one such as the temporary directory itself.
+        let target = UUID(uuidString: folder.lastPathComponent) == nil ? video : folder
+        try? FileManager.default.removeItem(at: target)
+    }
+
+    /// `name` without characters a file name can't hold, or "Nightflyy" if nothing is left.
+    static func fileName(for name: String) -> String {
+        let cleaned = name
+            .replacing("/", with: "-")
+            .replacing(":", with: "-")
+            .trimmingCharacters(in: .whitespacesAndNewlines.union(CharacterSet(charactersIn: ".")))
+        return cleaned.isEmpty ? "Nightflyy" : cleaned
     }
 
     /// The largest centered crop of `size` with the given aspect ratio, in even pixels as the encoder needs.
