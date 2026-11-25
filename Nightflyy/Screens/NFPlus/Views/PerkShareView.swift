@@ -80,7 +80,10 @@ struct PerkShareView: View {
 
             HStack {
                 if let shareVideo = viewModel.shareVideo {
-                    ShareLink(item: PerkVideoFile(url: shareVideo), preview: SharePreview(viewModel.perk.perkName)) {
+                    // Not a ShareLink: Instagram can't read the video copy a ShareLink sends.
+                    Button {
+                        FileShareSheet.present(shareVideo)
+                    } label: {
                         Text("Share")
                             .frame(maxWidth: .infinity)
                     }

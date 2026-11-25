@@ -48,6 +48,39 @@ struct PerkShareTests {
         #expect(viewModel.shareVideo == nil)
         #expect(viewModel.shareImage == nil)
         #expect(!FileManager.default.fileExists(atPath: video.path()))
+        #expect(!FileManager.default.fileExists(atPath: video.deletingLastPathComponent().path()))
+    }
+
+    // The share sheet shows the video's file name.
+    @Test func sharedVideoIsNamedAfterThePerk() async throws {
+        let viewModel = PerkShareViewModel(perk: NFPPerk(event: Event(perkName: "Free Drink")))
+        viewModel.shutterPressed()
+        try await Task.sleep(for: PerkShareViewModel.holdToRecordDelay * 2)
+        viewModel.shutterReleased()
+        while viewModel.isPreparingVideo {
+            try await Task.sleep(for: .milliseconds(50))
+        }
+
+        let video = try #require(viewModel.shareVideo)
+        #expect(video.lastPathComponent == "Nightflyy Free Drink.mp4")
+        // The share sheet types the file by its extension; apps such as Instagram need a movie.
+        #expect(UTType(filenameExtension: video.pathExtension)?.conforms(to: .movie) == true)
+        viewModel.retake()
+    }
+
+    @Test func deletingAVideoOutsideAnExportFolderKeepsTheFolder() throws {
+        let video = URL.temporaryDirectory.appending(path: "\(UUID().uuidString).mp4")
+        try Data("video".utf8).write(to: video)
+
+        PerkShareVideo.delete(video)
+
+        #expect(!FileManager.default.fileExists(atPath: video.path()))
+        #expect(FileManager.default.fileExists(atPath: URL.temporaryDirectory.path()))
+    }
+
+    @Test func videoFileNamesDropCharactersFilesCantHold() {
+        #expect(PerkShareVideo.fileName(for: "Nightflyy 2/1 Drinks: Tonight.") == "Nightflyy 2-1 Drinks- Tonight")
+        #expect(PerkShareVideo.fileName(for: " .. ") == "Nightflyy")
     }
 
     @Test func holdingTheShutterRecordsABrandedVideo() async throws {
@@ -84,30 +117,6 @@ struct PerkShareTests {
         await #expect(throws: CameraController.CameraError.notReady) {
             try await camera.recordVideo()
         }
-    }
-
-    // Shared as a plain file URL, the video was rejected by Instagram's share extension.
-    @Test func perkVideoIsSharedAsAnMP4Movie() async throws {
-        let video = URL.temporaryDirectory.appending(path: "\(UUID().uuidString).mp4")
-        try Data("video".utf8).write(to: video)
-        defer { try? FileManager.default.removeItem(at: video) }
-
-        // The share sheet hands apps an item provider; a movie type is what they look for.
-        let provider = NSItemProvider()
-        provider.register(PerkVideoFile(url: video))
-        #expect(provider.registeredContentTypes == [.mpeg4Movie])
-        #expect(provider.hasItemConformingToTypeIdentifier(UTType.movie.identifier))
-
-        let received = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Data, Error>) in
-            _ = provider.loadFileRepresentation(for: .mpeg4Movie) { url, _, error in
-                if let url, let data = try? Data(contentsOf: url) {
-                    continuation.resume(returning: data)
-                } else {
-                    continuation.resume(throwing: error ?? CocoaError(.fileReadUnknown))
-                }
-            }
-        }
-        #expect(received == Data("video".utf8))
     }
 
     @Test func renderSizeCropsWiderVideoToTheCardShape() {

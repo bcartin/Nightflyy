@@ -171,7 +171,7 @@ final class PerkShareViewModel {
         videoPlayer = nil
         videoLooper = nil
         if let shareVideo {
-            try? FileManager.default.removeItem(at: shareVideo)
+            PerkShareVideo.delete(shareVideo)
         }
         shareVideo = nil
         guard cameraAccess == .granted else { return }
@@ -218,7 +218,8 @@ final class PerkShareViewModel {
         overlay.scale = 3
         guard let overlayImage = overlay.uiImage else { return }
         do {
-            let video = try await PerkShareVideo.export(clip, overlay: overlayImage, aspectRatio: size.width / size.height)
+            let video = try await PerkShareVideo.export(clip, overlay: overlayImage, aspectRatio: size.width / size.height,
+                                                        name: "Nightflyy \(perk.perkName)")
             let player = AVQueuePlayer()
             videoLooper = AVPlayerLooper(player: player, templateItem: AVPlayerItem(url: video))
             player.play()
