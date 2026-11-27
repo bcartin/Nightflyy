@@ -127,12 +127,12 @@ class AccountClient {
         }
     }
 
-    static func fetchVenueByRedemptionCode(code: String) async throws -> Account? {
+    /// Every venue with this redemption code. Codes aren't unique, so there can be more than one.
+    static func fetchVenuesByRedemptionCode(code: String) async throws -> [Account] {
         let query = FirebaseManager.shared.db.collection(FirestoreCollections.Accounts.value)
             .whereField(FirestoreCollections.Accounts.redemptionCode, isEqualTo: code)
         let snapshot = try await query.getDocuments()
-        let document = snapshot.documents.first
-        return try document?.data(as: Account.self)
+        return snapshot.documents.compactMap { try? $0.data(as: Account.self) }
     }
 
     static func removeFromRequested(accountId: String) async throws {
@@ -229,8 +229,8 @@ extension AccountClient: AccountClientProtocol {
         await Self.getAccountReviewCount(for: uid)
     }
 
-    func fetchVenueByRedemptionCode(code: String) async throws -> Account? {
-        try await Self.fetchVenueByRedemptionCode(code: code)
+    func fetchVenuesByRedemptionCode(code: String) async throws -> [Account] {
+        try await Self.fetchVenuesByRedemptionCode(code: code)
     }
 
     func removeFromRequested(accountId: String) async throws {

@@ -22,6 +22,6 @@ protocol EventClientProtocol {
     func setEventOwner(eventId: String, uid: String) async throws
     func deleteEvent(eventId: String) async throws
     func declineClaim(eventId: String) async throws
-    func fetchEventByRedemptionCode(code: String) async throws -> Event?
+    func fetchEventsByRedemptionCode(code: String) async throws -> [Event]
     func fetchNightflyyPlusEvents() async -> [Event]
 }

@@ -193,12 +193,12 @@ class EventClient {
             .updateData([FirestoreCollections.Events.assignedTo: ""])
     }
 
-    static func fetchEventByRedemptionCode(code: String) async throws -> Event? {
+    /// Every event with this perk redemption code. Codes aren't unique; a venue may reuse one for each of its events.
+    static func fetchEventsByRedemptionCode(code: String) async throws -> [Event] {
         let query = FirebaseManager.shared.db.collection(FirestoreCollections.Events.value)
             .whereField(FirestoreCollections.Events.perkRedemptionCode, isEqualTo: code)
         let snapshot = try await query.getDocuments()
-        let document = snapshot.documents.first
-        return try document?.data(as: Event.self)
+        return snapshot.documents.compactMap { try? $0.data(as: Event.self) }
     }
 
     static func fetchNightflyyPlusEvents() async -> [Event] {
@@ -286,8 +286,8 @@ extension EventClient: EventClientProtocol {
         try await Self.declineClaim(eventId: eventId)
     }
 
-    func fetchEventByRedemptionCode(code: String) async throws -> Event? {
-        try await Self.fetchEventByRedemptionCode(code: code)
+    func fetchEventsByRedemptionCode(code: String) async throws -> [Event] {
+        try await Self.fetchEventsByRedemptionCode(code: code)
     }
 
     func fetchNightflyyPlusEvents() async -> [Event] {
