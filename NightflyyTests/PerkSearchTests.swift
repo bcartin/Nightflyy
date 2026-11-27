@@ -43,7 +43,21 @@ struct PerkSearchTests {
         let perk = NFPPerk(event: Event(eventName: "Jazz Night", eventVenue: "Photo City", perkName: "Free Drink"))
 
         #expect(perk.title == "Jazz Night")
-        #expect(perk.redemptionSteps[1].hasPrefix("Tell your server at Photo City"))
+        #expect(perk.redemptionSteps == [
+            "Tap the purple \"Use this Perk\" button",
+            "Tell the door person at Photo City\n\"I want to use my Nightflyy Plus Perk\"",
+            "Hand your phone to the door person to redeem credit",
+            "Scan your ticket on Eventbrite, Posh, etc.",
+            "Enjoy your Free Drink and the event!"
+        ])
+    }
+
+    @Test func venuePerkInstructionsSendYouToTheServer() {
+        let perk = NFPPerk(venue: Account(name: "Aqua Vitae", perkName: "Free Drink"))
+
+        #expect(perk.redemptionSteps.count == 4)
+        #expect(perk.redemptionSteps[1].hasPrefix("Tell your server at Aqua Vitae"))
+        #expect(perk.redemptionSteps[2] == "Hand your phone to the server")
         #expect(perk.redemptionSteps[3] == "Enjoy your Free Drink")
     }
 
