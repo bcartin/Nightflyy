@@ -191,32 +191,15 @@ class NFPManager {
             return
         }
 
-        var redemptionID: String?
-        var redemptionName: String?
-        var redemptionType: RedemptionType?
+        guard let uid = accountManager.account?.uid else { throw AccountError.invalidCode }
+        let target = try RedemptionTarget.matching(
+            venues: try await accountClient.fetchVenuesByRedemptionCode(code: code),
+            events: try await eventClient.fetchEventsByRedemptionCode(code: code),
+            acceptedIDs: acceptedIDs
+        )
 
-        if let venue = try await accountClient.fetchVenueByRedemptionCode(code: code) {
-            redemptionID = venue.id
-            redemptionName = venue.name
-            redemptionType = .venue
-        } else if let event = try await eventClient.fetchEventByRedemptionCode(code: code) {
-            redemptionID = event.id
-            redemptionName = event.eventName
-            redemptionType = .event
-        }
-
-        guard let uid = accountManager.account?.uid,
-              let redemptionID,
-              let redemptionName
-        else {
-            throw AccountError.invalidCode
-        }
-
-        if let acceptedIDs, !acceptedIDs.contains(redemptionID) {
-            throw AccountError.codeForDifferentVenue
-        }
-
-        let redemption = NFPRedemption(venueID: redemptionID, venueName: redemptionName, redemptionType: redemptionType, date: Date(), clientID: uid)
+        let redemption = NFPRedemption(venueID: target.id, venueName: target.name, redemptionType: target.type,
+                                       date: Date(), clientID: uid)
         try redemption.save()
 
         if UserDefaultsKeys.bonusCredit.getValue() ?? 0 > 0 {

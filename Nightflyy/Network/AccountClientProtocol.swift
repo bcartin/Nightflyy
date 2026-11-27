@@ -13,7 +13,7 @@ protocol AccountClientProtocol {
     func fetchNightflyyPlusProviders() async -> [Account]
     func fetchAccountReviews(for uid: String) async -> [Review]
     func getAccountReviewCount(for uid: String) async -> Int
-    func fetchVenueByRedemptionCode(code: String) async throws -> Account?
+    func fetchVenuesByRedemptionCode(code: String) async throws -> [Account]
     func removeFromRequested(accountId: String) async throws
     func submitReview(accountId: String, review: Review) throws
     func fetchNightflyyPlusMember() async -> [Account]
